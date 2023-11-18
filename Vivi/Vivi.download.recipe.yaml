@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.download.GoogleChrome
+Identifier: com.github.woodleighschool.download.Vivi
 
 Input:
-  NAME: Google Chrome
-  DOWNLOAD_URL: "https://dl.google.com/dl/chrome/mac/universal/stable/gcem/GoogleChrome.pkg"
+  NAME: Vivi
+  DOWNLOAD_URL: "https://api.vivi.io/mac"
 
 Process:
   - Processor: URLDownloader

@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.GoogleChrome
-ParentRecipe: com.github.woodleighschool.download.GoogleChrome
+Identifier: com.github.woodleighschool.pkg.Vivi
+ParentRecipe: com.github.woodleighschool.download.Vivi
 
 Input:
-  NAME: Google Chrome
+  NAME: Vivi
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -13,7 +13,7 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/GoogleChrome.pkg/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/au.com.viviaustralia.mac.pkg/Payload"
 
   - Processor: PlistReader
     Arguments:

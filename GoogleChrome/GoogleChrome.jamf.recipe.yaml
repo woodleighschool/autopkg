@@ -1,5 +1,6 @@
 Identifier: com.github.woodleighschool.jamf.GoogleChrome
 ParentRecipe: com.github.woodleighschool.pkg.GoogleChrome
+
 Input:
   NAME: Google Chrome
   CATEGORY: Browsers
@@ -16,16 +17,20 @@ Input:
   INSTALL_BUTTON_TEXT: Install
   REINSTALL_BUTTON_TEXT: Reinstall
   UPDATE_PREDICATE: pkg_uploaded == False
+
 Process:
   - Processor: StopProcessingIf
     Arguments:
       predicate: "%UPDATE_PREDICATE%"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: "%SELF_SERVICE_ICON%"
@@ -33,7 +38,8 @@ Process:
       policy_template: "%POLICY_TEMPLATE%"
       replace_policy: "True"
       replace_icon: "True"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
-      pkg_name_match: Google Chrome-
+      pkg_name_match: "%NAME%-"
       versions_to_keep: 1

@@ -1,17 +1,18 @@
-Identifier: com.github.woodleighschool.jamf.UltimakerCura
-ParentRecipe: com.github.woodleighschool.pkg.UltiMakerCura
+Identifier: com.github.woodleighschool.jamf.Vivi
+ParentRecipe: com.github.woodleighschool.pkg.Vivi
 
 Input:
-  NAME: UltiMaker Cura
-  CATEGORY: STEAM
+  NAME: Vivi
+  CATEGORY: Browsers
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml
   SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
-    UltiMaker Cura is free, easy-to-use 3D printing software trusted by millions
-    of users. Fine-tune your 3D model with 400+ settings for the best slicing
-    and printing results.
+    Vivi is the only scalable, easy-to-use wireless screensharing and student
+    engagement platform engineered for, and by, the education sector. Any
+    device, any number of users/classrooms, any media type, any learning type,
+    any display.
 
     Version: %version%
   SELF_SERVICE_ICON: "%NAME%.png"

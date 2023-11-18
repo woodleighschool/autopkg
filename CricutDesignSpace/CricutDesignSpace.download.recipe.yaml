@@ -30,7 +30,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: "%pathname%/Cricut Design Space.app"
+      input_path: "%pathname%/%NAME%.app"
       requirement: >-
         identifier "com.cricut.design" and anchor apple generic and certificate
         1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate
