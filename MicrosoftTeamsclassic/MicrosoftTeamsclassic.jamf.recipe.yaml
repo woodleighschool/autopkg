@@ -9,7 +9,7 @@ Input:
   POLICY_TEMPLATE: defaultAllScope.xml
   SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
-    <Description>
+    Microsoft Teams Classic is the original version of the popular collaboration tool, designed for those who prefer the classic interface and functionality. It offers a straightforward and familiar user experience.
 
     Version: %version%
   SELF_SERVICE_ICON: "%NAME%.png"
