@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.jamf.Microsoft365BusinessProSuite
 ParentRecipe: com.github.woodleighschool.download.Microsoft365BusinessProSuite
 
 Input:
-  NAME: Microsoft 365 BusinessPro Suite
+  NAME: Microsoft 365 Suite
   CATEGORY: Microsoft
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL

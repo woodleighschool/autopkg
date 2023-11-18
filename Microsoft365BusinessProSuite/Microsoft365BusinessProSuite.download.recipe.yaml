@@ -1,7 +1,7 @@
 Identifier: com.github.woodleighschool.download.Microsoft365BusinessProSuite
 
 Input:
-  NAME: Microsoft 365 BusinessPro Suite
+  NAME: Microsoft 365 Suite
 
 Process:
   - Processor: com.github.woodleighschool.processors/Microsoft365VersionerGetter
