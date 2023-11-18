@@ -1,0 +1,44 @@
+Identifier: com.github.woodleighschool.jamf.MicrosoftPowerPoint
+ParentRecipe: com.github.woodleighschool.download.MicrosoftPowerPoint
+
+Input:
+  NAME: Microsoft PowerPoint
+  CATEGORY: Productivity
+  POLICY_CATEGORY: Self Service
+  POLICY_NAME: ALL - %NAME% - ALL
+  POLICY_TEMPLATE: defaultAllScope.xml
+  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
+  SELF_SERVICE_DESCRIPTION: >
+    Design impactful presentations with stunning visuals and engaging content to captivate your audience.
+
+    Version: %version%
+  SELF_SERVICE_ICON: "%NAME%.png"
+  INSTALL_BUTTON_TEXT: Install
+  REINSTALL_BUTTON_TEXT: Reinstall
+  UPDATE_PREDICATE: pkg_uploaded == False
+
+Process:
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: "%UPDATE_PREDICATE%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: "%SELF_SERVICE_ICON%"
+      policy_name: "%POLICY_NAME%"
+      policy_template: "%POLICY_TEMPLATE%"
+      replace_policy: "True"
+      replace_icon: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: "%NAME%"
+      versions_to_keep: 1

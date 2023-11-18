@@ -4,18 +4,18 @@ Input:
   NAME: Cricut Design Space
 
 Process:
-  - Processor: SimpleJSONParser
+  - Processor: com.github.woodleighschool.processors/SimpleJSONParser
     Arguments:
       json_url: >-
         https://apis.cricut.com/desktopdownload/UpdateJson?operatingSystem=osxnative&shard=a
       json_key: result
 
-  - Processor: SimpleJSONParser
+  - Processor: com.github.woodleighschool.processors/SimpleJSONParser
     Arguments:
       json_url: "%json_value%"
       json_key: rolloutInstallFile
 
-  - Processor: SimpleJSONParser
+  - Processor: com.github.woodleighschool.processors/SimpleJSONParser
     Arguments:
       json_url: >-
         https://apis.cricut.com/desktopdownload/InstallerFile?shard=a&operatingSystem=osxnative&fileName=%json_value%
