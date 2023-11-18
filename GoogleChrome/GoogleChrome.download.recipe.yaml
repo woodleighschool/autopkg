@@ -1,0 +1,13 @@
+Identifier: com.github.woodleighschool.download.GoogleChrome
+Input:
+  NAME: Google Chrome
+  DOWNLOAD_URL: "https://dl.google.com/dl/chrome/mac/universal/stable/gcem/GoogleChrome.pkg"
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.pkg"
+  - Processor: EndOfCheckPhase
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"

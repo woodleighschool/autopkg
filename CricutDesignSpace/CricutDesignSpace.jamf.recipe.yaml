@@ -1,0 +1,45 @@
+Identifier: com.github.woodleighschool.jamf.CricutDesignSpace
+ParentRecipe: com.github.woodleighschool.pkg.CricutDesignSpace
+
+Input:
+  NAME: Cricut Design Space
+  CATEGORY: STEAM
+  POLICY_CATEGORY: Self Service
+  POLICY_NAME: ALL - %NAME% - ALL
+  POLICY_TEMPLATE: defaultAllScope.xml
+  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
+  SELF_SERVICE_DESCRIPTION: >
+    Enjoy total creative freedom over your next DIY project with Cricut Design Space™. Design, cut, or draw by connecting to Cricut Explore™ or Cricut Maker™ machines.
+    Start your project from scratch or browse thousands of images, ready-to-make projects, and unique fonts in the Cricut Image Library.
+
+    Version: %version%
+  SELF_SERVICE_ICON: "%NAME%.png"
+  INSTALL_BUTTON_TEXT: Install
+  REINSTALL_BUTTON_TEXT: Reinstall
+  UPDATE_PREDICATE: pkg_uploaded == False
+
+Process:
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: "%UPDATE_PREDICATE%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: "%SELF_SERVICE_ICON%"
+      policy_name: "%POLICY_NAME%"
+      policy_template: "%POLICY_TEMPLATE%"
+      replace_policy: "True"
+      replace_icon: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: Cricut Design Space-
+      versions_to_keep: 1
