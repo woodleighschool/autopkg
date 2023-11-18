@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.MicrosoftExcel
 
 Input:
   NAME: Microsoft Excel
-  CATEGORY: Productivity
+  CATEGORY: Microsoft
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml

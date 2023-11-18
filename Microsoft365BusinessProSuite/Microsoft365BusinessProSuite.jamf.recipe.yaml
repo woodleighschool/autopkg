@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.Microsoft365BusinessProSuite
 
 Input:
   NAME: Microsoft 365 BusinessPro Suite
-  CATEGORY: Productivity
+  CATEGORY: Microsoft
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml

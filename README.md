@@ -9,6 +9,12 @@ autopkg repo-add https://github.com/woodleighschool/autopkg.git
 autopkg repo-add https://github.com/grahampugh/jamf-upload
 ```
 
+```bash
+defaults write ~/Library/Preferences/com.github.autopkg.plist JSS_URL "https://<instance>.jamfcloud.com"
+defaults write ~/Library/Preferences/com.github.autopkg.plist API_USERNAME '<username>'
+defaults write ~/Library/Preferences/com.github.autopkg.plist API_PASSWORD '<password>'
+```
+
 Looking through this repo, you will see packages that are setup to download, package and/or upload to JAMF automatically. In the structure:
 
 ```

@@ -1,15 +1,15 @@
-Identifier: com.github.woodleighschool.jamf.MicrosoftOneDrive
-ParentRecipe: com.github.woodleighschool.download.MicrosoftOneDrive
+Identifier: com.github.woodleighschool.jamf.MicrosoftTeams
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftTeams
 
 Input:
-  NAME: Microsoft OneDrive
+  NAME: Microsoft Teams
   CATEGORY: Microsoft
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml
   SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
-    Securely store, share, and access your files from anywhere, ensuring your data is always within reach.
+    <Description>
 
     Version: %version%
   SELF_SERVICE_ICON: "%NAME%.png"

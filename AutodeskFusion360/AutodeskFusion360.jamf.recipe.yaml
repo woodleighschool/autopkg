@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.pkg.AutodeskFusion360
 
 Input:
   NAME: Autodesk Fusion 360
-  CATEGORY: Browsers
+  CATEGORY: STEAM
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml
