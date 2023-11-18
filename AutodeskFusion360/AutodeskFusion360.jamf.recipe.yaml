@@ -1,16 +1,15 @@
-Identifier: com.github.woodleighschool.jamf.CricutDesignSpace
-ParentRecipe: com.github.woodleighschool.pkg.CricutDesignSpace
+Identifier: com.github.woodleighschool.jamf.AutodeskFusion360
+ParentRecipe: com.github.woodleighschool.pkg.AutodeskFusion360
 
 Input:
-  NAME: Cricut Design Space
-  CATEGORY: STEAM
+  NAME: Autodesk Fusion 360
+  CATEGORY: Browsers
   POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
   POLICY_TEMPLATE: defaultAllScope.xml
   SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
-    Enjoy total creative freedom over your next DIY project with Cricut Design Space™. Design, cut, or draw by connecting to Cricut Explore™ or Cricut Maker™ machines.
-    Start your project from scratch or browse thousands of images, ready-to-make projects, and unique fonts in the Cricut Image Library.
+    Fusion 360 is software for 3D CAD, modelling, manufacturing, industrial design, electronics & mechanical engineering.
 
     Version: %version%
   SELF_SERVICE_ICON: "%NAME%.png"

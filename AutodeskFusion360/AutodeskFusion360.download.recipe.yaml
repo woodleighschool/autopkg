@@ -1,0 +1,21 @@
+Identifier: com.github.woodleighschool.download.AutodeskFusion360
+
+Input:
+  NAME: Autodesk Fusion 360
+  DOWNLOAD_URL: "https://dl.appstreaming.autodesk.com/production/installers/Autodesk%20Fusion%20360%20Admin%20Install.pkg"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"
+      expected_authority_names:
+        - "Developer ID Installer: Autodesk (XXKJ396S2Y)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
