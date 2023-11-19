@@ -4,18 +4,12 @@ ParentRecipe: com.github.woodleighschool.pkg.CricutDesignSpace
 Input:
   NAME: Cricut Design Space
   CATEGORY: STEAM
-  POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
-  POLICY_TEMPLATE: defaultAllScope.xml
-  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
     Enjoy total creative freedom over your next DIY project with Cricut Design Space™. Design, cut, or draw by connecting to Cricut Explore™ or Cricut Maker™ machines.
     Start your project from scratch or browse thousands of images, ready-to-make projects, and unique fonts in the Cricut Image Library.
 
     Version: %version%
-  SELF_SERVICE_ICON: "%NAME%.png"
-  INSTALL_BUTTON_TEXT: Install
-  REINSTALL_BUTTON_TEXT: Reinstall
   UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
@@ -31,11 +25,35 @@ Process:
     Arguments:
       pkg_category: "%CATEGORY%"
 
+  - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
+    Arguments:
+      general:
+        policy_name: "%POLICY_NAME%"
+        policy_category: Self Service
+        custom_event: "%NAME%"
+      scope:
+        all_computers: true
+      self_service:
+        install_button_text: "Install"
+        reinstall_button_text: "Reinstall"
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: "%CATEGORY%"
+            display_in: true
+            feature_in: true
+      maintenance:
+        recon: true
+      user_interaction:
+        message_start: "%NAME% is being installed."
+        message_finish: "%NAME% has now been installed."
+      output: "%RECIPE_CACHE_DIR%/%NAME%"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%SELF_SERVICE_ICON%"
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
-      policy_template: "%POLICY_TEMPLATE%"
+      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       replace_icon: "True"
 
