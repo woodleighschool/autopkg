@@ -32,9 +32,9 @@ Process:
             user: root
             group: admin
 
-  - Processor: com.github.woodleighschool.processors/PkgSigner
-    Arguments:
-      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+#  - Processor: com.github.woodleighschool.processors/PkgSigner
+#    Arguments:
+#      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
 
   - Processor: PathDeleter
     Arguments:

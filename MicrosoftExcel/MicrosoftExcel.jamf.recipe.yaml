@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.MicrosoftExcel
 
 Input:
   NAME: Microsoft Excel
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Harness the power of advanced spreadsheets to analyze data, visualize trends, and streamline complex calculations.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

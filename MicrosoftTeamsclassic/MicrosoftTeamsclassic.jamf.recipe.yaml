@@ -1,9 +1,9 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftTeamsclassic
-ParentRecipe: com.github.woodleighschool.pkg.MicrosoftTeamsclassic
+ParentRecipe: com.github.woodleighschool.download.MicrosoftTeamsclassic
 
 Input:
   NAME: Microsoft Teams classic
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Microsoft Teams Classic is the original version of the popular collaboration tool, designed for those who prefer the classic interface and functionality. It offers a straightforward and familiar user experience.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

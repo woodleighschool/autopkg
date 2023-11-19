@@ -3,10 +3,10 @@ ParentRecipe: com.github.woodleighschool.pkg.DockerDesktop
 
 Input:
   NAME: Docker Desktop
-  CATEGORY: Development Tools
+  CATEGORY: Development & Programming
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    <Description>
+    Docker Desktop is collaborative containerization software for developers.
 
     Version: %version%
   UPDATE_PREDICATE: pkg_uploaded == False
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

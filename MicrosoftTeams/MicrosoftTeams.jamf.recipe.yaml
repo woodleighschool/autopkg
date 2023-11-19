@@ -1,9 +1,9 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftTeams
-ParentRecipe: com.github.woodleighschool.pkg.MicrosoftTeams
+ParentRecipe: com.github.woodleighschool.download.MicrosoftTeams
 
 Input:
   NAME: Microsoft Teams
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Microsoft Teams is your modern solution for seamless collaboration and communication in the digital workplace. This platform brings together chat, video meetings, file collaboration, and integrated app functionalities in one place.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

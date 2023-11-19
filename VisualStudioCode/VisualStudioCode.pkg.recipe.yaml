@@ -1,0 +1,106 @@
+Identifier: com.github.woodleighschool.pkg.VisualStudioCode
+ParentRecipe: com.github.woodleighschool.download.VisualStudioCode
+
+Input:
+  NAME: Visual Studio Code
+
+Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/root"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/root/Applications/%NAME%.app"
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts/postinstall"
+      file_mode: "0755"
+      file_content: |
+        #!/bin/bash
+
+        # Get the currently logged in user
+        CURRENT_USER=$(ls -l /dev/console | awk '{ print $3 }')
+
+        # Define the settings file path
+        SETTINGS_FILE="/Users/${CURRENT_USER}/Library/Application Support/Code/User/settings.json"
+
+        # Check if the settings file already exists
+        if [ ! -f "${SETTINGS_FILE}" ]; then
+          # Create the directory for settings file if it doesn't exist
+          mkdir -p "$(dirname "${SETTINGS_FILE}")"
+
+          # Write the settings.json content
+          cat >"${SETTINGS_FILE}" <<EOF
+        {
+            "workbench.iconTheme": "eq-material-theme-icons-palenight",
+            "security.workspace.trust.enabled": false,
+            "workbench.colorTheme": "Community Material Theme Palenight High Contrast",
+            "explorer.confirmDelete": false,
+            "editor.accessibilitySupport": "off",
+            "editor.insertSpaces": false,
+            "editor.detectIndentation": false,
+            "explorer.confirmDragAndDrop": false,
+            "[python]": {
+                "editor.formatOnType": true,
+                "editor.defaultFormatter": "ms-python.autopep8"
+            },
+            "workbench.startupEditor": "none",
+            "terminal.integrated.enableMultiLinePasteWarning": false,
+        	"http.proxyStrictSSL": false,
+        	"editor.fontLigatures": false,
+        	"python.defaultInterpreterPath": "/usr/local/bin/python3"
+        }
+
+        EOF
+
+          # Fix permissions recursively on the Code folder
+          chown -R "${CURRENT_USER}:staff" "/Users/${CURRENT_USER}/Library/Application Support/Code"
+        fi
+
+        # List of extensions to install
+        EXTENSIONS=(
+          "Equinusocio.vsc-community-material-theme"
+          "equinusocio.vsc-material-theme-icons"
+          "ms-python.autopep8"
+          "ms-python.python"
+          "ms-python.vscode-pylance"
+        )
+
+        # Install each extension
+        for ext in "${EXTENSIONS[@]}"; do
+          su ${CURRENT_USER} -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
+        done
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.microsoft.vscode"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/root"
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unzip"
+        - "%RECIPE_CACHE_DIR%/%NAME%"
+        - "%pathname%"

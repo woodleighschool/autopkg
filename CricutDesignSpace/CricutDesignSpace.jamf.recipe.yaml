@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.pkg.CricutDesignSpace
 
 Input:
   NAME: Cricut Design Space
-  CATEGORY: STEAM
+  CATEGORY: Creative & Design
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Enjoy total creative freedom over your next DIY project with Cricut Design Space™. Design, cut, or draw by connecting to Cricut Explore™ or Cricut Maker™ machines.
@@ -41,7 +41,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

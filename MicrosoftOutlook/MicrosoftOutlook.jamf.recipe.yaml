@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.MicrosoftOutlook
 
 Input:
   NAME: Microsoft Outlook
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Manage your emails, calendar, contacts, and tasks, keeping your communications smooth and synchronized.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.MicrosoftWord
 
 Input:
   NAME: Microsoft Word
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Create and edit professional-looking documents with ease, whether it's for business reports, academic papers, or personal projects.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

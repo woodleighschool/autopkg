@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.MicrosoftOneNote
 
 Input:
   NAME: Microsoft OneNote
-  CATEGORY: Microsoft
+  CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     Capture, organize, and share your notes, ideas, and to-do lists, making information retrieval a breeze.
@@ -40,7 +40,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: true
+            feature_in: false
       maintenance:
         recon: true
       user_interaction:

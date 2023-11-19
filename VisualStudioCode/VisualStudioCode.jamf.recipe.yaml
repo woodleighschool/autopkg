@@ -1,26 +1,24 @@
-Identifier: com.github.woodleighschool.jamf.MinecraftEducation
-ParentRecipe: com.github.woodleighschool.pkg.MinecraftEducation
+Identifier: com.github.woodleighschool.jamf.VisualStudioCode
+ParentRecipe: com.github.woodleighschool.pkg.VisualStudioCode
 
 Input:
-  NAME: Minecraft Education
-  CATEGORY: Education & Learning
+  NAME: Visual Studio Code
+  POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
+  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
-    Engage students in game-based learning across the curriculum. Minecraft
-    Education is a game-based platform that inspires creative, inclusive
-    learning through play. Explore blocky words that unlock new ways to take on
-    any subject or challenge.
+    Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
 
     Version: %version%
+  SELF_SERVICE_ICON: "%NAME%.png"
+  INSTALL_BUTTON_TEXT: Install
+  REINSTALL_BUTTON_TEXT: Reinstall
+  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+  - Processor: StopProcessingIf
     Arguments:
-      category_name: "%CATEGORY%"
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
-    Arguments:
-      pkg_category: "%CATEGORY%"
+      predicate: "%UPDATE_PREDICATE%"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
@@ -42,13 +40,13 @@ Process:
       maintenance:
         recon: true
       user_interaction:
-        message_start: "%NAME% is being installed."
+        message_start: "%NAME% is being installed123."
         message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
+      icon: "%SELF_SERVICE_ICON%"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
