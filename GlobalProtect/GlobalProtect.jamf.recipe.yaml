@@ -1,19 +1,17 @@
-Identifier: com.github.woodleighschool.jamf.Vivi
-ParentRecipe: com.github.woodleighschool.pkg.Vivi
+Identifier: com.github.woodleighschool.jamf.GlobalProtect
+ParentRecipe: com.github.woodleighschool.pkg.GlobalProtect
 
 Input:
-  NAME: Vivi
-  CATEGORY: Applications
-  POLICY_NAME: ALL - %NAME% - ALL
+  NAME: GlobalProtect
+  CATEGORY: Utilities & Security
+  POLICY_NAME: ALL - %NAME% - Staff
   SELF_SERVICE_DESCRIPTION: >
-    Vivi is the only scalable, easy-to-use wireless screensharing and student
-    engagement platform engineered for, and by, the education sector. Any
-    device, any number of users/classrooms, any media type, any learning type,
-    any display.
+    The Palo Alto VPN client is required to access organizational resources outside of the school network. 
 
     Version: %version%
 
 Process:
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"
@@ -29,7 +27,13 @@ Process:
         policy_category: Self Service
         custom_event: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: false
+        include:
+          departments:
+            - id: 11
+              name: "Staff"
+            - id: 21
+              name: "IT"
       self_service:
         install_button_text: "Install"
         reinstall_button_text: "Reinstall"
@@ -45,7 +49,7 @@ Process:
         message_start: "%NAME% is being installed."
         message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-
+      
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: "%NAME%.png"

@@ -24,15 +24,15 @@ class JamfPolicyXMLGenerator(Processor):
             "required": True
         },
         "maintenance": {
-            "description": "Self service settings for the policy.",
+            "description": "Maintenance settings for the policy.",
             "required": True
         },
         "user_interaction": {
-            "description": "Self service settings for the policy.",
+            "description": "User interaction settings for the policy.",
             "required": True
         },
         "output": {
-            "description": "Self service settings for the policy.",
+            "description": "Where the XML is outputted to.",
             "required": True
         },
     }

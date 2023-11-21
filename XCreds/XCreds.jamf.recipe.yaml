@@ -1,19 +1,17 @@
-Identifier: com.github.woodleighschool.jamf.Vivi
-ParentRecipe: com.github.woodleighschool.pkg.Vivi
+Identifier: com.github.woodleighschool.jamf.XCreds
+ParentRecipe: com.github.woodleighschool.pkg.XCreds
 
 Input:
-  NAME: Vivi
-  CATEGORY: Applications
+  NAME: XCreds
+  CATEGORY: <Category>
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Vivi is the only scalable, easy-to-use wireless screensharing and student
-    engagement platform engineered for, and by, the education sector. Any
-    device, any number of users/classrooms, any media type, any learning type,
-    any display.
+    <Description>
 
     Version: %version%
 
 Process:
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"
@@ -45,12 +43,12 @@ Process:
         message_start: "%NAME% is being installed."
         message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-
+      
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
+      icon: "%SELF_SERVICE_ICON%"
       policy_name: "%POLICY_NAME%"
-      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
+      policy_template: "%POLICY_TEMPLATE%"
       replace_policy: "True"
       replace_icon: "True"
 

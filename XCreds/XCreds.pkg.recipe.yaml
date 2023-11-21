@@ -1,8 +1,7 @@
-Identifier: com.github.woodleighschool.pkg.VisualStudioCode
-ParentRecipe: com.github.woodleighschool.download.VisualStudioCode
+Identifier: com.github.woodleighschool.pkg.XCreds
 
 Input:
-  NAME: Visual Studio Code
+  NAME: XCreds
 
 Process:
   - Processor: PkgRootCreator
@@ -13,11 +12,11 @@ Process:
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+      info_path: "%RECIPE_CACHE_DIR%/%NAME%.app"
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+      source_path: "%RECIPE_CACHE_DIR%/%NAME%.app"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
 
   - Processor: Copier
@@ -31,7 +30,7 @@ Process:
       pkg_request:
         pkgname: "%NAME%-%version%"
         version: "%version%"
-        id: "com.microsoft.vscode"
+        id: "com.twocanoes.xcreds"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
@@ -47,6 +46,4 @@ Process:
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/unzip"
         - "%RECIPE_CACHE_DIR%/%NAME%"
-        - "%pathname%"

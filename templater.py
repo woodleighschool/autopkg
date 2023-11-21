@@ -38,23 +38,13 @@ ParentRecipe: com.github.woodleighschool.pkg.{dir_name}
 Input:
   NAME: {app_name}
   CATEGORY: <Category>
-  POLICY_CATEGORY: Self Service
   POLICY_NAME: ALL - %NAME% - ALL
-  POLICY_TEMPLATE: defaultAllScope.xml
-  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
     <Description>
 
     Version: %version%
-  SELF_SERVICE_ICON: "%NAME%.png"
-  INSTALL_BUTTON_TEXT: Install
-  REINSTALL_BUTTON_TEXT: Reinstall
-  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: "%UPDATE_PREDICATE%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
@@ -64,6 +54,30 @@ Process:
     Arguments:
       pkg_category: "%CATEGORY%"
 
+  - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
+    Arguments:
+      general:
+        policy_name: "%POLICY_NAME%"
+        policy_category: Self Service
+        custom_event: "%NAME%"
+      scope:
+        all_computers: true
+      self_service:
+        install_button_text: "Install"
+        reinstall_button_text: "Reinstall"
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: "%CATEGORY%"
+            display_in: true
+            feature_in: false
+      maintenance:
+        recon: true
+      user_interaction:
+        message_start: "%NAME% is being installed."
+        message_finish: "%NAME% has now been installed."
+      output: "%RECIPE_CACHE_DIR%/%NAME%"
+      
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: "%SELF_SERVICE_ICON%"

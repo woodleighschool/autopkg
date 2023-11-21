@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# remove nomad login
+if [ -f /usr/local/bin/authchanger ]; then
+    authchanger -reset
+    rm /usr/local/bin/authchanger
+fi
+if [ -d "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle" ]; then
+    rm -rf "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle"
+fi
+
+# remove old xcreds
+killall XCreds
+if [ -d "/Applications/XCreds.app" ]; then
+    rm -rf "/Applications/XCreds.app"
+fi

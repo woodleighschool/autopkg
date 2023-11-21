@@ -1,19 +1,21 @@
-Identifier: com.github.woodleighschool.jamf.Vivi
-ParentRecipe: com.github.woodleighschool.pkg.Vivi
+Identifier: com.github.woodleighschool.jamf.Spotify
+ParentRecipe: com.github.woodleighschool.pkg.Spotify
 
 Input:
-  NAME: Vivi
+  NAME: Spotify
   CATEGORY: Applications
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Vivi is the only scalable, easy-to-use wireless screensharing and student
-    engagement platform engineered for, and by, the education sector. Any
-    device, any number of users/classrooms, any media type, any learning type,
-    any display.
+    Spotify is a digital music service that gives you access to millions of songs.
 
     Version: %version%
+  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: "%UPDATE_PREDICATE%"
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"

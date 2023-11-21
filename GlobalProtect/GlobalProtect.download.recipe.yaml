@@ -1,0 +1,21 @@
+Identifier: com.github.woodleighschool.download.GlobalProtect
+
+Input:
+  NAME: GlobalProtect
+  DOWNLOAD_URL: "https://access.woodleigh.vic.edu.au/global-protect/getmsi.esp?platform=mac"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"
+      expected_authority_names:
+        - "Developer ID Installer: Palo Alto Networks (PXPZ95SK77)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
