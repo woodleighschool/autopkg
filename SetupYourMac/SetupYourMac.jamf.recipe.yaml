@@ -1,17 +1,13 @@
-Identifier: com.github.woodleighschool.jamf.CricutDesignSpace
-ParentRecipe: com.github.woodleighschool.pkg.CricutDesignSpace
+Identifier: com.github.woodleighschool.jamf.SetupYourMac
+ParentRecipe: com.github.woodleighschool.pkg.SetupYourMac
 
 Input:
-  NAME: Cricut Design Space
-  CATEGORY: Creative & Design
+  NAME: SetupYourMac
+  CATEGORY: New DEP
   POLICY_NAME: ALL - %NAME% - ALL
-  SELF_SERVICE_DESCRIPTION: >
-    Enjoy total creative freedom over your next DIY project with Cricut Design Space™. Design, cut, or draw by connecting to Cricut Explore™ or Cricut Maker™ machines.
-    Start your project from scratch or browse thousands of images, ready-to-make projects, and unique fonts in the Cricut Image Library.
-
-    Version: %version%
 
 Process:
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"
@@ -19,6 +15,7 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
+      replace_package: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
@@ -41,14 +38,12 @@ Process:
       files_processes:
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-
+      
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
-      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

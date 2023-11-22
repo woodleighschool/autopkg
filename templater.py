@@ -59,7 +59,7 @@ Process:
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Self Service
-        custom_event: "%NAME%"
+        trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:

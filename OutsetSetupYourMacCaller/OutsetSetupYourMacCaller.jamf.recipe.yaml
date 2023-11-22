@@ -1,0 +1,21 @@
+Identifier: com.github.woodleighschool.jamf.OutsetSetupYourMacCaller
+ParentRecipe: com.github.woodleighschool.pkg.OutsetSetupYourMacCaller
+
+Input:
+  NAME: Outset SetupYourMac Caller
+  CATEGORY: New DEP
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: "%CATEGORY%"
+      replace_package: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: "%NAME%"
+      versions_to_keep: 1

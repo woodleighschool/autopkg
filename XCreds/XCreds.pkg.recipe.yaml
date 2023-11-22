@@ -10,14 +10,14 @@ Process:
       pkgdirs:
         Applications: "0775"
 
-  - Processor: PlistReader
-    Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/%NAME%.app"
-
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/%NAME%.app"
+      source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
 
   - Processor: Copier
     Arguments:

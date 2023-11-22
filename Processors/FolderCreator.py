@@ -20,7 +20,6 @@ class FolderCreator(Processor):
             ),
         },
     }
-    
     output_variables = {}
 
     def main(self):

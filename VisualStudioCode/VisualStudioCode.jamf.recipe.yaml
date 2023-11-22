@@ -3,50 +3,48 @@ ParentRecipe: com.github.woodleighschool.pkg.VisualStudioCode
 
 Input:
   NAME: Visual Studio Code
-  POLICY_CATEGORY: Self Service
+  CATEGORY: Development & Programming
   POLICY_NAME: ALL - %NAME% - ALL
-  SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_DESCRIPTION: >
     Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
 
     Version: %version%
-  SELF_SERVICE_ICON: "%NAME%.png"
-  INSTALL_BUTTON_TEXT: Install
-  REINSTALL_BUTTON_TEXT: Reinstall
-  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
-  - Processor: StopProcessingIf
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
-      predicate: "%UPDATE_PREDICATE%"
+      category_name: "%CATEGORY%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: "%CATEGORY%"
+      replace_package: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Self Service
-        custom_event: "%NAME%"
+        frequency: Ongoing
+        trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        install_button_text: "Install"
-        reinstall_button_text: "Reinstall"
+        show: true
         display_name: "%NAME%"
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: false
+            feature_in: true
       maintenance:
-        recon: true
+      files_processes:
       user_interaction:
-        message_start: "%NAME% is being installed123."
-        message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%SELF_SERVICE_ICON%"
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"

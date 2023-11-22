@@ -37,6 +37,11 @@ To build packages, use `autopkg run`, eg:
 autopkg run <app>.<action>.recipe.yaml
 ```
 
+You can also build all working recipies using
+```bash
+autopkg run --recipe-list ~/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg/run_all.recipe.yaml
+```
+
 ### Explanation of <action>
 
 There are 3 actions (steps) in this setup, `jamf`, `pkg` and `download`.

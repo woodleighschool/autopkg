@@ -1,0 +1,72 @@
+Identifier: com.github.woodleighschool.pkg.SetupYourMac
+ParentRecipe: com.github.woodleighschool.download.SetupYourMac
+
+Input:
+  NAME: SetupYourMac
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0775"
+
+  - Processor: com.github.woodleighschool.processors/FolderCreator
+    Arguments:
+      folders:
+        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%"
+          perms: "0755"
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/start.sh"
+      file_content: |
+        #!/bin/bash
+        chmod +x /tmp/%NAME%/SYM-Dialog.bash
+        /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/var/log/com.woodlegh.setup.log' 'false' 'userInput' 'None'
+        rm -rf /tmp/%NAME%/
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Setup-Your-Mac-via-Dialog.bash"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Templates"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/Templates"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Icons"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/Icons"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+
+  - Processor: com.github.woodleighschool.processors/BashVariableExtractor
+    Arguments:
+      variable_name: "scriptVersion"
+      file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%scriptVersion%"
+        version: "%scriptVersion%"
+        id: "com.woodleighschool.setupyourmac"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+
+#  - Processor: com.github.woodleighschool.processors/PkgSigner
+#    Arguments:
+#      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"
+        - "%RECIPE_CACHE_DIR%/downloads/%NAME%"

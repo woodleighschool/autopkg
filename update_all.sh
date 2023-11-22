@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Runs all Jamf recipes
-# Needs to be run in the root of the git project
+# Changes directory to ~/Library/AutoPkg/Receipts first
+
+# Change directory
+cd ~/Library/AutoPkg/Receipts
 
 # Color codes
 RED='\033[0;31m'
@@ -13,23 +16,26 @@ NC='\033[0m' # No Color
 
 jamfRecipeListPath=$(find . -name "*.jamf.recipe.yaml")
 
+# Initialize an empty string for identifiers
+identifiers=""
+
 for recipe in $jamfRecipeListPath; do
-	# Extract the NAME and Identifier using awk
-	name=$(awk '/^Input:/{f=1} f && /NAME:/{sub(/NAME: /,""); print; exit}' "$recipe")
 	identifier=$(awk '/^Identifier:/{print $2; exit}' "$recipe")
 
-	# Check if name and identifier are found
-	if [ -z "$name" ] || [ -z "$identifier" ]; then
-		echo -e "${RED}Error: Unable to find NAME or Identifier in $recipe${NC}"
+	if [ -z "$identifier" ]; then
+		echo -e "${RED}Error: Unable to find Identifier in $recipe${NC}"
 		continue
 	fi
 
-	echo -e "${CYAN}${BOLD}${name}: Building${YELLOW}"
-	autopkg run "$identifier"
-	if [ $? -eq 0 ]; then
-		echo -e "${GREEN}${BOLD}${name}: Completed${NC}"
-	else
-		echo -e "${RED}${BOLD}${name}: Failed${NC}"
-	fi
-	echo ""
+	# Add identifier to the list
+	identifiers="$identifiers $identifier"
 done
+
+# Run autopkg with all identifiers
+echo -e "${CYAN}${BOLD}Running autopkg for all recipes${YELLOW}"
+echo "autopkg run $identifiers"
+if [ $? -eq 0 ]; then
+	echo -e "${GREEN}${BOLD}All recipes completed successfully${NC}"
+else
+	echo -e "${RED}${BOLD}Some recipes failed${NC}"
+fi
