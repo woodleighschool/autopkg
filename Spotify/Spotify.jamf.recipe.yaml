@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Spotify is a digital music service that gives you access to millions of songs.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

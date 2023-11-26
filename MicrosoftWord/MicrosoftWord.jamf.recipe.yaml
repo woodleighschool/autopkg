@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Create and edit professional-looking documents with ease, whether it's for business reports, academic papers, or personal projects.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

@@ -11,8 +11,6 @@ Input:
     device, any number of users/classrooms, any media type, any learning type,
     any display.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Capture, organize, and share your notes, ideas, and to-do lists, making information retrieval a breeze.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

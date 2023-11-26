@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
@@ -18,7 +16,7 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_package: "True"
+      replace_pkg: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:

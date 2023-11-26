@@ -6,9 +6,7 @@ Input:
   CATEGORY: Utilities & Security
   POLICY_NAME: ALL - %NAME% - Staff
   SELF_SERVICE_DESCRIPTION: >
-    The Palo Alto VPN client is required to access organizational resources outside of the school network. 
-
-    Version: %version%
+    The Palo Alto VPN client is required to access organizational resources outside of the school network.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -46,7 +44,7 @@ Process:
       files_processes:
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-      
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: "%NAME%.png"

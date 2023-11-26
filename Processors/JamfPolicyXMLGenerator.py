@@ -1,5 +1,6 @@
 #!/usr/local/autopkg/python
 
+import datetime
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from autopkglib import Processor, ProcessorError
@@ -125,15 +126,25 @@ class JamfPolicyXMLGenerator(Processor):
             ET.SubElement(self_service_element, "install_button_text").text = self_service.get("install_button_text", "Install")
             ET.SubElement(self_service_element, "reinstall_button_text").text = self_service.get("reinstall_button_text", "Reinstall")
             ET.SubElement(self_service_element, "self_service_display_name").text = self_service["display_name"]
-            ET.SubElement(self_service_element, "self_service_description").text = self_service["description"]
+            
+            # Get current date and time in the specified format
+            current_datetime = datetime.datetime.now().strftime("%d/%m/%y %I:%M%p").lower()
+            
+            # Update self_service_description with additional information
+            description_with_info = self_service["description"] + "\n**Package Information**\n"
+            description_with_info += f"Version: {self.env.get('version', 'Unknown')}\n"
+            description_with_info += f"Last Update: {current_datetime}"
+            ET.SubElement(self_service_element, "self_service_description").text = description_with_info
+    
             # Adding categories
-            self_service_categories = ET.SubElement( self_service_element, "self_service_categories")
+            self_service_categories = ET.SubElement(self_service_element, "self_service_categories")
             # Iterate over each category
             for category in self_service["categories"]:
                 category_element = ET.SubElement(self_service_categories, "category")
                 ET.SubElement(category_element, "name").text = category["name"]
                 ET.SubElement(category_element, "display_in").text = self.bool_to_str(category["display_in"])
                 ET.SubElement(category_element, "feature_in").text = self.bool_to_str(category["feature_in"])
+
 
     def add_maintenance_section(self, policy, maintenance):
         """Adds maintenance settings to the policy."""

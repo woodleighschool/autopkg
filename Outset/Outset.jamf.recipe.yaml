@@ -1,12 +1,10 @@
-Identifier: com.github.woodleighschool.jamf.MicrosoftOutlook
-ParentRecipe: com.github.woodleighschool.download.MicrosoftOutlook
+Identifier: com.github.woodleighschool.jamf.Outset
+ParentRecipe: com.github.woodleighschool.download.Outset
 
 Input:
-  NAME: Microsoft Outlook
-  CATEGORY: Productivity & Office
+  NAME: Outset
+  CATEGORY: New DEP
   POLICY_NAME: ALL - %NAME% - ALL
-  SELF_SERVICE_DESCRIPTION: >
-    Manage your emails, calendar, contacts, and tasks, keeping your communications smooth and synchronized.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -16,24 +14,20 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      replace_pkg: True
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: Self Service
+        policy_category: New DEP
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        show: true
-        display_name: "%NAME%"
-        description: "%SELF_SERVICE_DESCRIPTION%"
-        categories:
-          - name: "%CATEGORY%"
-            display_in: true
-            feature_in: false
+        show: false
       maintenance:
       files_processes:
       user_interaction:
@@ -41,13 +35,12 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
-      replace_icon: "True"
+      pkg_name: "%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
-      pkg_name_match: "%NAME%"
+      pkg_name_match: "%NAME%-"
       versions_to_keep: 1

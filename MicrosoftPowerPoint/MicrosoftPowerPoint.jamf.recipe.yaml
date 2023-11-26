@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Design impactful presentations with stunning visuals and engaging content to captivate your audience.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

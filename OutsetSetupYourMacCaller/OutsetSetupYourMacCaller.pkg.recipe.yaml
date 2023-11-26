@@ -2,6 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetSetupYourMacCaller
 
 Input:
   NAME: Outset SetupYourMac Caller
+  version: "1.0"
 
 Process:
   - Processor: PkgRootCreator
@@ -22,17 +23,13 @@ Process:
       file_mode: "0755"
       file_content: |
         #!/bin/bash
-        if [ ! -f /Library/Application\ Support/Woodleigh/com.woodleigh.symdone ]; then
-        	jamf policy -event setupyourmac
-        	touch /Library/Application\ Support/Woodleigh/com.woodleigh.symdone
-        fi
-        exit 0
+        jamf policy -event setupyourmac
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%"
-        version: "1"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "com.woodleigh.symcaller"
         options: purge_ds_store
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"

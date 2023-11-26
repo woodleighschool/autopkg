@@ -13,9 +13,9 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_package: "True"
+      replace_pkg: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
-      versions_to_keep: 1
+      versions_to_keep: 2

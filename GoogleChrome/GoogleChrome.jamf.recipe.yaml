@@ -9,8 +9,6 @@ Input:
     Get more done with the new Google Chrome. A more simple, secure, and faster
     web browser than ever, with Google's smarts built-in.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

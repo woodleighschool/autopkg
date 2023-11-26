@@ -8,8 +8,6 @@ Input:
   SELF_SERVICE_DESCRIPTION: >
     Microsoft Teams Classic is the original version of the popular collaboration tool, designed for those who prefer the classic interface and functionality. It offers a straightforward and familiar user experience.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

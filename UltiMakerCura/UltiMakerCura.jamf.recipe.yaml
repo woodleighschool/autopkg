@@ -10,8 +10,6 @@ Input:
     of users. Fine-tune your 3D model with 400+ settings for the best slicing
     and printing results.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

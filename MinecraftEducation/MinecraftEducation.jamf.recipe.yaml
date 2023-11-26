@@ -11,8 +11,6 @@ Input:
     learning through play. Explore blocky words that unlock new ways to take on
     any subject or challenge.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

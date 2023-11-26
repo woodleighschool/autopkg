@@ -1,9 +1,10 @@
-Identifier: com.github.woodleighschool.jamf.OutsetApplyBranding
-ParentRecipe: com.github.woodleighschool.pkg.OutsetApplyBranding
+Identifier: com.github.woodleighschool.jamf.swiftDialog
+ParentRecipe: com.github.woodleighschool.pkg.swiftDialog
 
 Input:
-  NAME: Outset Apply Branding
+  NAME: swiftDialog
   CATEGORY: New DEP
+  POLICY_NAME: ALL - %NAME% - ALL
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -13,9 +14,10 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_pkg: "True"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      replace_pkg: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
-      versions_to_keep: 2
+      versions_to_keep: 1

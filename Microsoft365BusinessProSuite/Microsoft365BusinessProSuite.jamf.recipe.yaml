@@ -6,9 +6,7 @@ Input:
   CATEGORY: Productivity & Office
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    This suite ties everything together, offering enhanced security, business-class email, and additional tools designed to boost efficiency and collaboration
-
-    Version: %version%
+    This suite ties everything together, offering enhanced security, business-class email, and additional tools designed to boost efficiency and collaboration.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader

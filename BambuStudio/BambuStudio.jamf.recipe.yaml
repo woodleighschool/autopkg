@@ -11,8 +11,6 @@ Input:
     algorithms, and an easy-to-use graphical interface, bringing users an
     incredibly smooth printing experience.
 
-    Version: %version%
-
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:

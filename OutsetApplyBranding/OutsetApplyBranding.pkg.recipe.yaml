@@ -2,6 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetApplyBranding
 
 Input:
   NAME: Outset Apply Branding
+  version: "1.0"
 
 Process:
   - Processor: PkgRootCreator
@@ -27,9 +28,9 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/Permer
     Arguments:
-        chown:
-          - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/usr/local/outset/login-once/ApplyBranding.sh"
-            perms: "0755"
+      chown:
+        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/usr/local/outset/login-once/ApplyBranding.sh"
+          perms: "0755"
 
   - Processor: Copier
     Arguments:
@@ -39,8 +40,8 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%"
-        version: "1"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "com.woodleigh.outsetapplybranding"
         options: purge_ds_store
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
@@ -52,11 +53,11 @@ Process:
             user: root
             group: wheel
 
-#  - Processor: com.github.woodleighschool.processors/PkgSigner
-#    Arguments:
-#      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+  #  - Processor: com.github.woodleighschool.processors/PkgSigner
+  #    Arguments:
+  #      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
 
-#  - Processor: PathDeleter
-#    Arguments:
-#      path_list:
-#        - "%RECIPE_CACHE_DIR%/%NAME%"
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

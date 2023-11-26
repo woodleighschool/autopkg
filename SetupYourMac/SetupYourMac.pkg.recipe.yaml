@@ -20,9 +20,9 @@ Process:
   - Processor: FileCreator
     Arguments:
       file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/start.sh"
+      file_mode: "0755"
       file_content: |
         #!/bin/bash
-        chmod +x /tmp/%NAME%/SYM-Dialog.bash
         /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/var/log/com.woodlegh.setup.log' 'false' 'userInput' 'None'
         rm -rf /tmp/%NAME%/
 
@@ -30,6 +30,12 @@ Process:
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Setup-Your-Mac-via-Dialog.bash"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+
+  - Processor: com.github.woodleighschool.processors/Permer
+    Arguments:
+      chown:
+        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+          perms: "0755"
 
   - Processor: Copier
     Arguments:
@@ -49,21 +55,22 @@ Process:
   - Processor: com.github.woodleighschool.processors/BashVariableExtractor
     Arguments:
       variable_name: "scriptVersion"
+      output_variable: "version"
       file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%-%scriptVersion%"
-        version: "%scriptVersion%"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "com.woodleighschool.setupyourmac"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
 
-#  - Processor: com.github.woodleighschool.processors/PkgSigner
-#    Arguments:
-#      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+  #  - Processor: com.github.woodleighschool.processors/PkgSigner
+  #    Arguments:
+  #      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
 
   - Processor: PathDeleter
     Arguments:
