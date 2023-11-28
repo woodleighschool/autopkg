@@ -39,8 +39,3 @@ Process:
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       pkg_name: "%NAME%"
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
-    Arguments:
-      pkg_name_match: "%NAME%-"
-      versions_to_keep: 1

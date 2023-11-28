@@ -15,15 +15,25 @@ Process:
       source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
 
-  - Processor: PlistReader
-    Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
-
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Scripts"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-      overwrite: True
+
+  - Processor: com.github.woodleighschool.processors/FolderCreator
+    Arguments:
+      folders:
+        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Library/LaunchAgents"
+          perms: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/com.twocanoes.XCreds.plist"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Library/LaunchAgents/com.twocanoes.XCreds.plist"
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
 
   - Processor: PkgCreator
     Arguments:

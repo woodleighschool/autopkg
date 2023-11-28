@@ -5,6 +5,7 @@ Input:
   NAME: SetupYourMac
   CATEGORY: New DEP
   POLICY_NAME: ALL - %NAME% - ALL
+  SELF_SERVICE_DESCRIPTION: "Do Not Install"
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -20,26 +21,33 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
+        policy_category: Self Service
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        show: false
+        show: true
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: Utilities & Security
+            display_in: true
+            feature_in: true
       maintenance:
       files_processes:
-        run_command: "/tmp/%NAME%/start.sh"
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
+      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
-      versions_to_keep: 2
+      versions_to_keep: 1

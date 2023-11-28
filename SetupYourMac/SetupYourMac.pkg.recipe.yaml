@@ -23,8 +23,15 @@ Process:
       file_mode: "0755"
       file_content: |
         #!/bin/bash
-        /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/var/log/com.woodlegh.setup.log' 'false' 'userInput' 'None'
-        rm -rf /tmp/%NAME%/
+        loggedInUser=$(stat -f%Su /dev/console)
+        if [ "$loggedInUser" = "tokenadmin" ] || [ "$loggedInUser" = "woodmin" ]; then
+            /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/var/log/com.woodlegh.setup.log' 'false' 'userInput' 'Restart'
+            rm -rf /tmp/%NAME%/
+        else
+            echo "The script can only be run by 'tokenadmin' or 'woodmin'. Exiting..."
+            rm -rf /tmp/%NAME%/
+            exit 1
+        fi
 
   - Processor: Copier
     Arguments:

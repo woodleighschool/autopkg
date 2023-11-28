@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the currently logged in user
-CURRENT_USER=$(ls -l /dev/console | awk '{ print $3 }')
+CURRENT_USER=$(logname)
 
 # Define the settings file path
 SETTINGS_FILE="/Users/${CURRENT_USER}/Library/Application Support/Code/User/settings.json"

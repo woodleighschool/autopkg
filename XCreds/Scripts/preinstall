@@ -1,16 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
-# remove nomad login
-if [ -f /usr/local/bin/authchanger ]; then
-    authchanger -reset
-    rm /usr/local/bin/authchanger
-fi
-if [ -d "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle" ]; then
-    rm -rf "/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle"
-fi
+# remove nomad
+/usr/local/bin/authchanger -reset || :
+killall NoMAD || :
+
+rm -rf \
+	/Applications/NoMAD.app \
+	/Library/Security/SecurityAgentPlugins/NoMADLoginAD.bundle \
+	/Library/LaunchAgents/com.trusourcelabs.NoMAD.plist \
+	/Library/Managed\ Preferences/com.trusourcelabs.NoMAD.plist \
+	/Library/Managed\ Preferences/*/com.trusourcelabs.NoMAD.plist \
+	/usr/local/bin/authchanger \
+	/Users/*/Library/LaunchAgents/com.trusourcelabs.NoMAD.plist || :
+
+# Remove any empty directories.
+find \
+	'/Library/Managed Preferences' \
+	-depth -maxdepth 1 -type d -empty -delete 2>/dev/null || :
 
 # remove old xcreds
 killall XCreds
 if [ -d "/Applications/XCreds.app" ]; then
-    rm -rf "/Applications/XCreds.app"
+	rm -rf "/Applications/XCreds.app"
 fi

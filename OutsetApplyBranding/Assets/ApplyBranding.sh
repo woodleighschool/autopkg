@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Wait for Dock to be running
-while ! pgrep -x Dock >/dev/null; do
-	echo "Waiting for Dock..."
-	sleep 1
+until pgrep -xq "Dock"; do
+   sleep 5
 done
 
 # Remove all items from Dock
