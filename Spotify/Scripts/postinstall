@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Define the application path
+APP_PATH="/Applications/Spotify.app"
+
+# Remove existing application if it exists
+if [ -d "$APP_PATH" ]; then
+	# Gracefully quit the app if it is running
+	pkill -x "Spotify" && sleep 2
+
+	# Remove the app
+	rm -rf "$APP_PATH"
+	if [ $? -ne 0 ]; then
+		echo "Error removing Spotify."
+		exit 1
+	fi
+fi
+
+# Move the new version of the app into /Applications
+if [ "$(arch)" == "arm64" ]; then
+	NEW_APP_PATH="/tmp/Spotify/Spotify-ARM64.app"
+else
+	NEW_APP_PATH="/tmp/Spotify/Spotify-Intel.app"
+fi
+
+mv "$NEW_APP_PATH" "$APP_PATH"
+
+# Clean up
+if [ -d /tmp/Spotify ]; then
+	rm -rf /tmp/Spotify
+fi

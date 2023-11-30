@@ -9,16 +9,39 @@ Process:
     Arguments:
       dmg_path: "%pathname%"
 
+  - Processor: com.github.woodleighschool.processors/VersionSanitizer
+    Arguments:
+      pattern: "x.x.xx.xxxx"
+
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%"
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
       pkgdirs:
-        Applications: "0775"
+        tmp: "0777"
+
+  - Processor: com.github.woodleighschool.processors/FolderCreator
+    Arguments:
+      folders:
+        - path: "%pkgroot%/tmp/Spotify"
+          perms: "0755"
 
   - Processor: Copier
     Arguments:
-      source_path: "%pathname%/%app_name%"
-      destination_path: "%pkgroot%/Applications/%app_name%"
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-ARM64.dmg/%NAME%.app"
+      destination_path: "%pkgroot%/tmp/Spotify/%NAME%-ARM64.app"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-Intel.dmg/%NAME%.app"
+      destination_path: "%pkgroot%/tmp/Spotify/%NAME%-Intel.app"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
 
   - Processor: PkgCreator
     Arguments:
@@ -27,17 +50,14 @@ Process:
         version: "%version%"
         id: "%bundleid%"
         options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
         chown:
-          - path: Applications
+          - path: tmp
             user: root
-            group: admin
-
-#  - Processor: com.github.woodleighschool.processors/PkgSigner
-#    Arguments:
-#      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+            group: wheel
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%pkgroot%"
-        - "%pathname%"
+        - "%RECIPE_CACHE_DIR%/%NAME%"

@@ -7,13 +7,13 @@ Input:
 Process:
   - Processor: FlatPkgUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      destination_path: "%RECIPE_CACHE_DIR%/expand"
       flat_pkg_path: "%pathname%"
 
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/GoogleChrome.pkg/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/GoogleChrome.pkg/Payload"
 
   - Processor: PlistReader
     Arguments:
@@ -28,4 +28,4 @@ Process:
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpack"
-        - "%pathname%"
+        - "%RECIPE_CACHE_DIR%/expand"

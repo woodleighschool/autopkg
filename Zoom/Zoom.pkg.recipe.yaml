@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.GlobalProtect
-ParentRecipe: com.github.woodleighschool.download.GlobalProtect
+Identifier: com.github.woodleighschool.pkg.Zoom
+ParentRecipe: com.github.woodleighschool.download.Zoom
 
 Input:
-  NAME: GlobalProtect
+  NAME: Zoom
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -13,11 +13,11 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/gp.pkg/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/zoomus.pkg/Payload"
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unpack/Contents/Info.plist"
+      info_path: "%RECIPE_CACHE_DIR%/unpack/zoom.us.app"
 
   - Processor: PkgCopier
     Arguments:

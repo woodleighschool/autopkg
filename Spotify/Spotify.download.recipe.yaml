@@ -2,19 +2,32 @@ Identifier: com.github.woodleighschool.download.Spotify
 
 Input:
   NAME: Spotify
-  DOWNLOAD_URL: "https://download.scdn.co/SpotifyARM64.dmg"
 
 Process:
   - Processor: URLDownloader
     Arguments:
-      url: "%DOWNLOAD_URL%"
-      filename: "%NAME%.dmg"
+      url: "https://download.scdn.co/Spotify.dmg"
+      filename: "%NAME%-Intel.dmg"
+
+  - Processor: URLDownloader
+    Arguments:
+      url: "https://download.scdn.co/SpotifyARM64.dmg"
+      filename: "%NAME%-ARM64.dmg"
 
   - Processor: EndOfCheckPhase
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: "%pathname%/%NAME%.app"
+      input_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-Intel.dmg/%NAME%.app"
+      requirement: >-
+        identifier "com.spotify.client" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "2FNC3A47ZF"
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-ARM64.dmg/%NAME%.app"
       requirement: >-
         identifier "com.spotify.client" and anchor apple generic and
         certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and

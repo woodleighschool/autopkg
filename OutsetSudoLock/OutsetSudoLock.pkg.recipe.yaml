@@ -2,6 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetSudoLock
 
 Input:
   NAME: Outset SudoLock
+  version: "1.0"
 
 Process:
   - Processor: PkgRootCreator
@@ -31,8 +32,8 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%"
-        version: "1"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "com.woodleigh.outsetsudolock"
         options: purge_ds_store
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
@@ -40,10 +41,6 @@ Process:
           - path: usr
             user: root
             group: wheel
-
-  #  - Processor: com.github.woodleighschool.processors/PkgSigner
-  #    Arguments:
-  #      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
 
   - Processor: PathDeleter
     Arguments:

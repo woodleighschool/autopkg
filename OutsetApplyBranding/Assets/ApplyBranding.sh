@@ -2,7 +2,7 @@
 
 # Wait for Dock to be running
 until pgrep -xq "Dock"; do
-   sleep 5
+	sleep 5
 done
 
 # Remove all items from Dock

@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # Runs all Jamf recipes
-# Changes directory to ~/Library/AutoPkg/Receipts first
 
 # Change directory
-cd ~/Library/AutoPkg/Receipts
+cd ~/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg
 
 # Color codes
 RED='\033[0;31m'
