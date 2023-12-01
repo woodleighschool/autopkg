@@ -1,0 +1,45 @@
+Identifier: com.github.woodleighschool.pkg.Sophos
+ParentRecipe: com.github.woodleighschool.download.Sophos
+
+Input:
+  NAME: Sophos
+  version: "Network Installer"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0777"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/unzip"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/SophosInstall"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-netinst"
+        version: "1.0"
+        id: "com.sophos.installer"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        chown:
+          - path: tmp
+            user: root
+            group: wheel
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unzip"
+        - "%RECIPE_CACHE_DIR%/%NAME%"

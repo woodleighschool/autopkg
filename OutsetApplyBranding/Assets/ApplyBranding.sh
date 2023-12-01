@@ -1,14 +1,33 @@
 #!/bin/bash
 
-# Wait for Dock to be running
-until pgrep -xq "Dock"; do
-	sleep 5
+# Loop to check if a user is logged in
+while true; do
+	loggedInUser=$(stat -f%Su /dev/console)
+	if [[ "${loggedInUser}" != "root" ]]; then
+		break
+	fi
+	sleep 1
 done
 
-# Remove all items from Dock
-dockutil --remove all --no-restart
+# Loop to wait for Dock process
+while true; do
+	myUser=$(id -un)
+	dockcheck=$(ps -ef | grep -v 'grep' | grep /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock)
 
-# Array of applications to add to the Dock
+	if [[ -n "${dockcheck}" ]]; then
+		break
+	fi
+	sleep 1
+done
+
+# Setting up the dock array and user home directory
+IFS=$'\n'
+userHome=$(dscl . -read /Users/${loggedInUser} NFSHomeDirectory | awk '{print $2}')
+
+# Removing all items from the dock
+dockutil --remove all --no-restart "$userHome"
+sleep 2
+
 dockArray=(
 	"/System/Applications/Launchpad.app"
 	"/System/Applications/Mission Control.app"
@@ -23,13 +42,13 @@ dockArray=(
 	"/Applications/Self Service.app"
 )
 
-# Add applications to the Dock
-for app in "${dockArray[@]}"; do
-	dockutil --add "${app}" --no-restart
+# Adding items to the dock
+for line in ${dockArray[@]}; do
+	dockutil --add "$line" --no-restart "$userHome"
 done
 
-# Add additional items to the Dock
-dockutil --add '~/Downloads' --view grid --display folder
+dockutil --add "$userHome/Downloads" --view grid --display folder "$userHome"
+sudo killall Dock
 
-# Set the desktop wallpaper
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Library/Desktop Pictures/Woodleigh.jpg"'
+# Applying wallpaper
+launchctl asuser $(id -u "$loggedInUser") desktoppr /Library/Desktop\ Pictures/Woodleigh.jpg

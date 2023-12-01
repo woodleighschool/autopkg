@@ -1,0 +1,19 @@
+Identifier: com.github.woodleighschool.download.Sophos
+
+Input:
+  NAME: Sophos
+  DOWNLOAD_URL: "https://dzr-api-amzn-eu-west-1-9af7.api-upe.p.hmr.sophos.com/api/download/a51be3b1c689c4225374bdd797335f42/SophosInstall.zip"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.zip"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%.zip"
+      destination_path: "%RECIPE_CACHE_DIR%/unzip"
+      purge_destination: true

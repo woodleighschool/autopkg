@@ -1,10 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.XCreds
-ParentRecipe: com.github.woodleighschool.pkg.XCreds
+Identifier: com.github.woodleighschool.jamf.Sophos
+ParentRecipe: com.github.woodleighschool.pkg.Sophos
 
 Input:
-  NAME: XCreds
-  CATEGORY: New DEP
+  NAME: Sophos
+  CATEGORY: Utilities & Security
   POLICY_NAME: ALL - %NAME% - ALL
+  SELF_SERVICE_DESCRIPTION: >
+    By combining cutting-edge technologies, such as deep learning and endpoint detection and response, Intercept X delivers unmatched protection against unknown malware, exploits, and ransomware.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -14,41 +16,33 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_pkg: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
-        frequency: Ongoing
+        policy_category: Self Service
         trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        show: false
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: "%CATEGORY%"
+            display_in: true
+            feature_in: false
       maintenance:
-      files_processes:
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
+      icon: "%SELF_SERVICE_ICON%"
       policy_name: "%POLICY_NAME%"
-      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
+      policy_template: "%POLICY_TEMPLATE%"
       replace_policy: "True"
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
-    Arguments:
-      enabled: "true"
-      patch_softwaretitle: "%NAME%"
-      patch_name: "%NAME% - Force"
-      patch_template: "PolicyPatchTemplateForce.xml"
-      patch_icon_policy_name: "%POLICY_NAME%"
-      min_os: ""
-      kill_app_name: ""
-      kill_app_bundle_id: ""
-      replace_patch: True
+      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

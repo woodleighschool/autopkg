@@ -16,3 +16,26 @@ Process:
       pkg_category: "%CATEGORY%"
       pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
       replace_pkg: True
+
+  - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
+    Arguments:
+      general:
+        policy_name: "%POLICY_NAME%"
+        policy_category: New DEP
+        frequency: Ongoing
+        trigger_other: "%NAME%"
+      scope:
+        all_computers: true
+      self_service:
+        show: false
+      maintenance:
+      files_processes:
+      user_interaction:
+      output: "%RECIPE_CACHE_DIR%/%NAME%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_name: "%POLICY_NAME%"
+      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
+      replace_policy: "True"
+      pkg_name: "%NAME%"

@@ -1,0 +1,47 @@
+Identifier: com.github.woodleighschool.pkg.AdobeCreativeCloud
+
+Input:
+  NAME: Adobe Creative Cloud
+  version: "11.23"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0777"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/Installer"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/CCInstallerTemp"
+      overwrite: true
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: true
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.adobe.creativecloud"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        chown:
+          - path: tmp
+            user: root
+            group: wheel
+
+  - Processor: com.github.woodleighschool.processors/PkgSigner
+    Arguments:
+      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

@@ -12,6 +12,10 @@ Process:
       asset_regex: '[\S]+\.pkg'
       result_output_var_name: version
 
+  - Processor: com.github.woodleighschool.processors/VersionSanitizer
+    Arguments:
+      pattern: "x.x.x"
+
   - Processor: URLDownloader
     Arguments:
       filename: "%NAME%-%version%.pkg"

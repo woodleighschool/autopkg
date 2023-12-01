@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rm -rf \
+	/Applications/Sophos \
+	/usr/local/bin/SophosUpdate \
+	/Library/Application\ Support/Sophos* \
+	/Library/Sophos* \
+	/Library/Preferences/com.sophos.* \
+	/Library/Preferences/Logging/Subsystems/com.sophos.* \
+	/Library/LaunchAgents/com.sophos.* \
+	/Library/Frameworks/Sophos* \
+	/Library/LaunchDaemons/com.sophos.*
+
+chmod a+x /tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer
+chmod a+x /tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper
+/tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer --quiet
+rm -rf /tmp/SophosInstall/

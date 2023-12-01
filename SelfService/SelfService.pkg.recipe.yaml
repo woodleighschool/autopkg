@@ -1,0 +1,43 @@
+Identifier: com.github.woodleighschool.pkg.SelfService
+
+Input:
+  NAME: Self Service
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
+      overwrite: true
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.selfservice.installer"
+        options: purge_ds_store
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: com.github.woodleighschool.processors/PkgSigner
+    Arguments:
+      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"
