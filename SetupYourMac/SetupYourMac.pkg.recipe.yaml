@@ -26,7 +26,7 @@ Process:
         #!/bin/bash
         loggedInUser=$(stat -f%Su /dev/console)
         if [ "$loggedInUser" = "tokenadmin" ] || [ "$loggedInUser" = "woodmin" ]; then
-            /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/var/log/com.woodlegh.setup.log' 'false' 'userInput' 'Restart'
+            /tmp/%NAME%/SYM-Dialog.bash '' '' '' '/Library/Application Support/Woodleigh/com.woodleigh.setup.log' 'false' 'userInput' 'Restart'
             rm -rf /tmp/%NAME%/
         else
             dialog --icon warning --mini --title "Permission Denied" --message "You are not permitted to use this utility."
@@ -84,10 +84,6 @@ Process:
           - path: tmp
             user: root
             group: wheel
-
-  - Processor: com.github.woodleighschool.processors/PkgSigner
-    Arguments:
-      signing_cert: "Developer ID Installer: Woodleigh School (SMLKBTR495)"
 
   - Processor: PathDeleter
     Arguments:

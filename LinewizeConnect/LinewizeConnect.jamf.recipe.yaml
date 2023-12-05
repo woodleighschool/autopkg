@@ -1,12 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.Sophos
-ParentRecipe: com.github.woodleighschool.pkg.Sophos
+Identifier: com.github.woodleighschool.jamf.LinewizeConnect
+ParentRecipe: com.github.woodleighschool.pkg.LinewizeConnect
 
 Input:
-  NAME: Sophos
+  NAME: Linewize Connect
   CATEGORY: Utilities & Security
-  POLICY_NAME: ALL - %NAME% - ALL
+  POLICY_NAME: ALL - %NAME% - STUDENTS
   SELF_SERVICE_DESCRIPTION: >
-    By combining cutting-edge technologies, such as deep learning and endpoint detection and response, Intercept X delivers unmatched protection against unknown malware, exploits, and ransomware.
+    Installs Family Zone on the machine....
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -25,7 +25,13 @@ Process:
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: false
+        include:
+          computer_groups:
+            - id: 31
+              name: "All Students"
+            - id: 46
+              name: "Spare Machines"
       self_service:
         show: true
         display_name: "%NAME%"

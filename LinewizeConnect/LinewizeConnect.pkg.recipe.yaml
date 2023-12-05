@@ -1,0 +1,55 @@
+Identifier: com.github.woodleighschool.pkg.LinewizeConnect
+
+Input:
+  NAME: Linewize Connect
+  version: "3.6.2"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0777"
+
+  - Processor: com.github.woodleighschool.processors/FolderCreator
+    Arguments:
+      folders:
+        - path: "%pkgroot%/tmp/ConnectInstall"
+          perms: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/auth_agent.woodleigh_vic_familyzone.pkg"
+      destination_path: "%pkgroot%/tmp/ConnectInstall/auth_agent.woodleigh_vic_familyzone.pkg"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/Connect-3.6.2.pkg"
+      destination_path: "%pkgroot%/tmp/ConnectInstall/Connect-3.6.2.pkg"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.woodleigh.connect.installer"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%pkgroot%"
+        chown:
+          - path: tmp
+            user: root
+            group: wheel
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

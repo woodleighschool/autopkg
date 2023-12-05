@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# uninstall previous installation
+UNINSTALLER="/Applications/FamilyZone/MobileZoneAgent/uninstall.app/Contents/MacOS/osx-x86_64"
+if [[ -f "${UNINSTALLER}" ]]; then
+	"${UNINSTALLER}" --mode unattended
+fi
+
+# install
+/usr/sbin/installer -pkg /tmp/ConnectInstall/Connect-3.6.2.pkg -target /
+/usr/sbin/installer -pkg /tmp/ConnectInstall/auth_agent.woodleigh_vic_familyzone.pkg -target /
+
+# cleanup after ourselves
+rm -rf /tmp/ConnectInstall

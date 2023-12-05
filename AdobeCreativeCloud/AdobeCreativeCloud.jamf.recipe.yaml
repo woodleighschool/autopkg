@@ -1,10 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.OutsetSudoLock
-ParentRecipe: com.github.woodleighschool.pkg.OutsetSudoLock
+Identifier: com.github.woodleighschool.jamf.AdobeCreativeCloud
+ParentRecipe: com.github.woodleighschool.pkg.AdobeCreativeCloud
 
 Input:
-  NAME: Outset SudoLock
-  CATEGORY: New DEP
+  NAME: Adobe Creative Cloud
+  CATEGORY: Creative & Design
   POLICY_NAME: ALL - %NAME% - ALL
+  SELF_SERVICE_DESCRIPTION: >
+    Enjoy the collection of creative desktop and mobile tools in Adobe Creative Cloud including Photoshop, Illustrator, InDesign, Premiere Pro, and more.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -14,30 +16,36 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_pkg: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
+        policy_category: Self Service
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        show: false
+        show: true
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: "%CATEGORY%"
+            display_in: true
+            feature_in: false
       maintenance:
       files_processes:
-        run_command: "/tmp/%NAME%/start.sh"
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
+      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

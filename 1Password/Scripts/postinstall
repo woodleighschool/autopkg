@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Define the application path
+APP_PATH="/Applications/1Password.app"
+
+# Remove existing application if it exists
+if [ -d "$APP_PATH" ]; then
+	# Gracefully quit the app if it is running
+	pkill -x "1Password" && sleep 2
+
+	# Remove the app
+	rm -rf "$APP_PATH"
+	if [ $? -ne 0 ]; then
+		echo "Error removing 1Password."
+		exit 1
+	fi
+fi
+
+# Move the new version of the app into /Applications
+if [ "$(arch)" == "arm64" ]; then
+	NEW_APP_PATH="/tmp/1passwordtmp/1Password-ARM64.app"
+else
+	NEW_APP_PATH="/tmp/1passwordtmp/1Password-Intel.app"
+fi
+
+mv "$NEW_APP_PATH" "$APP_PATH"
+
+# Clean up
+if [ -d /tmp/1passwordtmp ]; then
+	rm -rf /tmp/1passwordtmp
+fi

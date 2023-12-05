@@ -39,3 +39,16 @@ Process:
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       pkg_name: "%NAME%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "true"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
+      patch_icon_policy_name: ""
+      pkg_name: "%NAME%-%version%.pkg"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True

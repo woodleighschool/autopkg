@@ -9,24 +9,24 @@ while true; do
 	sleep 1
 done
 
-# Loop to wait for Dock process
-while true; do
-	myUser=$(id -un)
-	dockcheck=$(ps -ef | grep -v 'grep' | grep /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock)
-
-	if [[ -n "${dockcheck}" ]]; then
-		break
-	fi
+# Wait for dock to start
+while ! pgrep -x Dock >/dev/null; do
 	sleep 1
 done
 
-# Setting up the dock array and user home directory
-IFS=$'\n'
-userHome=$(dscl . -read /Users/${loggedInUser} NFSHomeDirectory | awk '{print $2}')
-
 # Removing all items from the dock
-dockutil --remove all --no-restart "$userHome"
-sleep 2
+/usr/local/bin/dockutil --remove all --no-restart "${HOME}"
+sleep 5
+
+# find the correct teams version
+if [ -d "/Applications/Microsoft Teams (work or school).app" ]; then
+	TEAMSPATH="/Applications/Microsoft Teams (work or school).app"
+elif [ -d "/Applications/Microsoft Teams classic.app" ]; then
+	TEAMSPATH="/Applications/Microsoft Teams classic.app"
+fi
+
+# Setting up the dock array
+IFS=$'\n'
 
 dockArray=(
 	"/System/Applications/Launchpad.app"
@@ -37,18 +37,25 @@ dockArray=(
 	"/Applications/Microsoft Excel.app"
 	"/Applications/Microsoft Outlook.app"
 	"/Applications/Microsoft OneNote.app"
-	"/Applications/Microsoft Teams classic.app"
+	"${TEAMSPATH}"
 	"/System/Applications/System Settings.app"
 	"/Applications/Self Service.app"
 )
 
 # Adding items to the dock
+echo "Applying Dock"
 for line in ${dockArray[@]}; do
-	dockutil --add "$line" --no-restart "$userHome"
+	sleep 0.1
+	/usr/local/bin/dockutil --add "$line" --no-restart "${HOME}" >/dev/null
 done
 
-dockutil --add "$userHome/Downloads" --view grid --display folder "$userHome"
-sudo killall Dock
+# customise dock, hide recents, minimise window into application
+defaults write com.apple.dock minimize-to-application -bool true
+defaults write com.apple.dock show-recents -bool false
+
+# restart the dock, and add downloads folder
+/usr/local/bin/dockutil --add "${HOME}/Downloads" --view grid --display folder "${HOME}" >/dev/null && echo "Restarting Dock"
 
 # Applying wallpaper
-launchctl asuser $(id -u "$loggedInUser") desktoppr /Library/Desktop\ Pictures/Woodleigh.jpg
+echo "Applying Wallpaper"
+/usr/local/bin/desktoppr "/Library/Desktop Pictures/Woodleigh.jpg"

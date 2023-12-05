@@ -6,17 +6,15 @@ CURRENT_USER=$(logname)
 # Define the settings file path
 SETTINGS_FILE="/Users/${CURRENT_USER}/Library/Application Support/Code/User/settings.json"
 
-# Check if the settings file already exists
-if [ ! -f "${SETTINGS_FILE}" ]; then
-	# Create the directory for settings file if it doesn't exist
-	mkdir -p "$(dirname "${SETTINGS_FILE}")"
+# Create the directory for settings file if it doesn't exist
+mkdir -p "$(dirname "${SETTINGS_FILE}")"
 
-	# Write the settings.json content
-	cat >"${SETTINGS_FILE}" <<EOF
+# Write the settings.json content
+cat >"${SETTINGS_FILE}" <<EOF
 {
     "workbench.iconTheme": "eq-material-theme-icons-palenight",
     "security.workspace.trust.enabled": false,
-    "workbench.colorTheme": "Community Material Theme Palenight High Contrast",
+    "workbench.colorTheme": "Material Theme Palenight High Contrast",
     "explorer.confirmDelete": false,
     "editor.accessibilitySupport": "off",
     "editor.insertSpaces": false,
@@ -34,13 +32,12 @@ if [ ! -f "${SETTINGS_FILE}" ]; then
 }
 EOF
 
-	# Fix permissions recursively on the Code folder
-	chown -R "${CURRENT_USER}:staff" "/Users/${CURRENT_USER}/Library/Application Support/Code"
-fi
+# Fix permissions recursively on the Code folder
+chown -R "${CURRENT_USER}:staff" "/Users/${CURRENT_USER}/Library/Application Support/Code"
 
 # List of extensions to install
 EXTENSIONS=(
-	"Equinusocio.vsc-community-material-theme"
+	"equinusocio.vsc-material-theme"
 	"equinusocio.vsc-material-theme-icons"
 	"ms-python.autopep8"
 	"ms-python.python"
