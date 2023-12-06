@@ -22,19 +22,19 @@ Process:
   - Processor: com.github.woodleighschool.processors/FolderCreator
     Arguments:
       folders:
-        - path: "%pkgroot%/tmp/Spotify"
+        - path: "%pkgroot%/tmp/spotifytemp"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-ARM64.dmg/%NAME%.app"
-      destination_path: "%pkgroot%/tmp/Spotify/%NAME%-ARM64.app"
+      destination_path: "%pkgroot%/tmp/spotifytemp/%NAME%-ARM64.app"
       overwrite: True
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-Intel.dmg/%NAME%.app"
-      destination_path: "%pkgroot%/tmp/Spotify/%NAME%-Intel.app"
+      destination_path: "%pkgroot%/tmp/spotifytemp/%NAME%-Intel.app"
       overwrite: True
 
   - Processor: Copier

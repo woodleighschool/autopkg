@@ -11,7 +11,7 @@ rm -rf \
 	/Library/Frameworks/Sophos* \
 	/Library/LaunchDaemons/com.sophos.*
 
-chmod a+x /tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer
-chmod a+x /tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper
-/tmp/SophosInstall/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer --quiet
-rm -rf /tmp/SophosInstall/
+chmod a+x /tmp/sophostemp/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer
+chmod a+x /tmp/sophostemp/Sophos\ Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper
+/tmp/sophostemp/Sophos\ Installer.app/Contents/MacOS/Sophos\ Installer --quiet
+rm -rf /tmp/sophostemp/

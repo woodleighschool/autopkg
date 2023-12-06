@@ -13,12 +13,12 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
       overwrite: true
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Applications/%NAME%.app"
+      info_path: "%pkgroot%/Applications/%NAME%.app"
 
   - Processor: PkgCreator
     Arguments:
@@ -27,7 +27,7 @@ Process:
         version: "%version%"
         id: "com.selfservice.installer"
         options: purge_ds_store
-        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        pkgroot: "%pkgroot%"
         chown:
           - path: Applications
             user: root

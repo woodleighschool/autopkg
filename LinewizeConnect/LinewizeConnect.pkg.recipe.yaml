@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.pkg.LinewizeConnect
 
 Input:
   NAME: Linewize Connect
-  version: "3.6.2"
+  version: "3.6.4"
 
 Process:
   - Processor: PkgRootCreator
@@ -14,19 +14,19 @@ Process:
   - Processor: com.github.woodleighschool.processors/FolderCreator
     Arguments:
       folders:
-        - path: "%pkgroot%/tmp/ConnectInstall"
+        - path: "%pkgroot%/tmp/connecttemp"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/auth_agent.woodleigh_vic_familyzone.pkg"
-      destination_path: "%pkgroot%/tmp/ConnectInstall/auth_agent.woodleigh_vic_familyzone.pkg"
+      destination_path: "%pkgroot%/tmp/connecttemp/auth_agent.woodleigh_vic_familyzone.pkg"
       overwrite: True
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Assets/Connect-3.6.2.pkg"
-      destination_path: "%pkgroot%/tmp/ConnectInstall/Connect-3.6.2.pkg"
+      source_path: "%RECIPE_DIR%/Assets/Connect-%version%.pkg"
+      destination_path: "%pkgroot%/tmp/connecttemp/Connect-%version%.pkg"
       overwrite: True
 
   - Processor: Copier

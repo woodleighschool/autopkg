@@ -3,7 +3,6 @@ ParentRecipe: com.github.woodleighschool.download.SetupYourMac
 
 Input:
   NAME: SetupYourMac
-  version: "1.0"
 
 Process:
   - Processor: PkgRootCreator
@@ -15,12 +14,12 @@ Process:
   - Processor: com.github.woodleighschool.processors/FolderCreator
     Arguments:
       folders:
-        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%"
+        - path: "%pkgroot%/tmp/%NAME%"
           perms: "0755"
 
   - Processor: FileCreator
     Arguments:
-      file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/start.sh"
+      file_path: "%pkgroot%/tmp/%NAME%/start.sh"
       file_mode: "0755"
       file_content: |
         #!/bin/bash
@@ -38,25 +37,25 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Setup-Your-Mac-via-Dialog.bash"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+      destination_path: "%pkgroot%/tmp/%NAME%/SYM-Dialog.bash"
       overwrite: true
 
   - Processor: com.github.woodleighschool.processors/Permer
     Arguments:
       chown:
-        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+        - path: "%pkgroot%/tmp/%NAME%/SYM-Dialog.bash"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Templates"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/Templates"
+      destination_path: "%pkgroot%/tmp/%NAME%/Templates"
       overwrite: true
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%/Icons"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/Icons"
+      destination_path: "%pkgroot%/tmp/%NAME%/Icons"
       overwrite: true
 
   - Processor: Copier
@@ -69,7 +68,7 @@ Process:
     Arguments:
       variable_name: "scriptVersion"
       output_variable: "version"
-      file_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/tmp/%NAME%/SYM-Dialog.bash"
+      file_path: "%pkgroot%/tmp/%NAME%/SYM-Dialog.bash"
 
   - Processor: PkgCreator
     Arguments:
@@ -79,7 +78,7 @@ Process:
         id: "com.woodleighschool.setupyourmac"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        pkgroot: "%pkgroot%"
         chown:
           - path: tmp
             user: root

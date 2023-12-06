@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetApplyBranding
 
 Input:
   NAME: Outset Apply Branding
-  version: "1.0"
+  version: "1.2"
 
 Process:
   - Processor: PkgRootCreator
@@ -15,27 +15,27 @@ Process:
   - Processor: com.github.woodleighschool.processors/FolderCreator
     Arguments:
       folders:
-        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/usr/local/outset/login-once"
+        - path: "%pkgroot%/usr/local/outset/login-once"
           perms: "0755"
-        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Library/Desktop Pictures"
+        - path: "%pkgroot%/Library/Desktop Pictures"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/ApplyBranding.sh"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/usr/local/outset/login-once/ApplyBranding.sh"
+      destination_path: "%pkgroot%/usr/local/outset/login-once/ApplyBranding.sh"
       overwrite: true
 
   - Processor: com.github.woodleighschool.processors/Permer
     Arguments:
       chown:
-        - path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/usr/local/outset/login-once/ApplyBranding.sh"
+        - path: "%pkgroot%/usr/local/outset/login-once/ApplyBranding.sh"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/Woodleigh.jpg"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/ROOT/Library/Desktop Pictures/Woodleigh.jpg"
+      destination_path: "%pkgroot%/Library/Desktop Pictures/Woodleigh.jpg"
       overwrite: true
 
   - Processor: PkgCreator
@@ -45,7 +45,7 @@ Process:
         version: "%version%"
         id: "com.woodleigh.outsetapplybranding"
         options: purge_ds_store
-        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        pkgroot: "%pkgroot%"
         chown:
           - path: usr
             user: root

@@ -46,5 +46,5 @@ EXTENSIONS=(
 
 # Install each extension
 for ext in "${EXTENSIONS[@]}"; do
-	su ${CURRENT_USER} -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
+	su "${CURRENT_USER}" -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
 done

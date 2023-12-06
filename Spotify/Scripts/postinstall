@@ -9,8 +9,7 @@ if [ -d "$APP_PATH" ]; then
 	pkill -x "Spotify" && sleep 2
 
 	# Remove the app
-	rm -rf "$APP_PATH"
-	if [ $? -ne 0 ]; then
+	if ! rm -rf "$APP_PATH"; then
 		echo "Error removing Spotify."
 		exit 1
 	fi
@@ -18,14 +17,14 @@ fi
 
 # Move the new version of the app into /Applications
 if [ "$(arch)" == "arm64" ]; then
-	NEW_APP_PATH="/tmp/Spotify/Spotify-ARM64.app"
+	NEW_APP_PATH="/tmp/spotifytemp/Spotify-ARM64.app"
 else
-	NEW_APP_PATH="/tmp/Spotify/Spotify-Intel.app"
+	NEW_APP_PATH="/tmp/spotifytemp/Spotify-Intel.app"
 fi
 
 mv "$NEW_APP_PATH" "$APP_PATH"
 
 # Clean up
-if [ -d /tmp/Spotify ]; then
-	rm -rf /tmp/Spotify
+if [ -d /tmp/spotifytemp ]; then
+	rm -rf /tmp/spotifytemp
 fi

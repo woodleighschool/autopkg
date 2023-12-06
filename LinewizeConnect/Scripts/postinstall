@@ -7,8 +7,8 @@ if [[ -f "${UNINSTALLER}" ]]; then
 fi
 
 # install
-/usr/sbin/installer -pkg /tmp/ConnectInstall/Connect-3.6.2.pkg -target /
-/usr/sbin/installer -pkg /tmp/ConnectInstall/auth_agent.woodleigh_vic_familyzone.pkg -target /
+/usr/sbin/installer -pkg /tmp/connecttemp/Connect-3.6.4.pkg -target /
+/usr/sbin/installer -pkg /tmp/connecttemp/auth_agent.woodleigh_vic_familyzone.pkg -target /
 
 # cleanup after ourselves
-rm -rf /tmp/ConnectInstall
+rm -rf /tmp/connecttemp
