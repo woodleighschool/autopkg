@@ -36,6 +36,7 @@ Process:
             feature_in: true
       maintenance:
       files_processes:
+        run_command: "/tmp/SetupYourMac/start.sh"
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 

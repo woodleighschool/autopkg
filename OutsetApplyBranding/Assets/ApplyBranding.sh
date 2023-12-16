@@ -1,22 +1,27 @@
 #!/bin/bash
 
 # Loop to check if a user is logged in
-while true; do
-	loggedInUser=$(stat -f%Su /dev/console)
-	if [[ "${loggedInUser}" != "root" ]]; then
-		break
-	fi
+until pgrep -q -x "Finder" && pgrep -q -x "Dock"; do
 	sleep 1
 done
 
-# Wait for dock to start
-while ! pgrep -x Dock >/dev/null; do
-	sleep 1
-done
+sleep 3
+
+##
+# Set wallpaper
+##
+
+echo "Applying Wallpaper"
+/usr/local/bin/desktoppr "/Library/Desktop Pictures/Woodleigh.jpg"
+
+##
+# Set Dock
+##
 
 # Removing all items from the dock
+echo "Clearing Dock"
 /usr/local/bin/dockutil --remove all --no-restart "${HOME}"
-sleep 5
+sleep 3
 
 # find the correct teams version
 if [ -d "/Applications/Microsoft Teams (work or school).app" ]; then
@@ -44,18 +49,17 @@ dockArray=(
 
 # Adding items to the dock
 echo "Applying Dock"
-for line in ${dockArray[@]}; do
-	sleep 0.1
-	/usr/local/bin/dockutil --add "$line" --no-restart "${HOME}" >/dev/null
+for line in "${dockArray[@]}"; do
+	/usr/local/bin/dockutil --add "$line" --no-restart "${HOME}"
+	sleep 0.2
 done
 
 # customise dock, hide recents, minimise window into application
 defaults write com.apple.dock minimize-to-application -bool true
 defaults write com.apple.dock show-recents -bool false
 
-# restart the dock, and add downloads folder
-/usr/local/bin/dockutil --add "${HOME}/Downloads" --view grid --display folder "${HOME}" >/dev/null && echo "Restarting Dock"
+# add downloads folder
+/usr/local/bin/dockutil --add "${HOME}/Downloads" --view grid --display folder "${HOME}"
 
-# Applying wallpaper
-echo "Applying Wallpaper"
-/usr/local/bin/desktoppr "/Library/Desktop Pictures/Woodleigh.jpg"
+echo "Restarting Dock"
+killall Dock

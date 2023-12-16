@@ -12,24 +12,25 @@ mkdir -p "$(dirname "${SETTINGS_FILE}")"
 # Write the settings.json content
 cat >"${SETTINGS_FILE}" <<EOF
 {
-    "workbench.iconTheme": "eq-material-theme-icons-palenight",
-    "security.workspace.trust.enabled": false,
-    "workbench.colorTheme": "Material Theme Palenight High Contrast",
-    "explorer.confirmDelete": false,
-    "editor.accessibilitySupport": "off",
-    "editor.insertSpaces": false,
-    "editor.detectIndentation": false,
-    "explorer.confirmDragAndDrop": false,
-    "[python]": {
-        "editor.formatOnType": true,
-        "editor.defaultFormatter": "ms-python.autopep8"
-    },
-    "workbench.startupEditor": "none",
-    "terminal.integrated.enableMultiLinePasteWarning": false,
-	"http.proxyStrictSSL": false,
-	"editor.fontLigatures": false,
-	"python.defaultInterpreterPath": "/usr/local/bin/python3"
+  "workbench.iconTheme": "eq-material-theme-icons-palenight",
+  "security.workspace.trust.enabled": false,
+  "redhat.telemetry.enabled": true,
+  "explorer.confirmDelete": false,
+  "editor.accessibilitySupport": "off",
+  "materialTheme.accent": "Purple",
+  "editor.insertSpaces": false,
+  "editor.detectIndentation": false,
+  "explorer.confirmDragAndDrop": false,
+  "settingsSync.ignoredSettings": [],
+  "workbench.startupEditor": "none",
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "window.restoreWindows": "none",
+  "workbench.colorTheme": "Material Theme Palenight High Contrast",
+  "http.proxyStrictSSL": false,
+  "python.defaultInterpreterPath": "/usr/local/bin/python3.12",
+  "python.experiments.optInto": []
 }
+
 EOF
 
 # Fix permissions recursively on the Code folder

@@ -53,8 +53,8 @@
 			</reminders>
 		</notifications>
 		<deadlines>
-			<deadline_enabled>true</deadline_enabled>
-			<deadline_period>1</deadline_period>
+			<deadline_enabled>false</deadline_enabled>
+			<deadline_period>7</deadline_period>
 		</deadlines>
 		<grace_period>
 			<grace_period_duration>60</grace_period_duration>

@@ -1,12 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.Zoom
-ParentRecipe: com.github.woodleighschool.pkg.Zoom
+Identifier: com.github.woodleighschool.jamf.MicrosoftRemoteDesktop
+ParentRecipe: com.github.woodleighschool.download.MicrosoftRemoteDesktop
 
 Input:
-  NAME: Zoom
-  CATEGORY: Applications
-  POLICY_NAME: ALL - %NAME% - ALL
+  NAME: Microsoft Remote Desktop
+  CATEGORY: Productivity & Office
+  POLICY_NAME: ALL - %NAME% - STAFF
   SELF_SERVICE_DESCRIPTION: >
-    Zoom is a cloud-based video conferencing platform that can be used for video conferencing meetings, audio conferencing, webinars, meeting recordings, and live chat.
+    Use Microsoft Remote Desktop for Mac to connect to Azure Virtual Desktop, Windows 365, admin-provided virtual apps and desktops, or remote PCs. With Microsoft Remote Desktop, you can be productive no matter where you are.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -19,13 +19,20 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
+      version: "%shortversion%"
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Self Service
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: false
+        include:
+          departments:
+            - id: 11
+              name: "Staff"
+            - id: 21
+              name: "IT"
       self_service:
         show: true
         display_name: "%NAME%"
@@ -47,17 +54,17 @@ Process:
       replace_policy: "True"
       replace_icon: "True"
 
-#  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
-#    Arguments:
-#      enabled: "true"
-#      patch_softwaretitle: "%NAME%"
-#      patch_name: "%NAME% - Notify"
-#      patch_template: "PolicyPatchTemplateNotify.xml"
-#      patch_icon_policy_name: "%POLICY_NAME%"
-#      min_os: ""
-#      kill_app_name: ""
-#      kill_app_bundle_id: ""
-#      replace_patch: True
+  #  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+  #    Arguments:
+  #      enabled: "true"
+  #      patch_softwaretitle: "%NAME%"
+  #      patch_name: "%NAME% - Notify"
+  #      patch_template: "PolicyPatchTemplateNotify.xml"
+  #      patch_icon_policy_name: "%POLICY_NAME%"
+  #      min_os: ""
+  #      kill_app_name: ""
+  #      kill_app_bundle_id: ""
+  #      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

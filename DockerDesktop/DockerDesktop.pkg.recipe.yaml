@@ -21,6 +21,12 @@ Process:
       destination_path: "%pkgroot%/Applications/%app_name%"
       overwrite: true
 
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+
   - Processor: PkgCreator
     Arguments:
       pkg_request:
@@ -28,6 +34,8 @@ Process:
         version: "%version%"
         id: "%bundleid%"
         options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%pkgroot%"
         chown:
           - path: Applications
             user: root
