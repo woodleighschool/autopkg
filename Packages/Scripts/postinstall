@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ "$(arch)" == "arm64" ]; then
+	PACKAGES="/tmp/packagestemp/ARM64"
+else
+	PACKAGES="/tmp/packagestemp/X86_64"
+fi
+
+cp -f "${PACKAGES}"/* /usr/local/bin/
+
+# Clean up
+if [ -d /tmp/packagestemp ]; then
+	rm -rf /tmp/packagestemp
+fi

@@ -1,0 +1,55 @@
+Identifier: com.github.woodleighschool.pkg.Packages
+
+Input:
+  NAME: Packages
+  version: "1.0"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0777"
+
+  - Processor: com.github.woodleighschool.processors/FolderCreator
+    Arguments:
+      folders:
+        - path: "%pkgroot%/tmp/packagestemp"
+          perms: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Packages/ARM64"
+      destination_path: "%pkgroot%/tmp/packagestemp/ARM64"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Packages/X86_64"
+      destination_path: "%pkgroot%/tmp/packagestemp/X86_64"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.woodleigh.packages"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        chown:
+          - path: tmp
+            user: root
+            group: wheel
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"
