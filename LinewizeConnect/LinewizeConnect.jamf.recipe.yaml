@@ -4,7 +4,7 @@ ParentRecipe: com.github.woodleighschool.pkg.LinewizeConnect
 Input:
   NAME: Linewize Connect
   CATEGORY: Utilities & Security
-  POLICY_NAME: ALL - %NAME% - STUDENTS
+  POLICY_NAME: ALL - %NAME% - STUDENTS|SHARED
   SELF_SERVICE_DESCRIPTION: >
     Installs Family Zone on the machine....
 
@@ -21,7 +21,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: Self Service
+        policy_category: Applications
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
@@ -30,8 +30,8 @@ Process:
           computer_groups:
             - id: 31
               name: "All Students"
-            - id: 46
-              name: "Spare Machines"
+            - id: 193
+              name: "Shared MacBooks"
       self_service:
         show: true
         display_name: "%NAME%"

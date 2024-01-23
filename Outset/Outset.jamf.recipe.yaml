@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.Outset
 
 Input:
   NAME: Outset
-  CATEGORY: New DEP
+  CATEGORY: Applications
   POLICY_NAME: ALL - %NAME% - ALL
 
 Process:
@@ -21,7 +21,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
+        policy_category: Applications
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
@@ -32,6 +32,14 @@ Process:
       files_processes:
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: "%NAME%.png"
+      policy_name: "%POLICY_NAME%"
+      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
+      replace_policy: "True"
+      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:
@@ -45,3 +53,5 @@ Process:
       kill_app_name: ""
       kill_app_bundle_id: ""
       replace_patch: True
+      
+# used in prestage, so no package cleanup

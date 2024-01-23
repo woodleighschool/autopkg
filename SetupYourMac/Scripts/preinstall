@@ -1,5 +1,0 @@
-#!/bin/sh
-
-if [ -d /tmp/SetupYourMac ]; then
-	rm -rf /tmp/SetupYourMac
-fi

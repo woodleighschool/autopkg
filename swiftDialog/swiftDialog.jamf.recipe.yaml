@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.download.swiftDialig
 
 Input:
   NAME: swiftDialog
-  CATEGORY: New DEP
+  CATEGORY: Applications
   POLICY_NAME: ALL - %NAME% - ALL
 
 Process:
@@ -21,7 +21,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
+        policy_category: Applications
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
@@ -52,3 +52,5 @@ Process:
       kill_app_name: ""
       kill_app_bundle_id: ""
       replace_patch: True
+
+# used in prestage, so no package cleanup

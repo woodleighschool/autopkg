@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.pkg.XCreds
 
 Input:
   NAME: XCreds
-  CATEGORY: New DEP
+  CATEGORY: Applications
   POLICY_NAME: ALL - %NAME% - ALL
 
 Process:
@@ -20,7 +20,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: New DEP
+        policy_category: Applications
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:

@@ -24,7 +24,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: Self Service
+        policy_category: Applications
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:

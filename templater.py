@@ -58,7 +58,7 @@ Process:
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: Self Service
+        policy_category: Applications
         trigger_other: "%NAME%"
       scope:
         all_computers: true

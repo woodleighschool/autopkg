@@ -57,7 +57,7 @@ Process:
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       policy_name: ALL - %NAME% - ALL
-      policy_category: Self Service
+      policy_category: Applications
       install_button_text: "test"
       scope:
         all_computers: false
