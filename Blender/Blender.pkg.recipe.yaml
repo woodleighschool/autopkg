@@ -1,0 +1,39 @@
+Identifier: com.github.woodleighschool.pkg.Blender
+ParentRecipe: com.github.woodleighschool.download.Blender
+
+Input:
+  NAME: Blender
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: "%pathname%"
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%pathname%/%app_name%"
+      destination_path: "%pkgroot%/Applications/%app_name%"
+      overwrite: true
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "%bundleid%"
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

@@ -1,51 +1,75 @@
 import os
 
-# Function to create a directory
-def create_directory(dir_name):
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    else:
-        print(f"Directory {dir_name} already exists.")
-
 # Function to create a file with given content
 def create_file(file_path, content):
     with open(file_path, "w") as file:
         file.write(content)
 
-# Main script
-def main():
-    app_name = input(
-        "Enter the application name (e.g., 'Autodesk Fusion 360'): ").strip()
-    dir_name = app_name.replace(" ", "")
-    create_directory(dir_name)
+# Take user input for App name
+app_name = input(
+    "Enter the application name (e.g., 'Autodesk Fusion 360'): ").strip()
+# Create recipe directory
+dir_name = app_name.replace(" ", "")
+if not os.path.exists(dir_name):
+    os.makedirs(dir_name)
+else:
+    print(f"Directory {dir_name} already exists.")
 
-    # Content for AutodeskFusion360.pkg.recipe.yaml
-    pkg_recipe_content = f"""Identifier: com.github.woodleighschool.pkg.{dir_name}
+# Write content to yaml's
+'''
+Content for Content for .pkg.recipe.yaml
+'''
+pkg_recipe_content = f"""
+Identifier: com.github.woodleighschool.pkg.{dir_name}
 ParentRecipe: com.github.woodleighschool.download.{dir_name}
 
 Input:
   NAME: {app_name}
 
 Process:
-"""
-    create_file(os.path.join(
-        dir_name, f"{dir_name}.pkg.recipe.yaml"), pkg_recipe_content)
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/expand"
+      flat_pkg_path: "%pathname%"
 
-    # Content for AutodeskFusion360.jamf.recipe.yaml
-    jamf_recipe_content = f"""Identifier: com.github.woodleighschool.jamf.{dir_name}
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/<Name>.pkg/Payload"
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/unpack/%NAME%.app"
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpack"
+        - "%RECIPE_CACHE_DIR%/expand"
+"""
+create_file(os.path.join(
+    dir_name, f"{dir_name}.pkg.recipe.yaml"), pkg_recipe_content)
+
+'''
+Content for .jamf.recipe.yaml
+'''
+jamf_recipe_content = f"""
+Identifier: com.github.woodleighschool.jamf.{dir_name}
 ParentRecipe: com.github.woodleighschool.pkg.{dir_name}
 
 Input:
   NAME: {app_name}
-  CATEGORY: <Category>
+  CATEGORY: <Main Category>
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
     <Description>
 
-    Version: %version%
-
 Process:
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: "%CATEGORY%"
@@ -59,43 +83,57 @@ Process:
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Applications
+        frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
         all_computers: true
       self_service:
-        install_button_text: "Install"
-        reinstall_button_text: "Reinstall"
+        show: true
         display_name: "%NAME%"
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: false
+            feature_in: true
       maintenance:
-        recon: true
+      files_processes:
       user_interaction:
-        message_start: "%NAME% is being installed."
-        message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-      
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%SELF_SERVICE_ICON%"
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
-      policy_template: "%POLICY_TEMPLATE%"
+      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       replace_icon: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "true"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Notify"
+      patch_template: "PolicyPatchTemplateNotify.xml"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
       versions_to_keep: 1
-"""
-    create_file(os.path.join(
-        dir_name, f"{dir_name}.jamf.recipe.yaml"), jamf_recipe_content)
 
-    # Content for AutodeskFusion360.download.recipe.yaml
-    download_recipe_content = f"""Identifier: com.github.woodleighschool.download.{dir_name}
+"""
+create_file(os.path.join(
+    dir_name, f"{dir_name}.jamf.recipe.yaml"), jamf_recipe_content)
+
+'''
+Content for .download.recipe.yaml
+'''
+download_recipe_content = f"""
+Identifier: com.github.woodleighschool.download.{dir_name}
 
 Input:
   NAME: {app_name}
@@ -113,9 +151,5 @@ Process:
     Arguments:
       input_path: "%pathname%"
 """
-    create_file(os.path.join(
-        dir_name, f"{dir_name}.download.recipe.yaml"), download_recipe_content)
-
-
-if __name__ == "__main__":
-    main()
+create_file(os.path.join(
+    dir_name, f"{dir_name}.download.recipe.yaml"), download_recipe_content)

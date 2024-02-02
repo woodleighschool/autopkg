@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-    <key>recipes</key>
-    <array>
-        <string>com.github.woodleighschool.jamf.MicrosoftExcel</string>
-        <string>com.github.woodleighschool.jamf.MinecraftEducation</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftOutlook</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftOneNote</string>
-        <string>com.github.woodleighschool.jamf.DockerDesktop</string>
-        <string>com.github.woodleighschool.jamf.UltimakerCura</string>
-        <string>com.github.woodleighschool.jamf.Spotify</string>
-        <string>com.github.woodleighschool.jamf.CricutDesignSpace</string>
-        <string>com.github.woodleighschool.jamf.AutodeskFusion360</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftPowerPoint</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftWord</string>
-        <string>com.github.woodleighschool.jamf.GlobalProtect</string>
-        <string>com.github.woodleighschool.jamf.Microsoft365BusinessProSuite</string>
-        <string>com.github.woodleighschool.jamf.swiftDialog</string>
-        <string>com.github.woodleighschool.jamf.BambuStudio</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftOneDrive</string>
-        <string>com.github.woodleighschool.jamf.VisualStudioCode</string>
-        <string>com.github.woodleighschool.jamf.GoogleChrome</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftTeamsclassic</string>
-        <string>com.github.woodleighschool.jamf.Vivi</string>
-        <string>com.github.woodleighschool.jamf.Outset</string>
-        <string>com.github.woodleighschool.jamf.MicrosoftTeams</string>
-        <string>com.github.woodleighschool.jamf.Zoom</string>
-    </array>
-</dict>
+	<dict>
+		<key>recipes</key>
+		<array>
+			<string>com.github.woodleighschool.jamf.AutodeskFusion360</string>
+			<string>com.github.woodleighschool.jamf.1Password</string>
+			<string>com.github.woodleighschool.jamf.BambuStudio</string>
+			<string>com.github.woodleighschool.jamf.Blender</string>
+			<string>com.github.woodleighschool.jamf.CricutDesignSpace</string>
+			<string>com.github.woodleighschool.jamf.DockerDesktop</string>
+			<string>com.github.woodleighschool.jamf.GlobalProtect</string>
+			<string>com.github.woodleighschool.jamf.GoogleChrome</string>
+			<string>com.github.woodleighschool.jamf.Microsoft365BusinessProSuite</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftExcel</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftOneDrive</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftOneNote</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftOutlook</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftPowerPoint</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftRemoteDesktop</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftTeams</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftTeamsclassic</string>
+			<string>com.github.woodleighschool.jamf.MicrosoftWord</string>
+			<string>com.github.woodleighschool.jamf.MinecraftEducation</string>
+			<string>com.github.woodleighschool.jamf.Outset</string>
+			<string>com.github.woodleighschool.jamf.Spotify</string>
+			<string>com.github.woodleighschool.jamf.UltimakerCura</string>
+			<string>com.github.woodleighschool.jamf.VisualStudioCode</string>
+			<string>com.github.woodleighschool.jamf.Vivi</string>
+			<string>com.github.woodleighschool.jamf.Zoom</string>
+			<string>com.github.woodleighschool.jamf.swiftDialog</string>
+		</array>
+	</dict>
 </plist>

@@ -10,9 +10,9 @@ autopkg repo-add https://github.com/grahampugh/jamf-upload
 ```
 
 ```bash
-defaults write ~/Library/Preferences/com.github.autopkg.plist JSS_URL "https://<instance>.jamfcloud.com"
-defaults write ~/Library/Preferences/com.github.autopkg.plist API_USERNAME '<username>'
-defaults write ~/Library/Preferences/com.github.autopkg.plist API_PASSWORD '<password>'
+defaults write com.github.autopkg.plist JSS_URL "https://<instance>.jamfcloud.com"
+defaults write com.github.autopkg.plist API_USERNAME '<username>'
+defaults write com.github.autopkg.plist API_PASSWORD '<password>'
 ```
 
 Looking through this repo, you will see packages that are setup to download, package and/or upload to JAMF automatically. In the structure:
@@ -25,11 +25,11 @@ Looking through this repo, you will see packages that are setup to download, pac
 	└── <AppName>.png
 ```
 
-# Development
+## Development
 
-NMP
+to be continued...
 
-# Using autopkg
+## Using autopkg
 
 To build packages, use `autopkg run`, eg:
 
@@ -38,8 +38,9 @@ autopkg run <app>.<action>.recipe.yaml
 ```
 
 You can also build all working recipies using
+
 ```bash
-autopkg run --recipe-list ~/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg/run_all.recipe.yaml
+autopkg run --recipe-list ~/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg/recipe-list.plist
 ```
 
 ### Explanation of <action>
@@ -51,6 +52,28 @@ There are 3 actions (steps) in this setup, `jamf`, `pkg` and `download`.
 | `jamf`     | Uploads the packaged pkg from `pkg` to jamf, and recreates policies                                            |
 | `pkg`      | Packages up the `.dmg` (if source is a `.dmg`) to a `.pkg` and auto names the `.pkg` to `<name>-<version>.pkg` |
 | `download` | downloads the `.dmg` or `.pkg` and verifies it's authenticity                                                  |
+
+## Custom Processors
+
+This repo has a few custom processors, mainly the `JamfPolicyXMLGenerator`, which dynamically generates a xml to upload to jamf via arguments
+
+### BashVariableExtractor
+
+Extracts a variable from a bash file (ie getting the version string in a script) then exports it into the autopkg enviroment
+
+```yaml
+    - Processor: com.github.woodleighschool.processors/BashVariableExtractor
+      Arguments:
+        variable_name: "scriptVersion"
+        output_variable: "version"
+        file_path: "%pkgroot%/tmp/%NAME%/SYM-Dialog.bash"
+```
+
+### JamfPolicyXMLGenerator
+
+to be continued...
+
+Example of how to scope parameters work:
 
 ```yaml
 Process:
@@ -78,3 +101,31 @@ Process:
               name: "IT"
         exclude:
 ```
+
+### PkgSigner
+
+to be continued...
+
+### VersionSanitizer
+
+to be continued...
+
+### FolderCreator
+
+to be continued...
+
+### Microsoft365VersionerGetter
+
+to be continued...
+
+### GitRepoCloner
+
+to be continued...
+
+### Permer
+
+to be continued...
+
+### SimpleJSONParser
+
+to be continued...

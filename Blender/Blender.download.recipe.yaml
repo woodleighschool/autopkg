@@ -1,0 +1,31 @@
+Identifier: com.github.woodleighschool.download.Blender
+
+Input:
+  NAME: Blender
+
+Process:
+  - Comment: Get a link to a redirect page from the official download page for arm64
+    Processor: URLTextSearcher
+    Arguments:
+      url: https://www.blender.org/download/
+      re_pattern: '(?P<download_path>Blender[0-9a-zA-Z\\.]+/blender-(?P<version>[0-9a-zA-Z\\.]+)-macos-arm64.dmg)'
+  - Comment: Get the page from the previous URLTextSearcher match and find the actual (mirrored) download URL for arm64
+    Processor: URLTextSearcher
+    Arguments:
+      url: https://www.blender.org/download/release/%download_path%
+      re_pattern: '"(?P<url>https://.*/blender-(?P<version>[0-9a-zA-Z\\.]+)-macos-arm64.dmg)"'
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%.dmg"
+    Comment: Download the arm64 version
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/%NAME%.app"
+      requirement: >-
+        identifier "org.blenderfoundation.blender" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "68UA947AUU"
