@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.download.AutodeskFusion360
 
 Input:
   NAME: Autodesk Fusion 360
-  DOWNLOAD_URL: "https://dl.appstreaming.autodesk.com/production/installers/Autodesk%20Fusion%20360%20Admin%20Install.pkg"
+  DOWNLOAD_URL: "https://dl.appstreaming.autodesk.com/production/installers/Autodesk%20Fusion%20Admin%20Install.pkg"
 
 Process:
   - Processor: URLDownloader

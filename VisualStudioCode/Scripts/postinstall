@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Get the currently logged in user
-CURRENT_USER=$(logname)
+loggedInUser=$(echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }')
 
 # Define the settings file path
-SETTINGS_FILE="/Users/${CURRENT_USER}/Library/Application Support/Code/User/settings.json"
+SETTINGS_FILE="/Users/${loggedInUser}/Library/Application Support/Code/User/settings.json"
 
 # Create the directory for settings file if it doesn't exist
 mkdir -p "$(dirname "${SETTINGS_FILE}")"
@@ -34,7 +34,7 @@ cat >"${SETTINGS_FILE}" <<EOF
 EOF
 
 # Fix permissions recursively on the Code folder
-chown -R "${CURRENT_USER}:staff" "/Users/${CURRENT_USER}/Library/Application Support/Code"
+chown -R "${loggedInUser}:staff" "/Users/${loggedInUser}/Library/Application Support/Code"
 
 # List of extensions to install
 EXTENSIONS=(
@@ -47,5 +47,5 @@ EXTENSIONS=(
 
 # Install each extension
 for ext in "${EXTENSIONS[@]}"; do
-	su "${CURRENT_USER}" -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
+	su "${loggedInUser}" -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
 done
