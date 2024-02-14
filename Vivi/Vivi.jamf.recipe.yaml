@@ -54,13 +54,14 @@ Process:
     Arguments:
       enabled: "true"
       patch_softwaretitle: "%NAME%"
-      patch_name: "%NAME% - Notify"
-      patch_template: "PolicyPatchTemplateNotify.xml"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""
       replace_patch: True
+
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

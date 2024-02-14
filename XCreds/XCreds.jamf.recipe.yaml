@@ -26,7 +26,13 @@ Process:
       scope:
         all_computers: true
       self_service:
-        show: false
+        show: true
+        display_name: "%NAME%"
+        description: "%SELF_SERVICE_DESCRIPTION%"
+        categories:
+          - name: "%CATEGORY%"
+            display_in: true
+            feature_in: false
       maintenance:
       files_processes:
       user_interaction:
@@ -34,9 +40,11 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
+      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
+      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:

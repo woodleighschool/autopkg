@@ -1,0 +1,74 @@
+Identifier: com.github.woodleighschool.pkg.Python
+ParentRecipe: com.github.woodleighschool.download.Python
+
+Input:
+  NAME: "Python %MAJVERSION%"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        tmp: "0777" # stub
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/expand"
+      flat_pkg_path: "%pathname%"
+  # Binaries
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack/usr/local/bin"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/Python_Command_Line_Tools.pkg/Payload"
+  # Framework
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack/Library/Frameworks/Python.framework"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/Python_Framework.pkg/Payload"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/unpack/"
+      destination_path: "%pkgroot%/"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+  # Add configs
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/pip.conf"
+      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/3.12/pip.conf"
+      overwrite: True
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/openssl.cnf"
+      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/3.12/etc/openssl/openssl.cnf"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "Python-%MAJVERSION%"
+        version: "%VERSION%"
+        id: "com.woodleigh.python-%MAJVERSION%.installer"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+        chown:
+          - path: Library
+            user: root
+            group: wheel
+          - path: usr
+            user: root
+            group: wheel
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpack"
+        - "%RECIPE_CACHE_DIR%/expand"
+        - "%RECIPE_CACHE_DIR%/%NAME%"

@@ -1,0 +1,217 @@
+#!/bin/sh
+
+# Snippets taken from python installer payloads
+
+####
+# Python_Framework.pkg
+####
+
+#
+# Recompile the .py files.
+#
+
+PYVER="3.12" # rectify download recipe if version change !!!!!
+PYMAJOR="2"  # ^
+FWK="/Library/Frameworks/Python.framework/Versions/${PYVER}"
+RELFWKBIN="../../..${FWK}/bin"
+
+"${FWK}/bin/python3.12" -E -s -Wi \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x 'bad_coding|badsyntax|site-packages|test/test_lib2to3/data' \
+	"${FWK}/lib/python${PYVER}"
+
+"${FWK}/bin/python3.12" -E -s -Wi -O \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x 'bad_coding|badsyntax|site-packages|test/test_lib2to3/data' \
+	"${FWK}/lib/python${PYVER}"
+
+"${FWK}/bin/python3.12" -E -s -Wi \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x badsyntax \
+	"${FWK}/lib/python${PYVER}/site-packages"
+
+"${FWK}/bin/python3.12" -E -s -Wi -O \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x badsyntax \
+	"${FWK}/lib/python${PYVER}/site-packages"
+
+chgrp -R admin "${FWK}"
+chmod -R g+w "${FWK}"
+
+####
+# Python_Install_Pip.pkg
+####
+
+#
+# Install/upgrade pip.
+#
+
+umask 022
+
+"${FWK}/bin/python${PYVER}" -E -s -m ensurepip --upgrade
+
+# bpo-33290: An earlier "pip3 install --upgrade pip" may have installed
+#     a "pip" in the fw bin directory.  For a py3 install, remove it.
+
+rm -f "${FWK}/bin/pip"
+
+"${FWK}/bin/python${PYVER}" -E -s -Wi \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x badsyntax \
+	"${FWK}/lib/python${PYVER}/site-packages"
+
+"${FWK}/bin/python${PYVER}" -E -s -Wi -O \
+	"${FWK}/lib/python${PYVER}/compileall.py" -q -j0 \
+	-f -x badsyntax \
+	"${FWK}/lib/python${PYVER}/site-packages"
+
+chgrp -R admin "${FWK}/lib/python${PYVER}/site-packages" "${FWK}/bin"
+chmod -R g+w "${FWK}/lib/python${PYVER}/site-packages" "${FWK}/bin"
+
+if [ -d /usr/local/bin ]; then
+	(
+		install_links_if_our_fw() {
+			if [ "$(readlink -n ./$1)" = "${RELFWKBIN}/$1" ]; then
+				shift
+				for fn; do
+					if [ -e "${RELFWKBIN}/${fn}" ]; then
+						rm -f ./${fn}
+						ln -s "${RELFWKBIN}/${fn}" "./${fn}"
+						chgrp -h admin "./${fn}"
+						chmod -h g+w "./${fn}"
+					fi
+				done
+			fi
+		}
+
+		cd /usr/local/bin
+
+		# Create pipx.y links if /usr/local/bin/pythonx.y
+		#   is linked to this framework version
+		install_links_if_our_fw "python${PYVER}" \
+			"pip${PYVER}"
+
+		# Create pipx link if /usr/local/bin/pythonx is linked to this version
+		install_links_if_our_fw "python${PYMAJOR}" \
+			"pip${PYMAJOR}"
+
+		# Create pip link if /usr/local/bin/python
+		#   is linked to this version
+		install_links_if_our_fw "python" \
+			"pip"
+	)
+fi
+
+####
+# Python_Install_Pip.pkg
+####
+
+echo "This script will update your shell profile when the 'bin' directory"
+echo "of python is not early enough of the PATH of your shell."
+echo "These changes will be effective only in shell windows that you open"
+echo "after running this script."
+
+if [ $(id -ur) = 0 ]; then
+	# Run from the installer, do some trickery to fetch the information
+	# we need.
+	theShell="$(finger $USER | grep Shell: | head -1 | awk '{ print $NF }')"
+
+else
+	theShell="${SHELL}"
+fi
+
+# Make sure the directory ${FWK}/bin is on the users PATH.
+BSH="$(basename "${theShell}")"
+case "${BSH}" in
+bash | ksh | sh | *csh | zsh | fish)
+	if [ $(id -ur) = 0 ]; then
+		P=$(su - ${USER} -c 'echo A-X-4-X@@$PATH@@X-4-X-A' | grep 'A-X-4-X@@.*@@X-4-X-A' | sed -e 's/^A-X-4-X@@//g' -e 's/@@X-4-X-A$//g')
+	else
+		P="$( (exec -l ${theShell} -c 'echo $PATH'))"
+	fi
+	;;
+*)
+	echo "Sorry, I don't know how to patch $BSH shells"
+	exit 0
+	;;
+esac
+
+# Now ensure that our bin directory is on $P and before /usr/bin at that
+for elem in $(echo $P | tr ':' ' '); do
+	if [ "${elem}" = "${FWK}/bin" ]; then
+		echo "All right, you're a python lover already"
+		exit 0
+	elif [ "${elem}" = "/usr/bin" ]; then
+		break
+	fi
+done
+
+echo "${FWK}/bin is not on your PATH or at least not early enough"
+case "${BSH}" in
+*csh)
+	if [ -f "${HOME}/.tcshrc" ]; then
+		RC="${HOME}/.tcshrc"
+	else
+		RC="${HOME}/.cshrc"
+	fi
+	# Create backup copy before patching
+	if [ -f "${RC}" ]; then
+		cp -fp "${RC}" "${RC}.pysave"
+	fi
+	echo "" >>"${RC}"
+	echo "# Setting PATH for Python ${PYVER}" >>"${RC}"
+	echo "# The original version is saved in .cshrc.pysave" >>"${RC}"
+	echo "set path=(${FWK}/bin "'$path'")" >>"${RC}"
+	if [ $(id -ur) = 0 ]; then
+		chown "${USER}" "${RC}"
+	fi
+	exit 0
+	;;
+bash)
+	if [ -e "${HOME}/.bash_profile" ]; then
+		PR="${HOME}/.bash_profile"
+	elif [ -e "${HOME}/.bash_login" ]; then
+		PR="${HOME}/.bash_login"
+	elif [ -e "${HOME}/.profile" ]; then
+		PR="${HOME}/.profile"
+	else
+		PR="${HOME}/.bash_profile"
+	fi
+	;;
+fish)
+	CONFIG_DIR="${HOME}/.config/fish"
+	RC="${CONFIG_DIR}/config.fish"
+	mkdir -p "$CONFIG_DIR"
+	if [ -f "${RC}" ]; then
+		cp -fp "${RC}" "${RC}.pysave"
+	fi
+	echo "" >>"${RC}"
+	echo "# Setting PATH for Python ${PYVER}" >>"${RC}"
+	echo "# The original version is saved in ${RC}.pysave" >>"${RC}"
+	echo "set -x PATH \"${FWK}/bin\" \"\$PATH\"" >>"${RC}"
+	if [ $(id -ur) = 0 ]; then
+		chown "${USER}" "${RC}"
+	fi
+	exit 0
+	;;
+zsh)
+	PR="${HOME}/.zprofile"
+	;;
+*sh)
+	PR="${HOME}/.profile"
+	;;
+esac
+
+# Create backup copy before patching
+if [ -f "${PR}" ]; then
+	cp -fp "${PR}" "${PR}.pysave"
+fi
+echo "" >>"${PR}"
+echo "# Setting PATH for Python ${PYVER}" >>"${PR}"
+echo "# The original version is saved in $(basename ${PR}).pysave" >>"${PR}"
+echo 'PATH="'"${FWK}/bin"':${PATH}"' >>"${PR}"
+echo 'export PATH' >>"${PR}"
+if [ $(id -ur) = 0 ]; then
+	chown "${USER}" "${PR}"
+fi
+exit 0

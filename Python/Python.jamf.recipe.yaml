@@ -1,24 +1,21 @@
-Identifier: com.github.woodleighschool.jamf.Zoom
-ParentRecipe: com.github.woodleighschool.pkg.Zoom
+Identifier: com.github.woodleighschool.jamf.Python
+ParentRecipe: com.github.woodleighschool.pkg.Python
 
 Input:
-  NAME: Zoom
-  CATEGORY: Applications
+  NAME: "Python %MAJVERSION%"
+  CATEGORY: Development & Programming
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Zoom is a cloud-based video conferencing platform that can be used for video conferencing meetings, audio conferencing, webinars, meeting recordings, and live chat.
+    Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation. Python is dynamically typed and garbage-collected. It supports multiple programming paradigms, including structured, object-oriented and functional programming.
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
+      version: "%VERSION%"
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Applications
@@ -33,7 +30,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: true
-            feature_in: false
+            feature_in: true
       maintenance:
       files_processes:
       user_interaction:
@@ -41,23 +38,11 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
+      icon: "Python.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       replace_icon: "True"
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
-    Arguments:
-      enabled: "true"
-      patch_softwaretitle: "%NAME%"
-      patch_name: "%NAME% - Notify"
-      patch_template: "PolicyPatchTemplateNotify.xml"
-      patch_icon_policy_name: "%POLICY_NAME%"
-      min_os: ""
-      kill_app_name: ""
-      kill_app_bundle_id: ""
-      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
