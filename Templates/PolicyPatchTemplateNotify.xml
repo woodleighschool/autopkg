@@ -57,7 +57,7 @@
 			<deadline_period>7</deadline_period>
 		</deadlines>
 		<grace_period>
-			<grace_period_duration>60</grace_period_duration>
+			<grace_period_duration>%grace_period_duration%</grace_period_duration>
 			<notification_center_subject>%NAME%</notification_center_subject>
 			<message>%NAME% will quit in $DELAY_MINUTES minutes for an update.</message>
 		</grace_period>

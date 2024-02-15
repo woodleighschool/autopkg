@@ -12,10 +12,6 @@ Input:
     any display.
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
@@ -28,15 +24,15 @@ Process:
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: True
       self_service:
-        show: true
+        show: True
         display_name: "%NAME%"
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
-            display_in: true
-            feature_in: false
+            display_in: True
+            feature_in: False
       maintenance:
       files_processes:
       user_interaction:
@@ -57,6 +53,7 @@ Process:
       patch_name: "%NAME% - Force"
       patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "60"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""

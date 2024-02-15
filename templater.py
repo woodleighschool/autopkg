@@ -86,15 +86,15 @@ Process:
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: True
       self_service:
-        show: true
+        show: True
         display_name: "%NAME%"
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
-            display_in: true
-            feature_in: true
+            display_in: True
+            feature_in: True
       maintenance:
       files_processes:
       user_interaction:
@@ -110,7 +110,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:
-      enabled: "true"
+      enabled: "True"
       patch_softwaretitle: "%NAME%"
       patch_name: "%NAME% - Notify"
       patch_template: "PolicyPatchTemplateNotify.xml"

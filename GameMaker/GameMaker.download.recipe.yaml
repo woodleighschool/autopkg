@@ -1,0 +1,19 @@
+
+Identifier: com.github.woodleighschool.download.GameMaker
+
+Input:
+  NAME: GameMaker
+  version: "2023.11.1.129"
+  DOWNLOAD_URL: "https://gms.yoyogames.com/GameMaker-%version%.pkg"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%-%version%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"

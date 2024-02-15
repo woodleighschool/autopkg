@@ -17,30 +17,12 @@ Process:
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
       pkgdirs:
-        tmp: "0777"
-
-  - Processor: com.github.woodleighschool.processors/FolderCreator
-    Arguments:
-      folders:
-        - path: "%pkgroot%/tmp/spotifytemp"
-          perms: "0755"
+        Applications: "0775"
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-ARM64.dmg/%NAME%.app"
-      destination_path: "%pkgroot%/tmp/spotifytemp/%NAME%-ARM64.app"
-      overwrite: True
-
-  - Processor: Copier
-    Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%-Intel.dmg/%NAME%.app"
-      destination_path: "%pkgroot%/tmp/spotifytemp/%NAME%-Intel.app"
-      overwrite: True
-
-  - Processor: Copier
-    Arguments:
-      source_path: "%RECIPE_DIR%/Scripts"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
       overwrite: True
 
   - Processor: PkgCreator
@@ -50,12 +32,11 @@ Process:
         version: "%version%"
         id: "%bundleid%"
         options: purge_ds_store
-        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
         chown:
-          - path: tmp
+          - path: Applications
             user: root
-            group: wheel
+            group: admin
 
   - Processor: PathDeleter
     Arguments:

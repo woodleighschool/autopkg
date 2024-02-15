@@ -19,7 +19,7 @@ Process:
     Arguments:
       source_path: "%pathname%/%app_name%"
       destination_path: "%pkgroot%/Applications/%app_name%"
-      overwrite: true
+      overwrite: True
 
   - Processor: PkgCreator
     Arguments:

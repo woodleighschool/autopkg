@@ -24,7 +24,7 @@ Process:
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/ApplyBranding.sh"
       destination_path: "%pkgroot%/usr/local/outset/login-once/ApplyBranding.sh"
-      overwrite: true
+      overwrite: True
 
   - Processor: com.github.woodleighschool.processors/Permer
     Arguments:
@@ -36,7 +36,7 @@ Process:
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/Woodleigh.jpg"
       destination_path: "%pkgroot%/Library/Desktop Pictures/Woodleigh.jpg"
-      overwrite: true
+      overwrite: True
 
   - Processor: PkgCreator
     Arguments:

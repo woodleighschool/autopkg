@@ -9,10 +9,6 @@ Input:
     The Palo Alto VPN client is required to access organizational resources outside of the school network.
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
@@ -25,7 +21,7 @@ Process:
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: false
+        all_computers: False
         include:
           departments:
             - id: 11
@@ -33,13 +29,13 @@ Process:
             - id: 21
               name: "IT"
       self_service:
-        show: true
+        show: True
         display_name: "%NAME%"
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
-            display_in: true
-            feature_in: false
+            display_in: True
+            feature_in: False
       maintenance:
       files_processes:
       user_interaction:

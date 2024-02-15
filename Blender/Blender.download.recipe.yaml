@@ -4,20 +4,17 @@ Input:
   NAME: Blender
 
 Process:
-  - Comment: Get a link to a redirect page from the official download page for arm64
-    Processor: URLTextSearcher
+  - Processor: URLTextSearcher
     Arguments:
       url: https://www.blender.org/download/
       re_pattern: '(?P<download_path>Blender[0-9a-zA-Z\\.]+/blender-(?P<version>[0-9a-zA-Z\\.]+)-macos-arm64.dmg)'
-  - Comment: Get the page from the previous URLTextSearcher match and find the actual (mirrored) download URL for arm64
-    Processor: URLTextSearcher
+  - Processor: URLTextSearcher
     Arguments:
       url: https://www.blender.org/download/release/%download_path%
       re_pattern: '"(?P<url>https://.*/blender-(?P<version>[0-9a-zA-Z\\.]+)-macos-arm64.dmg)"'
   - Processor: URLDownloader
     Arguments:
       filename: "%NAME%.dmg"
-    Comment: Download the arm64 version
 
   - Processor: EndOfCheckPhase
 

@@ -14,13 +14,13 @@ Process:
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
       destination_path: "%pkgroot%/Applications/%NAME%.app"
-      overwrite: true
+      overwrite: True
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Scripts"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-      overwrite: true
+      overwrite: True
 
   - Processor: PlistReader
     Arguments:

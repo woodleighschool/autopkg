@@ -11,11 +11,6 @@ Input:
     Version: %version%
 
 Process:
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
@@ -27,7 +22,7 @@ Process:
         policy_category: Self Service
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: True
       self_service:
         install_button_text: "Install"
         reinstall_button_text: "Reinstall"
@@ -35,15 +30,15 @@ Process:
         description: "%SELF_SERVICE_DESCRIPTION%"
         categories:
           - name: "%CATEGORY%"
-            display_in: true
-            feature_in: false
+            display_in: True
+            feature_in: False
       maintenance:
-        recon: true
+        recon: True
       user_interaction:
         message_start: "%NAME% is being installed."
         message_finish: "%NAME% has now been installed."
       output: "%RECIPE_CACHE_DIR%/%NAME%"
-      
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: "%SELF_SERVICE_ICON%"

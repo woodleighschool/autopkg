@@ -7,10 +7,6 @@ Input:
   POLICY_NAME: ALL - %NAME% - ALL
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
@@ -25,9 +21,9 @@ Process:
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
-        all_computers: true
+        all_computers: True
       self_service:
-        show: false
+        show: False
       maintenance:
       files_processes:
       user_interaction:
@@ -46,8 +42,8 @@ Process:
       patch_softwaretitle: "%NAME%"
       patch_name: "%NAME% - Force"
       patch_template: "PolicyPatchTemplateForce.xml"
-      patch_icon_policy_name: ""
-      pkg_name: "%NAME%-%version%.pkg"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "1"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""

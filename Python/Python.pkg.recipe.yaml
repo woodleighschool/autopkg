@@ -41,12 +41,12 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/pip.conf"
-      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/3.12/pip.conf"
+      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/%MAJVERSION%/pip.conf"
       overwrite: True
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_DIR%/Assets/openssl.cnf"
-      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/3.12/etc/openssl/openssl.cnf"
+      destination_path: "%pkgroot%/Library/Frameworks/Python.framework/Versions/%MAJVERSION%/etc/openssl/openssl.cnf"
       overwrite: True
 
   - Processor: PkgCreator
