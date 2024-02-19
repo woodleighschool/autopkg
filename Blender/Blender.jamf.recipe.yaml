@@ -26,6 +26,7 @@ Process:
           computer_groups:
             - id: 201
               name: "Apple Silicon"
+      package:
       self_service:
         show: True
         display_name: "%NAME%"

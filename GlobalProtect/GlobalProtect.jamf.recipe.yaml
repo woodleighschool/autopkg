@@ -28,6 +28,7 @@ Process:
               name: "Staff"
             - id: 21
               name: "IT"
+      package:
       self_service:
         show: True
         display_name: "%NAME%"

@@ -22,6 +22,7 @@ Process:
         trigger_other: "%NAME%"
       scope:
         all_computers: True
+      package:
       self_service:
         show: False
       maintenance:

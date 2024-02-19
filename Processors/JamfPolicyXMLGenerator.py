@@ -24,6 +24,10 @@ class JamfPolicyXMLGenerator(Processor):
             "description": "Self service settings for the policy.",
             "required": True
         },
+        "package": {
+            "description": "Package settings for the policy.",
+            "required": True
+        },
         "maintenance": {
             "description": "Maintenance settings for the policy.",
             "required": True
@@ -53,12 +57,12 @@ class JamfPolicyXMLGenerator(Processor):
             return str(value).lower()
         return value
 
-    def create_policy_xml(self, general, scope, self_service, maintenance, files_processes, user_interaction):
+    def create_policy_xml(self, general, scope, self_service, package_info, maintenance, files_processes, user_interaction):
         """Generates the XML structure for the policy."""
         policy = ET.Element("policy")
         self.add_general_section(policy, general)
         self.add_scope_section(policy, scope)
-        self.add_package_configuration(policy)
+        self.add_package_configuration(policy, package_info)
         self.add_scripts_section(policy)
         self.add_self_service_section(policy, self_service)
         self.add_maintenance_section(policy, maintenance)
@@ -72,13 +76,13 @@ class JamfPolicyXMLGenerator(Processor):
     def add_general_section(self, policy, general):
         """Adds the general section to the policy."""
         general_element = ET.SubElement(policy, "general")
-    
+
         # Mandatory elements
-        ET.SubElement(general_element, "name").text = general.get("policy_name", "DefaultPolicyName") # policy name
-        ET.SubElement(general_element, "trigger").text = general.get("trigger", "EVENT") # policy trigger
-        category = ET.SubElement(general_element, "category") # policy category
+        ET.SubElement(general_element, "name").text = general.get("policy_name", "DefaultPolicyName")  # policy name
+        ET.SubElement(general_element, "trigger").text = general.get("trigger", "EVENT")  # policy trigger
+        category = ET.SubElement(general_element, "category")  # policy category
         ET.SubElement(category, "name").text = general.get("policy_category", "DefaultCategory")
-    
+
         # Optional elements
         if "enabled" in general and general["enabled"] != "":
             ET.SubElement(general_element, "enabled").text = self.bool_to_str(general["enabled"])
@@ -104,14 +108,26 @@ class JamfPolicyXMLGenerator(Processor):
         scope_element = ET.SubElement(policy, "scope")
         self.create_scope_xml(scope_element, scope)
 
-    def add_package_configuration(self, policy):
+    def add_package_configuration(self, policy, package_info):
         """Adds package configuration to the policy."""
         package_config = ET.SubElement(policy, "package_configuration")
-        packages = ET.SubElement(package_config, "packages")
-        ET.SubElement(packages, "size").text = "1"
-        package = ET.SubElement(packages, "package")
-        ET.SubElement(package, "name").text = self.env.get("pkg_name")
-        ET.SubElement(package, "action").text = "Install"
+        packages_element = ET.SubElement(package_config, "packages")
+        if package_info is None:
+            package_info = {}
+        distribution_point = package_info.get('distribution_point', 'default')
+        packages = package_info.get('packages', [])
+        # Check if packages are defined, if not, use the default package name
+        if not packages:
+            packages = [{'name': self.env.get("pkg_name")}]
+        # Set the size based on the packages list length
+        ET.SubElement(packages_element, "size").text = str(len(packages))
+        # Add each package to the XML
+        for package in packages:
+            package_element = ET.SubElement(packages_element, "package")
+            ET.SubElement(package_element, "name").text = package.get("name")
+            ET.SubElement(package_element, "action").text = "Install"
+        # Set the distribution point
+        ET.SubElement(package_config, "distribution_point").text = distribution_point
 
     def add_scripts_section(self, policy):
         """Adds scripts section to the policy."""
@@ -126,16 +142,16 @@ class JamfPolicyXMLGenerator(Processor):
             ET.SubElement(self_service_element, "install_button_text").text = self_service.get("install_button_text", "Install")
             ET.SubElement(self_service_element, "reinstall_button_text").text = self_service.get("reinstall_button_text", "Reinstall")
             ET.SubElement(self_service_element, "self_service_display_name").text = self_service["display_name"]
-            
+
             # Get current date and time in the specified format
             current_datetime = datetime.datetime.now().strftime("%d/%m/%y %I:%M%p").lower()
-            
+
             # Update self_service_description with additional information
             description_with_info = self_service["description"] + "\n**Package Information**\n"
             description_with_info += f"Version: {self.env.get('version', 'Unknown')}\n"
             description_with_info += f"Last Update: {current_datetime}"
             ET.SubElement(self_service_element, "self_service_description").text = description_with_info
-    
+
             # Adding categories
             self_service_categories = ET.SubElement(self_service_element, "self_service_categories")
             # Iterate over each category
@@ -144,7 +160,6 @@ class JamfPolicyXMLGenerator(Processor):
                 ET.SubElement(category_element, "name").text = category["name"]
                 ET.SubElement(category_element, "display_in").text = self.bool_to_str(category["display_in"])
                 ET.SubElement(category_element, "feature_in").text = self.bool_to_str(category["feature_in"])
-
 
     def add_maintenance_section(self, policy, maintenance):
         """Adds maintenance settings to the policy."""
@@ -165,9 +180,9 @@ class JamfPolicyXMLGenerator(Processor):
         # Use .get() to provide a default value if the key is not present
         message_start = user_interaction.get("message_start", "") if user_interaction else ""
         message_finish = user_interaction.get("message_finish", "") if user_interaction else ""
-    
+
         ET.SubElement(user_interaction_element, "message_start").text = message_start
-        ET.SubElement(user_interaction_element, "message_finish").text = message_finish      
+        ET.SubElement(user_interaction_element, "message_finish").text = message_finish
 
     def create_scope_xml(self, scope_element, scope_details):
         """Generates the XML structure for the scope"""
@@ -214,12 +229,13 @@ class JamfPolicyXMLGenerator(Processor):
         general = self.env.get("general", {})
         scope = self.env.get("scope", {})
         self_service = self.env.get("self_service", {})
+        package_info = self.env.get("package", {})
         maintenance = self.env.get("maintenance", {})
         files_processes = self.env.get("files_processes", {})
         user_interaction = self.env.get("user_interaction", {})
 
         xml_data = self.create_policy_xml(
-            general, scope, self_service, maintenance, files_processes, user_interaction)
+            general, scope, self_service, package_info, maintenance, files_processes, user_interaction)
 
         # Writing XML to file
         output_location = self.env.get("output")

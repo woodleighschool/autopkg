@@ -29,6 +29,7 @@ Process:
               name: "All Students"
             - id: 193
               name: "Shared MacBooks"
+      package:
       self_service:
         show: True
         display_name: "%NAME%"
