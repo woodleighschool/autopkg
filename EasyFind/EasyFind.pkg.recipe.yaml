@@ -1,0 +1,41 @@
+
+Identifier: com.github.woodleighschool.pkg.EasyFind
+ParentRecipe: com.github.woodleighschool.download.EasyFind
+
+Input:
+  NAME: EasyFind
+
+Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_CACHE_DIR%/unzip/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.woodleigh.easyfind.installer"
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"
+        - "%RECIPE_CACHE_DIR%/unzip"

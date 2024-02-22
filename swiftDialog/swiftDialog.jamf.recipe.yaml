@@ -44,6 +44,7 @@ Process:
       patch_name: "%NAME% - Force"
       patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
+      pkg_name: "%NAME%-%version%.pkg"
       grace_period_duration: "1"
       min_os: ""
       kill_app_name: ""

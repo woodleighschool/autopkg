@@ -70,10 +70,6 @@ Input:
     <Description>
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: "%CATEGORY%"
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
@@ -87,6 +83,7 @@ Process:
         trigger_other: "%NAME%"
       scope:
         all_computers: True
+      package:
       self_service:
         show: True
         display_name: "%NAME%"
@@ -110,11 +107,12 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:
-      enabled: "True"
+      enabled: "true"
       patch_softwaretitle: "%NAME%"
-      patch_name: "%NAME% - Notify"
-      patch_template: "PolicyPatchTemplateNotify.xml"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "60"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""

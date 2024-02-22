@@ -1,0 +1,45 @@
+Identifier: com.github.woodleighschool.jamf.UnityEditor
+
+Input:
+  NAME: Unity Editor
+  CATEGORY: Development & Programming
+  POLICY_NAME: ALL - %NAME% - ALL
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: "%CATEGORY%"
+      pkg_path: "%RECIPE_DIR%/Assets/Unity Editor-2022.3.20f1.dmg"
+
+  - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
+    Arguments:
+      pkg_name: "Unity Editor-2022.3.20f1.dmg"
+      general:
+        policy_name: "ALL - Unity Editor - ALL"
+        policy_category: Applications
+        frequency: Ongoing
+        trigger_other: "unity_editor"
+      scope:
+        all_computers: False
+        include:
+          computer_groups:
+            - id: 201
+              name: "Apple Silicon"
+      package:
+      self_service:
+        show: False
+      maintenance:
+      files_processes:
+      user_interaction:
+      output: "%RECIPE_CACHE_DIR%/%NAME%"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_name: "ALL - Unity Editor - ALL"
+      policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
+      replace_policy: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: "Unity Editor"
+      versions_to_keep: 1

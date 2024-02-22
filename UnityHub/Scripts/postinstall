@@ -1,0 +1,10 @@
+#!/bin/bash
+
+loggedInUser=$(stat -f%Su /dev/console)
+
+if [ ! -d /Applications/Unity ]; then
+	echo "Installing Unity Editor"
+	/usr/local/bin/jamf policy -event unity_editor
+fi
+
+chown -R "${loggedInUser}":wheel /Applications/Unity
