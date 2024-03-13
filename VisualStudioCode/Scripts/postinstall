@@ -15,7 +15,7 @@ cat >"${SETTINGS_FILE}" <<EOF
   "workbench.iconTheme": "eq-material-theme-icons-palenight",
   "security.workspace.trust.enabled": false,
   "redhat.telemetry.enabled": true,
-  "explorer.confirmDelete": false,
+  "explorer.confirmDelete": true,
   "editor.accessibilitySupport": "off",
   "materialTheme.accent": "Purple",
   "editor.insertSpaces": false,
@@ -28,9 +28,10 @@ cat >"${SETTINGS_FILE}" <<EOF
   "workbench.colorTheme": "Material Theme Palenight High Contrast",
   "http.proxyStrictSSL": false,
   "python.defaultInterpreterPath": "/usr/local/bin/python3.12",
-  "python.experiments.optInto": []
+  "python.experiments.optInto": [],
+  "autopep8.args": ["--max-line-length=200"],
+  "update.mode": "none"
 }
-
 EOF
 
 # Fix permissions recursively on the Code folder
