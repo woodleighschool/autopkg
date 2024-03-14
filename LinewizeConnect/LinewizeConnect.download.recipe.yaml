@@ -1,0 +1,17 @@
+Identifier: com.github.woodleighschool.download.LinewizeConnect
+
+Input:
+  NAME: Linewize Connect
+  DOWNLOAD_URL: "https://s3-ap-southeast-2.amazonaws.com/fz-mza-update-files/PRD/MAC-V3/Connect%20Installer.pkg"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"

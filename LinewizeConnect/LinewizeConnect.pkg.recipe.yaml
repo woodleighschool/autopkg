@@ -1,4 +1,5 @@
 Identifier: com.github.woodleighschool.pkg.LinewizeConnect
+ParentRecipe: com.github.woodleighschool.download.LinewizeConnect
 
 Input:
   NAME: Linewize Connect
@@ -25,7 +26,7 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Assets/Connect-%version%.pkg"
+      source_path: "%RECIPE_DIR%/Linewize Connect.pkg"
       destination_path: "%pkgroot%/tmp/connecttemp/Connect-%version%.pkg"
       overwrite: True
 
