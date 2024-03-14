@@ -13,11 +13,15 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/payload.pkg/Payload"
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unpack/Family Zone/installer/Contents/Info.plist"
+      info_path: "%RECIPE_CACHE_DIR%/unpack/Contents/Info.plist"
+    
+  - Processor: com.github.woodleighschool.processors/VersionSanitizer
+    Arguments:
+      pattern: "x.x.x"
  
   - Processor: PkgRootCreator
     Arguments:
@@ -39,7 +43,7 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Linewize Connect.pkg"
+      source_path: "%pathname%"
       destination_path: "%pkgroot%/tmp/connecttemp/Connect-%version%.pkg"
       overwrite: True
 
