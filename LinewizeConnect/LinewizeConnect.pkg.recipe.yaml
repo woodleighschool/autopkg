@@ -44,7 +44,7 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: "%pathname%"
-      destination_path: "%pkgroot%/tmp/connecttemp/Connect-%version%.pkg"
+      destination_path: "%pkgroot%/tmp/connecttemp/Connect.pkg"
       overwrite: True
 
   - Processor: Copier
