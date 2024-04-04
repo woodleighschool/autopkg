@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftRemoteDesktop
-ParentRecipe: com.github.woodleighschool.download.MicrosoftRemoteDesktop
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftRemoteDesktop
 
 Input:
   NAME: Microsoft Remote Desktop
@@ -15,7 +15,7 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
-      version: "%shortversion%"
+      version: "%version%"
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Applications
@@ -52,17 +52,18 @@ Process:
       replace_policy: "True"
       replace_icon: "True"
 
-  #  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
-  #    Arguments:
-  #      enabled: "True"
-  #      patch_softwaretitle: "%NAME%"
-  #      patch_name: "%NAME% - Notify"
-  #      patch_template: "PolicyPatchTemplateNotify.xml"
-  #      patch_icon_policy_name: "%POLICY_NAME%"
-  #      min_os: ""
-  #      kill_app_name: ""
-  #      kill_app_bundle_id: ""
-  #      replace_patch: True
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "True"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Notify"
+      patch_template: "PolicyPatchTemplateNotify.xml"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "60"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

@@ -4,14 +4,10 @@ Input:
   NAME: Microsoft Teams
 
 Process:
-  - Processor: com.github.woodleighschool.processors/Microsoft365VersionerGetter
-    Arguments:
-      package_id: "com.microsoft.teams2.standalone"
-
   - Processor: URLDownloader
     Arguments:
-      url: "%download_url%"
-      filename: "%NAME%-%version%.pkg"
+      url: "https://go.microsoft.com/fwlink/?linkid=2249065"
+      filename: "%NAME%.pkg"
 
   - Processor: EndOfCheckPhase
 

@@ -4,14 +4,10 @@ Input:
   NAME: Microsoft Remote Desktop
 
 Process:
-  - Processor: com.github.woodleighschool.processors/Microsoft365VersionerGetter
-    Arguments:
-      package_id: "com.microsoft.remotedesktop.standalone"
-
   - Processor: URLDownloader
     Arguments:
-      url: "%download_url%"
-      filename: "%NAME%-%shortversion%.pkg"
+      url: "https://go.microsoft.com/fwlink/?linkid=868963"
+      filename: "%NAME%.pkg"
 
   - Processor: EndOfCheckPhase
 

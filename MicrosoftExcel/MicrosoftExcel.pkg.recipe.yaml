@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.Vivi
-ParentRecipe: com.github.woodleighschool.download.Vivi
+Identifier: com.github.woodleighschool.pkg.MicrosoftExcel
+ParentRecipe: com.github.woodleighschool.download.MicrosoftExcel
 
 Input:
-  NAME: Vivi
+  NAME: Microsoft Excel
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -13,11 +13,12 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/au.com.viviaustralia.mac.pkg/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/Microsoft_Excel.pkg/Payload"
 
-  - Processor: PlistReader
+  - Processor: Versioner
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/payload/%NAME%.app"
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Microsoft Excel.app/Contents/Info.plist"
+      plist_version_key: "CFBundleVersion"
 
   - Processor: PkgCopier
     Arguments:

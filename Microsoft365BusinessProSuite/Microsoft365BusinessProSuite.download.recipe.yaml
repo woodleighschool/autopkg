@@ -4,13 +4,15 @@ Input:
   NAME: Microsoft 365 Suite
 
 Process:
-  - Processor: com.github.woodleighschool.processors/Microsoft365VersionerGetter
+  - Processor: URLTextSearcher
     Arguments:
-      package_id: "com.microsoft.office.suite.365.businesspro"
+      re_pattern: Version (\*|\d+(\.\d+){0,2}(\.\*)?)
+      url: https://learn.microsoft.com/en-us/officeupdates/release-notes-office-for-mac
+      result_output_var_name: version
 
   - Processor: URLDownloader
     Arguments:
-      url: "%download_url%"
+      url: "https://go.microsoft.com/fwlink/?linkid=2009112"
       filename: "%NAME%-%version%.pkg"
 
   - Processor: EndOfCheckPhase

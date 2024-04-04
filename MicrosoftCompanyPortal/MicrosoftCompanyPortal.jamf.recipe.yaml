@@ -1,12 +1,13 @@
-Identifier: com.github.woodleighschool.jamf.MicrosoftTeamsclassic
-ParentRecipe: com.github.woodleighschool.download.MicrosoftTeamsclassic
+
+Identifier: com.github.woodleighschool.jamf.MicrosoftCompanyPortal
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftCompanyPortal
 
 Input:
-  NAME: Microsoft Teams classic
-  CATEGORY: Productivity & Office
+  NAME: Microsoft Company Portal
+  CATEGORY: Utilities & Security
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Microsoft Teams Classic is the original version of the popular collaboration tool, designed for those who prefer the classic interface and functionality. It offers a straightforward and familiar user experience.
+    Company Portal allows you to sign in once, and automatically be signed into supported apps. 
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -30,7 +31,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: True
-            feature_in: False
+            feature_in: True
       maintenance:
       files_processes:
       user_interaction:
@@ -44,7 +45,21 @@ Process:
       replace_policy: "True"
       replace_icon: "True"
 
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "true"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "1"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
       versions_to_keep: 1
+

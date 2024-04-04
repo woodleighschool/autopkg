@@ -29,17 +29,17 @@ Input:
 Process:
   - Processor: FlatPkgUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/expand"
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
       flat_pkg_path: "%pathname%"
 
   - Processor: PkgPayloadUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/expand/<Name>.pkg/Payload"
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/<Name>.pkg/Payload"
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unpack/%NAME%.app"
+      info_path: "%RECIPE_CACHE_DIR%/payload/%NAME%.app"
 
   - Processor: PkgCopier
     Arguments:
@@ -49,8 +49,8 @@ Process:
   - Processor: PathDeleter
     Arguments:
       path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpack"
-        - "%RECIPE_CACHE_DIR%/expand"
 """
 create_file(os.path.join(
     dir_name, f"{dir_name}.pkg.recipe.yaml"), pkg_recipe_content)

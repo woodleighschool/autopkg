@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftExcel
-ParentRecipe: com.github.woodleighschool.download.MicrosoftExcel
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftExcel
 
 Input:
   NAME: Microsoft Excel

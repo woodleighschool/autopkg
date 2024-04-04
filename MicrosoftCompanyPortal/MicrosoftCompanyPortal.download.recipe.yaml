@@ -1,17 +1,14 @@
-Identifier: com.github.woodleighschool.download.MicrosoftTeamsclassic
+
+Identifier: com.github.woodleighschool.download.MicrosoftCompanyPortal
 
 Input:
-  NAME: Microsoft Teams classic
+  NAME: Microsoft Company Portal
 
 Process:
-  - Processor: com.github.woodleighschool.processors/Microsoft365VersionerGetter
-    Arguments:
-      package_id: "com.microsoft.teams.standalone"
-
   - Processor: URLDownloader
     Arguments:
-      url: "%download_url%"
-      filename: "%NAME%-%version%.pkg"
+      url: "https://go.microsoft.com/fwlink/?linkid=853070"
+      filename: "%NAME%.pkg"
 
   - Processor: EndOfCheckPhase
 

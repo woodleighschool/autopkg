@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftWord
-ParentRecipe: com.github.woodleighschool.download.MicrosoftWord
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftWord
 
 Input:
   NAME: Microsoft Word

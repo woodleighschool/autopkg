@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.Vivi
-ParentRecipe: com.github.woodleighschool.download.Vivi
+Identifier: com.github.woodleighschool.pkg.MicrosoftOneDrive
+ParentRecipe: com.github.woodleighschool.download.MicrosoftOneDrive
 
 Input:
-  NAME: Vivi
+  NAME: Microsoft OneDrive
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -13,11 +13,12 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/au.com.viviaustralia.mac.pkg/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/OneDrive.pkg/Payload"
 
-  - Processor: PlistReader
+  - Processor: Versioner
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/payload/%NAME%.app"
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/OneDrive.app/Contents/Info.plist"
+      plist_version_key: "CFBundleVersion"
 
   - Processor: PkgCopier
     Arguments:

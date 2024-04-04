@@ -11,7 +11,7 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/VersionSanitizer
     Arguments:
-      pattern: "x.x.xx.xxxx"
+      pattern: "x.x.xx.xxx"
 
   - Processor: PkgRootCreator
     Arguments:

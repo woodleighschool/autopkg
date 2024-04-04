@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftOneNote
-ParentRecipe: com.github.woodleighschool.download.MicrosoftOneNote
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftOneNote
 
 Input:
   NAME: Microsoft OneNote

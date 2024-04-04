@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftOneDrive
-ParentRecipe: com.github.woodleighschool.download.MicrosoftOneDrive
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftOneDrive
 
 Input:
   NAME: Microsoft OneDrive

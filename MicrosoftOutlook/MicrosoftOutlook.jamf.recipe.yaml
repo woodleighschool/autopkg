@@ -1,5 +1,5 @@
 Identifier: com.github.woodleighschool.jamf.MicrosoftOutlook
-ParentRecipe: com.github.woodleighschool.download.MicrosoftOutlook
+ParentRecipe: com.github.woodleighschool.pkg.MicrosoftOutlook
 
 Input:
   NAME: Microsoft Outlook
