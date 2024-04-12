@@ -3,7 +3,7 @@ ParentRecipe: com.github.woodleighschool.pkg.OutsetApplyBranding
 
 Input:
   NAME: Outset Apply Branding
-  CATEGORY: New DEP
+  CATEGORY: DEP
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader

@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetApplyBranding
 
 Input:
   NAME: Outset Apply Branding
-  version: "1.3"
+  version: "1.4"
 
 Process:
   - Processor: PkgRootCreator

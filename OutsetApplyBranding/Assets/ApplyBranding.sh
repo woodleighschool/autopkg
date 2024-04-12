@@ -5,23 +5,21 @@ until pgrep -q -x "Finder" && pgrep -q -x "Dock"; do
 	sleep 1
 done
 
-sleep 3
-
 ##
 # Set wallpaper
 ##
 
-echo "Applying Wallpaper"
-/usr/local/bin/desktoppr "/Library/Desktop Pictures/Woodleigh.jpg"
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/Library/Desktop Pictures/Woodleigh.jpg"'
 
 ##
 # Set Dock
 ##
 
-# Removing all items from the dock
-echo "Clearing Dock"
-/usr/local/bin/dockutil --remove all --no-restart "${HOME}"
-sleep 3
+dock_item() {
+	printf '<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>%s</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>', "$1"
+}
+
+defaults delete com.apple.dock persistent-apps
 
 # find the correct teams version
 if [ -d "/Applications/Microsoft Teams (work or school).app" ]; then
@@ -30,36 +28,21 @@ elif [ -d "/Applications/Microsoft Teams classic.app" ]; then
 	TEAMSPATH="/Applications/Microsoft Teams classic.app"
 fi
 
-# Setting up the dock array
-IFS=$'\n'
-
-dockArray=(
-	"/System/Applications/Launchpad.app"
-	"/System/Applications/Mission Control.app"
-	"/Applications/Google Chrome.app"
-	"/Applications/Microsoft Word.app"
-	"/Applications/Microsoft Powerpoint.app"
-	"/Applications/Microsoft Excel.app"
-	"/Applications/Microsoft Outlook.app"
-	"/Applications/Microsoft OneNote.app"
-	"${TEAMSPATH}"
-	"/System/Applications/System Settings.app"
-	"/Applications/Self Service.app"
-)
-
-# Adding items to the dock
-echo "Applying Dock"
-for line in "${dockArray[@]}"; do
-	/usr/local/bin/dockutil --add "$line" --no-restart "${HOME}"
-	sleep 0.2
-done
+defaults write com.apple.dock persistent-apps -array \
+	"$(dock_item /System/Applications/Launchpad.app)" \
+	"$(dock_item /System/Applications/Mission\ Control.app)" \
+	"$(dock_item /Applications/Google\ Chrome.app)" \
+	"$(dock_item /Applications/Microsoft\ Word.app)" \
+	"$(dock_item /Applications/Microsoft\ Powerpoint.app)" \
+	"$(dock_item /Applications/Microsoft\ Excel.app)" \
+	"$(dock_item /Applications/Microsoft\ Outlook.app)" \
+	"$(dock_item /Applications/Microsoft\ OneNote.app)" \
+	"$(dock_item "${TEAMSPATH}")" \
+	"$(dock_item /System/Applications/System\ Settings.app)" \
+	"$(dock_item /Applications/Self\ Service.app)"
 
 # customise dock, hide recents, minimise window into application
 defaults write com.apple.dock minimize-to-application -bool true
 defaults write com.apple.dock show-recents -bool false
 
-# add downloads folder
-/usr/local/bin/dockutil --add "${HOME}/Downloads" --view grid --display folder "${HOME}"
-
-echo "Restarting Dock"
 killall Dock
