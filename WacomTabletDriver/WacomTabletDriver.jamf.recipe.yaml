@@ -1,18 +1,19 @@
-Identifier: com.github.woodleighschool.jamf.XCreds
-ParentRecipe: com.github.woodleighschool.pkg.XCreds
+
+Identifier: com.github.woodleighschool.jamf.WacomTabletDriver
+ParentRecipe: com.github.woodleighschool.pkg.WacomTabletDriver
 
 Input:
-  NAME: XCreds
-  CATEGORY: Utilities & Security
+  NAME: Wacom Tablet Driver
+  CATEGORY: Creative & Design
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Open Source Project for Syncing IdP password with macOS login password.
+    These are the drivers needed to use any Wacom pad/display.
+    You may need to reinstall these when you update your MacBooks OS.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
-      replace_pkg: "True"
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
@@ -31,7 +32,7 @@ Process:
         categories:
           - name: "%CATEGORY%"
             display_in: True
-            feature_in: False
+            feature_in: True
       maintenance:
       files_processes:
       user_interaction:
@@ -52,7 +53,7 @@ Process:
       patch_name: "%NAME% - Force"
       patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
-      grace_period_duration: "1"
+      grace_period_duration: "60"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""
@@ -62,3 +63,4 @@ Process:
     Arguments:
       pkg_name_match: "%NAME%"
       versions_to_keep: 1
+

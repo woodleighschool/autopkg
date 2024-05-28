@@ -1,7 +1,10 @@
 #!/bin/bash
 
 set -e
-set -x
+
+loggedInUser=$(stat -f "%Su" /dev/console)
+loggedInUserID=$(id -u "${loggedInUser}")
+launchctl bootstrap gui/"${loggedInUserID}" /Library/LaunchAgents/com.twocanoes.XCreds.plist
 
 script_path="${0}"
 package_path="${1}"

@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.download.Python
 
 Input:
   MAJVERSION: "3.12" # rectify postinstall if version change !!!!!
-  MINVERSION: "2"    # ^
+  MINVERSION: "3"    # ^
   VERSION: "%MAJVERSION%.%MINVERSION%"
   NAME: "Python %MAJVERSION%"
   DOWNLOAD_URL: "https://www.python.org/ftp/python/%VERSION%/python-%VERSION%-macos11.pkg"
@@ -11,6 +11,6 @@ Process:
   - Processor: URLDownloader
     Arguments:
       url: "%DOWNLOAD_URL%"
-      filename: "Python-%VERSION%.pkg"
+      filename: "Python-%MAJVERSION%.%MINVERSION%.pkg"
 
   - Processor: EndOfCheckPhase

@@ -60,6 +60,6 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
-      pkg_name_match: "Company Portal"
+      pkg_name_match: "%NAME%"
       versions_to_keep: 1
 

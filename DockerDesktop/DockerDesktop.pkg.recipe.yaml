@@ -13,12 +13,12 @@ Process:
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
       pkgdirs:
-        Applications: "0775"
+        tmp: "0777"
 
   - Processor: Copier
     Arguments:
       source_path: "%pathname%/%app_name%"
-      destination_path: "%pkgroot%/Applications/%app_name%"
+      destination_path: "%pkgroot%/tmp/dockertemp"
       overwrite: True
 
   - Processor: Copier

@@ -52,9 +52,9 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "Python-%MAJVERSION%"
+        pkgname: "Python-%MAJVERSION%.%MINVERSION%"
         version: "%VERSION%"
-        id: "com.woodleigh.python-%MAJVERSION%.installer"
+        id: "com.woodleigh.python-%MAJVERSION%.%MINVERSION%.installer"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
         pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+loggedInUser=$(stat -f "%Su" /dev/console)
+loggedInUserID=$(id -u "${loggedInUser}")
+
 # remove nomad
 /usr/local/bin/authchanger -reset || :
 killall NoMAD || :
@@ -19,8 +22,13 @@ find \
 	-depth -maxdepth 1 -type d -empty -delete 2>/dev/null || :
 
 # remove old xcreds
-killall XCreds
+launchctl bootout gui/"${loggedInUserID}" /Library/LaunchAgents/com.twocanoes.XCreds.plist || :
+killall XCreds || :
 
 if [ -d "/Applications/XCreds.app" ]; then
 	rm -rf "/Applications/XCreds.app"
 fi
+
+# Xcreds temp fix for accounts not created via login
+dscl . -create /Users/"${loggedInUser}" 'dsAttrTypeNative:_xcreds_oidc_username' "${loggedInUser}"
+dscl . -create /Users/"${loggedInUser}" 'dsAttrTypeNative:_xcreds_activedirectory_kerberosPrincipal' "${loggedInUser}"@WOODLEIGHSCHOOL.NET

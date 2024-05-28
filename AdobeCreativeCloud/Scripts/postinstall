@@ -1,4 +1,4 @@
 #!/bin/bash
 
-installer -pkg '/tmp/creativecloudtemp/Build/November-2023-2_Install.pkg' -target /
+installer -pkg '/tmp/creativecloudtemp/Build/Adobe Creative Cloud 120424_Install.pkg' -target /
 rm -rf /tmp/creativecloudtemp

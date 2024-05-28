@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.pkg.AdobeCreativeCloud
 
 Input:
   NAME: Adobe Creative Cloud
-  version: "11.23"
+  version: "12-04-24"
 
 Process:
   - Processor: PkgRootCreator

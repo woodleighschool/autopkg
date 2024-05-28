@@ -18,6 +18,12 @@ Process:
 
   - Processor: Copier
     Arguments:
+      source_path: "%RECIPE_DIR%/Assets/Library"
+      destination_path: "%pkgroot%/Library"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
       source_path: "%RECIPE_DIR%/Scripts"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
       overwrite: True
@@ -39,6 +45,9 @@ Process:
           - path: Applications
             user: root
             group: admin
+          - path: Library
+            user: root
+            group: wheel
 
   - Processor: PathDeleter
     Arguments:
