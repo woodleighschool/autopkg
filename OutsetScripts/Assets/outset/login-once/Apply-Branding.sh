@@ -19,7 +19,9 @@ dock_item() {
 setup_dock() {
 	defaults delete com.apple.dock persistent-apps
 
-	if [ -d "/Applications/Microsoft Teams (work or school).app" ]; then
+	if [ -d "/Applications/Microsoft Teams.app" ]; then
+		TEAMSPATH="/Applications/Microsoft Teams.app"
+	elif [ -d "/Applications/Microsoft Teams (work or school).app" ]; then
 		TEAMSPATH="/Applications/Microsoft Teams (work or school).app"
 	elif [ -d "/Applications/Microsoft Teams classic.app" ]; then
 		TEAMSPATH="/Applications/Microsoft Teams classic.app"
@@ -36,7 +38,8 @@ setup_dock() {
 		"$(dock_item /Applications/Microsoft\ OneNote.app)" \
 		"$(dock_item "${TEAMSPATH}")" \
 		"$(dock_item /System/Applications/System\ Settings.app)" \
-		"$(dock_item /Applications/Self\ Service.app)"
+		"$(dock_item /Applications/Self\ Service.app)" \
+		"$(dock_item /Applications/Vivi.app)"
 
 	defaults write com.apple.dock minimize-to-application -bool true
 	defaults write com.apple.dock show-recents -bool false

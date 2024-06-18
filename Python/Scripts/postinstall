@@ -11,7 +11,7 @@
 #
 
 PYVER="3.12" # rectify download recipe if version change !!!!!
-PYMAJOR="3"  # ^
+PYMAJOR="4"  # ^
 FWK="/Library/Frameworks/Python.framework/Versions/${PYVER}"
 RELFWKBIN="../../..${FWK}/bin"
 

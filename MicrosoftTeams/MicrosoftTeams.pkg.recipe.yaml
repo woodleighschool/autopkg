@@ -17,7 +17,7 @@ Process:
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Microsoft Teams (work or school).app/Contents/Info.plist"
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Microsoft Teams.app/Contents/Info.plist"
       plist_version_key: "CFBundleVersion"
 
   - Processor: PkgCopier

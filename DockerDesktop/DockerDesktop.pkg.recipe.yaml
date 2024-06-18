@@ -37,9 +37,9 @@ Process:
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
         pkgroot: "%pkgroot%"
         chown:
-          - path: Applications
+          - path: tmp
             user: root
-            group: admin
+            group: wheel
 
   - Processor: PathDeleter
     Arguments:

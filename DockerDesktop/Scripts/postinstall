@@ -4,4 +4,5 @@
 # and cant access files they dont have permission to see
 
 loggedInUser=$(stat -f%Su /dev/console)
-/Applications/Docker.app/Contents/MacOS/install --accept-license --user="${loggedInUser}"
+/tmp/dockertemp/Docker.app/Contents/MacOS/install --accept-license --user="${loggedInUser}"
+rm -rf /tmp/dockertemp/

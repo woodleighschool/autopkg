@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.OutsetApplyBranding
+Identifier: com.github.woodleighschool.pkg.OutsetScripts
 
 Input:
-  NAME: Outset Apply Branding
-  version: "1.7"
+  NAME: Outset Scripts
+  version: "2.1"
 
 Process:
   - Processor: PkgRootCreator
@@ -15,22 +15,21 @@ Process:
   - Processor: com.github.woodleighschool.processors/FolderCreator
     Arguments:
       folders:
-        - path: "%pkgroot%/usr/local/outset/login-once"
+        - path: "%pkgroot%/usr/local/"
           perms: "0755"
         - path: "%pkgroot%/Library/Desktop Pictures"
           perms: "0755"
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Assets/ApplyBranding.sh"
-      destination_path: "%pkgroot%/usr/local/outset/login-once/ApplyBranding.sh"
+      source_path: "%RECIPE_DIR%/Assets/outset"
+      destination_path: "%pkgroot%/usr/local/outset"
       overwrite: True
 
-  - Processor: com.github.woodleighschool.processors/Permer
+  - Processor: FileCreator
     Arguments:
-      chown:
-        - path: "%pkgroot%/usr/local/outset/login-once/ApplyBranding.sh"
-          perms: "0755"
+      file_path: "%pkgroot%/usr/local/outset/version"
+      file_content: "%version%"
 
   - Processor: Copier
     Arguments:
@@ -43,7 +42,7 @@ Process:
       pkg_request:
         pkgname: "%NAME%-%version%"
         version: "%version%"
-        id: "com.woodleigh.outsetapplybranding"
+        id: "com.woodleigh.outsetscripts"
         options: purge_ds_store
         scripts: "%RECIPE_DIR%/Scripts"
         pkgroot: "%pkgroot%"

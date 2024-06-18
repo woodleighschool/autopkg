@@ -1,0 +1,4 @@
+#!/bin/bash
+
+chflags -R noschg /usr/local/outset
+rm -rf /usr/local/outset/{boot*,login*,on*}/*

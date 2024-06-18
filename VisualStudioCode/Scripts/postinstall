@@ -3,15 +3,15 @@
 # Get the currently logged in user
 loggedInUser=$(echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { print $3 }')
 
-# Define the settings file path
-SETTINGS_FILE="/Users/${loggedInUser}/Library/Application Support/Code/User/settings.json"
+settingsFile="/Users/${loggedInUser}/Library/Application Support/Code/User/settings.json"
+mkdir -p "$(dirname "${settingsFile}")"
 
-# Create the directory for settings file if it doesn't exist
-mkdir -p "$(dirname "${SETTINGS_FILE}")"
-
-# Write the settings.json content
-cat >"${SETTINGS_FILE}" <<EOF
+# Check if settings.json exists and if it does not contain 'installed.selfService'
+if [ -f "${settingsFile}" ]; then
+	if ! grep -q '"installed.selfService": "true"' "${settingsFile}"; then
+		cat >"${settingsFile}" <<EOF
 {
+  "installed.selfService": "true",
   "workbench.iconTheme": "eq-material-theme-icons-palenight",
   "security.workspace.trust.enabled": false,
   "redhat.telemetry.enabled": true,
@@ -23,19 +23,25 @@ cat >"${SETTINGS_FILE}" <<EOF
   "explorer.confirmDragAndDrop": false,
   "settingsSync.ignoredSettings": [],
   "workbench.startupEditor": "none",
-  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
   "window.restoreWindows": "none",
   "workbench.colorTheme": "Material Theme Palenight High Contrast",
   "http.proxyStrictSSL": false,
-  "python.defaultInterpreterPath": "/usr/local/bin/python3.12",
+  "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "python.experiments.optInto": [],
   "autopep8.args": ["--max-line-length=200"],
-  "update.mode": "none"
+  "update.mode": "none",
+  "workbench.settings.applyToAllProfiles": [],
 }
 EOF
+	fi
+fi
 
 # Fix permissions recursively on the Code folder
 chown -R "${loggedInUser}:staff" "/Users/${loggedInUser}/Library/Application Support/Code"
+
+# Force creation of a symbolic link for VS Code binary, overwriting if it exists
+ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" "/usr/local/bin/code"
 
 # List of extensions to install
 EXTENSIONS=(

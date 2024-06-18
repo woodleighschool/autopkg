@@ -1,37 +1,29 @@
-Identifier: com.github.woodleighschool.jamf.GoogleChrome
-ParentRecipe: com.github.woodleighschool.pkg.GoogleChrome
+Identifier: com.github.woodleighschool.jamf.OutsetScripts
+ParentRecipe: com.github.woodleighschool.pkg.OutsetScripts
 
 Input:
-  NAME: Google Chrome
-  CATEGORY: Productivity & Office
-  POLICY_NAME: ALL - %NAME% - ALL
-  SELF_SERVICE_DESCRIPTION: >
-    Get more done with the new Google Chrome. A more simple, secure, and faster
-    web browser than ever, with Google's smarts built-in.
+  NAME: Outset Scripts
+  CATEGORY: Deployment & Provisioning
+  POLICY_NAME: DEP - %NAME% - ALL
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: "%CATEGORY%"
+      replace_pkg: True
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:
       general:
         policy_name: "%POLICY_NAME%"
-        policy_category: Applications
+        policy_category: "%CATEGORY%"
         frequency: Ongoing
         trigger_other: "%NAME%"
       scope:
         all_computers: True
       package:
       self_service:
-        show: True
-        display_name: "%NAME%"
-        description: "%SELF_SERVICE_DESCRIPTION%"
-        categories:
-          - name: "%CATEGORY%"
-            display_in: True
-            feature_in: True
+        show: False
       maintenance:
       files_processes:
       user_interaction:
@@ -39,11 +31,9 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
-      replace_icon: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
     Arguments:
@@ -52,8 +42,7 @@ Process:
       patch_name: "%NAME% - Force"
       patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
-      grace_period_duration: "60"
-      patch_unknown: "false"
+      grace_period_duration: "1"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""

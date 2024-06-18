@@ -52,6 +52,7 @@ Process:
       patch_template: "PolicyPatchTemplateForce.xml"
       patch_icon_policy_name: "%POLICY_NAME%"
       grace_period_duration: "60"
+      patch_unknown: "true"
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""
