@@ -1,0 +1,52 @@
+Identifier: com.github.woodleighschool.pkg.GarageBand
+
+Input:
+  NAME: GarageBand
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "/Applications/%NAME%.app"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "/Applications/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "/Library/Application Support/GarageBand"
+      destination_path: "%pkgroot%/Library/Application Support/GarageBand"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "/Library/Application Support/Logic"
+      destination_path: "%pkgroot%/Library/Application Support/Logic"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "/Library/Audio"
+      destination_path: "%pkgroot%/Library/Audio"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.woodleigh.garageband"
+        options: purge_ds_store
+        pkgroot: "%pkgroot%"
+        chown:
+          - path: Applications
+            user: root
+            group: admin

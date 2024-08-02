@@ -12,8 +12,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Assets/%NAME%.app"
-      destination_path: "%pkgroot%/Applications/%NAME%.app"
+      source_path: "%RECIPE_DIR%/Assets/Applications"
+      destination_path: "%pkgroot%/Applications"
       overwrite: True
 
   - Processor: Copier

@@ -1,12 +1,13 @@
-Identifier: com.github.woodleighschool.jamf.Sophos
-ParentRecipe: com.github.woodleighschool.pkg.Sophos
+
+Identifier: com.github.woodleighschool.jamf.GarageBand
+ParentRecipe: com.github.woodleighschool.pkg.GarageBand
 
 Input:
-  NAME: Sophos
-  CATEGORY: Utilities & Security
+  NAME: GarageBand
+  CATEGORY: Creative & Design
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    By combining cutting-edge technologies, such as deep learning and endpoint detection and response, Intercept X delivers unmatched protection against unknown malware, exploits, and ransomware.
+    GarageBand is the easiest way to create a great-sounding song on your Mac. Add realistic, impeccably produced and performed drum grooves to your song with Drummer. Easily shape the sound of any instrument in the Sound Library with Smart Controls. Crank up the bottom end with Bass Amp Designer, or mix and match electric guitar amps, cabinets, and pedals with Amp Designer and Pedalboard. Control GarageBand and play any software instrument wirelessly on your iPad using the Logic Remote app. Use iCloud to keep your GarageBand projects updated across multiple Mac computers, or even import GarageBand for iOS songs directly from iCloud.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -44,7 +45,22 @@ Process:
       replace_policy: "True"
       replace_icon: "True"
 
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "true"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "60"
+      patch_unknown: "true"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: "%NAME%"
       versions_to_keep: 1
+

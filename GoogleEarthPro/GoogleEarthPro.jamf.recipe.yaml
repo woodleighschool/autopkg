@@ -1,12 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.Sophos
-ParentRecipe: com.github.woodleighschool.pkg.Sophos
+Identifier: com.github.woodleighschool.jamf.GoogleEarthPro
+ParentRecipe: com.github.woodleighschool.pkg.GoogleEarthPro
 
 Input:
-  NAME: Sophos
-  CATEGORY: Utilities & Security
+  NAME: Google Earth Pro
+  CATEGORY: Creative & Design
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    By combining cutting-edge technologies, such as deep learning and endpoint detection and response, Intercept X delivers unmatched protection against unknown malware, exploits, and ransomware.
+    Google Earth Pro on desktop is available for users with advanced feature needs. Import and export GIS data, and go back in time with historical imagery. Available on PC, Mac, or Linux.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -43,6 +43,20 @@ Process:
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       replace_icon: "True"
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+    Arguments:
+      enabled: "true"
+      patch_softwaretitle: "%NAME%"
+      patch_name: "%NAME% - Force"
+      patch_template: "PolicyPatchTemplateForce.xml"
+      patch_icon_policy_name: "%POLICY_NAME%"
+      grace_period_duration: "1"
+      patch_unknown: "true"
+      min_os: ""
+      kill_app_name: ""
+      kill_app_bundle_id: ""
+      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

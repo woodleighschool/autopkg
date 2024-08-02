@@ -1,0 +1,24 @@
+
+Identifier: com.github.woodleighschool.download.VernierGraphicalAnalysis
+
+Input:
+  NAME: Vernier Graphical Analysis
+  DOWNLOAD_URL: "https://software-releases.graphicalanalysis.com/ga/mac/release/latest/Vernier-Graphical-Analysis.dmg"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.dmg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%/%NAME%.app"
+      requirement: >-
+        identifier "Vernier.GraphicalAnalysis" and
+        anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "75WN2B2WR8"

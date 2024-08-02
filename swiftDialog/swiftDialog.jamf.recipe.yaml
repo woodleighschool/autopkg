@@ -11,7 +11,6 @@ Process:
     Arguments:
       pkg_category: "%CATEGORY%"
       pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      replace_pkg: True
 
   - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
     Arguments:

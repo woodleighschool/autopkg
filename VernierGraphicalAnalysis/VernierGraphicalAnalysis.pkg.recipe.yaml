@@ -1,8 +1,9 @@
-Identifier: com.github.woodleighschool.pkg.DockerDesktop
-ParentRecipe: com.github.woodleighschool.download.DockerDesktop
+
+Identifier: com.github.woodleighschool.pkg.VernierGraphicalAnalysis
+ParentRecipe: com.github.woodleighschool.download.VernierGraphicalAnalysis
 
 Input:
-  NAME: Docker Desktop
+  NAME: Vernier Graphical Analysis
 
 Process:
   - Processor: AppDmgVersioner
@@ -13,18 +14,12 @@ Process:
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
       pkgdirs:
-        tmp: "0777"
+        Applications: "0775"
 
   - Processor: Copier
     Arguments:
-      source_path: "%pathname%/"
-      destination_path: "%pkgroot%/tmp/dockertemp"
-      overwrite: True
-
-  - Processor: Copier
-    Arguments:
-      source_path: "%RECIPE_DIR%/Scripts"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
       overwrite: True
 
   - Processor: PkgCreator
@@ -34,12 +29,11 @@ Process:
         version: "%version%"
         id: "%bundleid%"
         options: purge_ds_store
-        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-        pkgroot: "%pkgroot%"
+        pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
         chown:
-          - path: tmp
+          - path: Applications
             user: root
-            group: wheel
+            group: admin
 
   - Processor: PathDeleter
     Arguments:

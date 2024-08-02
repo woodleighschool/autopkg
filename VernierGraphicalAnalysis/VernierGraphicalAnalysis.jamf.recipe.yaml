@@ -1,12 +1,13 @@
-Identifier: com.github.woodleighschool.jamf.Sophos
-ParentRecipe: com.github.woodleighschool.pkg.Sophos
+
+Identifier: com.github.woodleighschool.jamf.VernierGraphicalAnalysis
+ParentRecipe: com.github.woodleighschool.pkg.VernierGraphicalAnalysis
 
 Input:
-  NAME: Sophos
-  CATEGORY: Utilities & Security
+  NAME: Vernier Graphical Analysis
+  CATEGORY: Education & Learning
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    By combining cutting-edge technologies, such as deep learning and endpoint detection and response, Intercept X delivers unmatched protection against unknown malware, exploits, and ransomware.
+    Collect, share, and analyze sensor in real time—and deepen students’ understanding of natural phenomena
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -48,3 +49,4 @@ Process:
     Arguments:
       pkg_name_match: "%NAME%"
       versions_to_keep: 1
+

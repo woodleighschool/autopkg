@@ -1,0 +1,23 @@
+Identifier: com.github.woodleighschool.download.GoogleEarthPro
+
+Input:
+  NAME: Google Earth Pro
+  DOWNLOAD_URL: "https://dl.google.com/earth/client/advanced/current/GoogleEarthProMac-Intel.dmg"
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%DOWNLOAD_URL%"
+      filename: "%NAME%.dmg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"
+      requirement: >-
+        identifier "googleearth-pro-7" and
+        anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = EQHXZ8M8AV

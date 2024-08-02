@@ -3,7 +3,6 @@ ParentRecipe: com.github.woodleighschool.download.Sophos
 
 Input:
   NAME: Sophos
-  version: "Network Installer"
 
 Process:
   - Processor: PkgRootCreator
@@ -24,11 +23,16 @@ Process:
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
       overwrite: True
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app/Contents/Info.plist"
+      plist_version_key: "CFBundleShortVersionString"
+
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%-netinst"
-        version: "1.0"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "com.sophos.installer"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"

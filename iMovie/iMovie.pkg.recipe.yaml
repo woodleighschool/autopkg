@@ -1,0 +1,35 @@
+
+Identifier: com.github.woodleighschool.pkg.iMovie
+
+Input:
+  NAME: iMovie
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "/Applications/%NAME%.app"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "/Applications/%NAME%.app"
+      destination_path: "%pkgroot%/Applications/%NAME%.app"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
+        id: "com.woodleigh.imovie"
+        options: purge_ds_store
+        pkgroot: "%pkgroot%"
+        chown:
+          - path: Applications
+            user: root
+            group: admin
