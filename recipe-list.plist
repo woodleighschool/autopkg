@@ -13,8 +13,8 @@
 			<string>com.github.woodleighschool.jamf.EasyFind</string>
 			<string>com.github.woodleighschool.jamf.GameMaker</string>
 			<string>com.github.woodleighschool.jamf.GlobalProtect</string>
-			<string>com.github.woodleighschool.jamf.LinewizeConnect</string>
 			<string>com.github.woodleighschool.jamf.GoogleChrome</string>
+			<string>com.github.woodleighschool.jamf.GoogleEarthPro</string>
 			<string>com.github.woodleighschool.jamf.Microsoft365BusinessProSuite</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftCompanyPortal</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftExcel</string>
@@ -27,11 +27,14 @@
 			<string>com.github.woodleighschool.jamf.MicrosoftWord</string>
 			<string>com.github.woodleighschool.jamf.MinecraftEducation</string>
 			<string>com.github.woodleighschool.jamf.Outset</string>
+			<string>com.github.woodleighschool.jamf.Sophos</string>
 			<string>com.github.woodleighschool.jamf.Spotify</string>
 			<string>com.github.woodleighschool.jamf.UltimakerCura</string>
 			<string>com.github.woodleighschool.jamf.UnityHub</string>
+			<string>com.github.woodleighschool.jamf.VernierGraphicalAnalysis</string>
 			<string>com.github.woodleighschool.jamf.VisualStudioCode</string>
 			<string>com.github.woodleighschool.jamf.Vivi</string>
+			<string>com.github.woodleighschool.jamf.WacomTabletDriver</string>
 			<string>com.github.woodleighschool.jamf.Zoom</string>
 			<string>com.github.woodleighschool.jamf.swiftDialog</string>
 		</array>
