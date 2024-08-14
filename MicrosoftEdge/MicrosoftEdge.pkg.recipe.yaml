@@ -1,0 +1,32 @@
+Identifier: com.github.woodleighschool.pkg.MicrosoftEdge
+ParentRecipe: com.github.woodleighschool.download.MicrosoftEdge
+
+Input:
+  NAME: Microsoft Edge
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      flat_pkg_path: "%pathname%"
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/Microsoft_Edge.pkg/Payload"
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Microsoft Edge.app/Contents/Info.plist"
+      plist_version_key: "CFBundleVersion"
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/unpack"

@@ -1,0 +1,20 @@
+Identifier: com.github.woodleighschool.download.MicrosoftEdge
+
+Input:
+  NAME: Microsoft Edge
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "https://go.microsoft.com/fwlink/?linkid=2093504"
+      filename: "%NAME%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%"
+      expected_authority_names:
+        - "Developer ID Installer: Microsoft Corporation (UBF8T346G9)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
