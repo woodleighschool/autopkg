@@ -10,7 +10,7 @@ Process:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
       flat_pkg_path: "%pathname%"
     
-  - Processor: MicrosoftEdgeMakesMeSad
+  - Processor: com.github.woodleighschool.processors/MicrosoftEdgeMakesMeSad
     Arguments:
       filepath: "%pathname%"
 
