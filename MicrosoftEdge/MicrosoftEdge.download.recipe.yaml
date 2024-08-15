@@ -7,7 +7,6 @@ Process:
   - Processor: URLDownloader
     Arguments:
       url: "https://go.microsoft.com/fwlink/?linkid=2093504"
-      filename: "%NAME%.pkg"
 
   - Processor: EndOfCheckPhase
 

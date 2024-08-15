@@ -17,7 +17,7 @@ Process:
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/%filepath%/Payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/%filename%/Payload"
 
   - Processor: Versioner
     Arguments:
