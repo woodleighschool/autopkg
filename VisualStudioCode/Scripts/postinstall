@@ -8,10 +8,10 @@ mkdir -p "$(dirname "${settingsFile}")"
 
 # Check if settings.json exists and if it does not contain 'installed.selfService'
 if [ -f "${settingsFile}" ]; then
-	if ! grep -q '"installed.selfService": "true"' "${settingsFile}"; then
+	if ! grep -q '"woodleigh.managed": "v1"' "${settingsFile}"; then
 		cat >"${settingsFile}" <<EOF
 {
-  "installed.selfService": "true",
+  "woodleigh.managed": "v1",
   "workbench.iconTheme": "eq-material-theme-icons-palenight",
   "security.workspace.trust.enabled": false,
   "redhat.telemetry.enabled": true,

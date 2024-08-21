@@ -11,8 +11,9 @@
 #
 
 PYVER="3.12" # rectify download recipe if version change !!!!!
-PYMAJOR="4"  # ^
+PYMAJOR="5"  # ^
 FWK="/Library/Frameworks/Python.framework/Versions/${PYVER}"
+PYTHON_ROOT="${FWK}"
 RELFWKBIN="../../..${FWK}/bin"
 
 "${FWK}/bin/python3.12" -E -s -Wi \
@@ -68,6 +69,13 @@ rm -f "${FWK}/bin/pip"
 chgrp -R admin "${FWK}/lib/python${PYVER}/site-packages" "${FWK}/bin"
 chmod -R g+w "${FWK}/lib/python${PYVER}/site-packages" "${FWK}/bin"
 
+# We do not know if the user selected the Python command-line tools
+# package that installs symlinks to /usr/local/bin.  So we assume
+# that the command-line tools package has already completed or was
+# not selected and we will only install /usr/local/bin symlinks for
+# pip et al if there are /usr/local/bin/python* symlinks to our
+# framework bin directory.
+
 if [ -d /usr/local/bin ]; then
 	(
 		install_links_if_our_fw() {
@@ -103,7 +111,7 @@ if [ -d /usr/local/bin ]; then
 fi
 
 ####
-# Python_Install_Pip.pkg
+# Python_Shell_Profile_Updater.pkg
 ####
 
 echo "This script will update your shell profile when the 'bin' directory"
@@ -120,7 +128,7 @@ else
 	theShell="${SHELL}"
 fi
 
-# Make sure the directory ${FWK}/bin is on the users PATH.
+# Make sure the directory ${PYTHON_ROOT}/bin is on the users PATH.
 BSH="$(basename "${theShell}")"
 case "${BSH}" in
 bash | ksh | sh | *csh | zsh | fish)
@@ -138,7 +146,7 @@ esac
 
 # Now ensure that our bin directory is on $P and before /usr/bin at that
 for elem in $(echo $P | tr ':' ' '); do
-	if [ "${elem}" = "${FWK}/bin" ]; then
+	if [ "${elem}" = "${PYTHON_ROOT}/bin" ]; then
 		echo "All right, you're a python lover already"
 		exit 0
 	elif [ "${elem}" = "/usr/bin" ]; then
@@ -146,7 +154,7 @@ for elem in $(echo $P | tr ':' ' '); do
 	fi
 done
 
-echo "${FWK}/bin is not on your PATH or at least not early enough"
+echo "${PYTHON_ROOT}/bin is not on your PATH or at least not early enough"
 case "${BSH}" in
 *csh)
 	if [ -f "${HOME}/.tcshrc" ]; then
@@ -161,7 +169,7 @@ case "${BSH}" in
 	echo "" >>"${RC}"
 	echo "# Setting PATH for Python ${PYVER}" >>"${RC}"
 	echo "# The original version is saved in .cshrc.pysave" >>"${RC}"
-	echo "set path=(${FWK}/bin "'$path'")" >>"${RC}"
+	echo "set path=(${PYTHON_ROOT}/bin "'$path'")" >>"${RC}"
 	if [ $(id -ur) = 0 ]; then
 		chown "${USER}" "${RC}"
 	fi
@@ -188,7 +196,7 @@ fish)
 	echo "" >>"${RC}"
 	echo "# Setting PATH for Python ${PYVER}" >>"${RC}"
 	echo "# The original version is saved in ${RC}.pysave" >>"${RC}"
-	echo "set -x PATH \"${FWK}/bin\" \"\$PATH\"" >>"${RC}"
+	echo "set -x PATH \"${PYTHON_ROOT}/bin\" \"\$PATH\"" >>"${RC}"
 	if [ $(id -ur) = 0 ]; then
 		chown "${USER}" "${RC}"
 	fi
@@ -209,7 +217,7 @@ fi
 echo "" >>"${PR}"
 echo "# Setting PATH for Python ${PYVER}" >>"${PR}"
 echo "# The original version is saved in $(basename ${PR}).pysave" >>"${PR}"
-echo 'PATH="'"${FWK}/bin"':${PATH}"' >>"${PR}"
+echo 'PATH="'"${PYTHON_ROOT}/bin"':${PATH}"' >>"${PR}"
 echo 'export PATH' >>"${PR}"
 if [ $(id -ur) = 0 ]; then
 	chown "${USER}" "${PR}"
