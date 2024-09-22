@@ -1,7 +1,7 @@
-Identifier: com.github.woodleighschool.download.MicrosoftRemoteDesktop
+Identifier: com.github.woodleighschool.download.WindowsApp
 
 Input:
-  NAME: Microsoft Remote Desktop
+  NAME: Windows App
 
 Process:
   - Processor: URLDownloader

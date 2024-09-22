@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.MicrosoftRemoteDesktop
-ParentRecipe: com.github.woodleighschool.download.MicrosoftRemoteDesktop
+Identifier: com.github.woodleighschool.pkg.WindowsApp
+ParentRecipe: com.github.woodleighschool.download.WindowsApp
 
 Input:
-  NAME: Microsoft Remote Desktop
+  NAME: Windows App
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -17,7 +17,7 @@ Process:
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Microsoft Remote Desktop.app/Contents/Info.plist"
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Windows App.app/Contents/Info.plist"
       plist_version_key: "CFBundleShortVersionString"
 
   - Processor: PkgCopier
