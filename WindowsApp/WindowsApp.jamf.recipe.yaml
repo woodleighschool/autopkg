@@ -40,7 +40,7 @@ Process:
             feature_in: False
       maintenance:
       files_processes:
-        run_command: killall 'Windows App' || echo && loggedInUser=$(/bin/ls -l /dev/console | /usr/bin/awk '{ print $3 }') && hostAddress="rds.woodleigh.vic.edu.au" && friendlyName="RDS" && uuid=$(existingUUID=$(sudo -u "${loggedInUser}" "/Applications/Windows App.app/Contents/MacOS/Windows App" --script bookmark list | grep "\"${friendlyName}\"" | awk -F ', ' '{print $2}') && echo "${existingUUID:-$(uuidgen)}") && sudo -u "${loggedInUser}" "/Applications/Windows App.app/Contents/MacOS/Windows App" --script bookmark write "${uuid}" --hostname "${hostAddress}" --friendlyname "${friendlyName}" --redirectprinters true --username "${loggedInUser}"
+#        run_command: killall 'Windows App' || echo && loggedInUser=$(/bin/ls -l /dev/console | /usr/bin/awk '{ print $3 }') && hostAddress="rds.woodleigh.vic.edu.au" && friendlyName="RDS" && uuid=$(existingUUID=$(sudo -u "${loggedInUser}" "/Applications/Windows App.app/Contents/MacOS/Windows App" --script bookmark list | grep "\"${friendlyName}\"" | awk -F ', ' '{print $2}') && echo "${existingUUID:-$(uuidgen)}") && sudo -u "${loggedInUser}" "/Applications/Windows App.app/Contents/MacOS/Windows App" --script bookmark write "${uuid}" --hostname "${hostAddress}" --friendlyname "${friendlyName}" --redirectprinters true --username "${loggedInUser}"
       user_interaction:
       output: "%RECIPE_CACHE_DIR%/%NAME%"
 
