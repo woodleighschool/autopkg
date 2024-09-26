@@ -22,7 +22,7 @@
 			<string>com.github.woodleighschool.jamf.MicrosoftOneNote</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftOutlook</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftPowerPoint</string>
-			<string>com.github.woodleighschool.jamf.MicrosoftRemoteDesktop</string>
+			<string>com.github.woodleighschool.jamf.WindowsApp</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftTeams</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftWord</string>
 			<string>com.github.woodleighschool.jamf.MinecraftEducation</string>
