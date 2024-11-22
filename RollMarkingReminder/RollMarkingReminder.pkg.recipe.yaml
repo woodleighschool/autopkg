@@ -1,0 +1,42 @@
+Identifier: com.github.woodleighschool.pkg.RollMarkingReminder
+
+Input:
+  NAME: RollMarkingReminder
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Assets/"
+      destination_path: "%pkgroot%/"
+      overwrite: True
+
+  - Processor: Copier
+    Arguments:
+      source_path: "%RECIPE_DIR%/Scripts"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+      overwrite: True
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-1.0.1"
+        version: "1.0.1"
+        id: "au.edu.vic.woodleigh.rollmarkingreminder"
+        options: purge_ds_store
+        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
+        pkgroot: "%pkgroot%"
+        chown:
+          - path: Library
+            user: root
+            group: wheel
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

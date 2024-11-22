@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "open 'jamfselfservice://content?entity=policy&id=311&action=execute'" >"/Users/tokenadmin/Desktop/Setup Your Mac.command"
+chmod +x "/Users/tokenadmin/Desktop/Setup Your Mac.command"
+exit 0
