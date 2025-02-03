@@ -4,6 +4,10 @@ Input:
   NAME: RollMarkingReminder
 
 Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_DIR%/Assets/Library/Application Support/Woodleigh/RollMarkingReminder.app"
+
   - Processor: PkgRootCreator
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
@@ -25,8 +29,8 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%-1.0.1"
-        version: "1.0.1"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
         id: "au.edu.vic.woodleigh.rollmarkingreminder"
         options: purge_ds_store
         scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"

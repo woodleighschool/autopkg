@@ -1,0 +1,8 @@
+#!/bin/bash
+
+loggedInUser=$(stat -f "%Su" /dev/console)
+loggedInUserID=$(id -u "${loggedInUser}")
+
+# remove old xcreds
+launchctl bootout gui/"${loggedInUserID}" /Library/LaunchAgents/au.edu.vic.woodleigh.rollmarkingreminder.plist || :
+killall RollMarkingReminder || :
