@@ -49,6 +49,6 @@ Process:
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""
-      replace_patch: True
+      replace_patch: "True"
       
 # used in prestage, so no package cleanup

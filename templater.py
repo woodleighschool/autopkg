@@ -116,7 +116,7 @@ Process:
       min_os: ""
       kill_app_name: ""
       kill_app_bundle_id: ""
-      replace_patch: True
+      replace_patch: "True"
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
