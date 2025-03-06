@@ -1,12 +1,10 @@
-Identifier: com.github.woodleighschool.jamf.XCreds
-ParentRecipe: com.github.woodleighschool.pkg.XCreds
+Identifier: com.github.woodleighschool.jamf.RollMarkingReminder
+ParentRecipe: com.github.woodleighschool.pkg.RollMarkingReminder
 
 Input:
-  NAME: XCreds
+  NAME: Roll Marking Reminder
   CATEGORY: Utilities & Security
-  POLICY_NAME: ALL - %NAME% - ALL
-  SELF_SERVICE_DESCRIPTION: >
-    Open Source Project for Syncing IdP password with macOS login password.
+  POLICY_NAME: SC - %NAME% - STAFF
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -18,19 +16,17 @@ Process:
       general:
         policy_name: "%POLICY_NAME%"
         policy_category: Applications
-        frequency: Ongoing
+        frequency: Once per computer
         trigger_other: "%NAME%"
       scope:
-        all_computers: True
+        all_computers: False
+        include:
+          departments:
+            - id: 11
+              name: "Staff"
       package:
       self_service:
-        show: True
-        display_name: "%NAME%"
-        description: "%SELF_SERVICE_DESCRIPTION%"
-        categories:
-          - name: "%CATEGORY%"
-            display_in: True
-            feature_in: False
+        show: False
       maintenance:
       files_processes:
       user_interaction:
@@ -38,25 +34,25 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: "%NAME%.png"
+#      icon: "%NAME%.png"
       policy_name: "%POLICY_NAME%"
       policy_template: "%RECIPE_CACHE_DIR%/%NAME%.xml"
       replace_policy: "True"
       replace_icon: "True"
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
-    Arguments:
-      enabled: "true"
-      patch_softwaretitle: "%NAME%"
-      patch_name: "%NAME% - Force"
-      patch_template: "PolicyPatchTemplateForce.xml"
-      patch_icon_policy_name: "%POLICY_NAME%"
-      grace_period_duration: "1"
-      patch_unknown: "true"
-      min_os: ""
-      kill_app_name: ""
-      kill_app_bundle_id: ""
-      replace_patch: True
+#  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPatchUploader
+#    Arguments:
+#      enabled: "true"
+#      patch_softwaretitle: "%NAME%"
+#      patch_name: "%NAME% - Force"
+#      patch_template: "PolicyPatchTemplateForce.xml"
+#      patch_icon_policy_name: "%POLICY_NAME%"
+#      grace_period_duration: "1"
+#      patch_unknown: "true"
+#      min_os: ""
+#      kill_app_name: ""
+#      kill_app_bundle_id: ""
+#      replace_patch: True
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:

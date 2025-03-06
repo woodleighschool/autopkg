@@ -1,12 +1,12 @@
-Identifier: com.github.woodleighschool.jamf.AutodeskFusion360
-ParentRecipe: com.github.woodleighschool.pkg.AutodeskFusion360
+Identifier: com.github.woodleighschool.jamf.AutodeskFusion
+ParentRecipe: com.github.woodleighschool.pkg.AutodeskFusion
 
 Input:
-  NAME: Autodesk Fusion 360
+  NAME: Autodesk Fusion
   CATEGORY: STEAM
   POLICY_NAME: ALL - %NAME% - ALL
   SELF_SERVICE_DESCRIPTION: >
-    Fusion 360 is software for 3D CAD, modelling, manufacturing, industrial design, electronics & mechanical engineering.
+    Fusion is software for 3D CAD, modelling, manufacturing, industrial design, electronics & mechanical engineering.
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader

@@ -1,8 +1,8 @@
-Identifier: com.github.woodleighschool.pkg.AutodeskFusion360
-ParentRecipe: com.github.woodleighschool.download.AutodeskFusion360
+Identifier: com.github.woodleighschool.pkg.AutodeskFusion
+ParentRecipe: com.github.woodleighschool.download.AutodeskFusion
 
 Input:
-  NAME: Autodesk Fusion 360
+  NAME: Autodesk Fusion
 
 Process:
   - Processor: FlatPkgUnpacker
