@@ -2,7 +2,7 @@ Identifier: com.github.woodleighschool.pkg.OutsetScripts
 
 Input:
   NAME: Outset Scripts
-  version: "2.1"
+  version: "2.4"
 
 Process:
   - Processor: PkgRootCreator

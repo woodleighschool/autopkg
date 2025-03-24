@@ -6,18 +6,12 @@ loggedInUser=$(echo "show State:/Users/ConsoleUser" | scutil | awk '/Name :/ { p
 settingsFile="/Users/${loggedInUser}/Library/Application Support/Code/User/settings.json"
 mkdir -p "$(dirname "${settingsFile}")"
 
-# Check if settings.json exists and if it does not contain 'installed.selfService'
-if [ -f "${settingsFile}" ]; then
-	if ! grep -q '"woodleigh.managed": "v1"' "${settingsFile}"; then
-		cat >"${settingsFile}" <<EOF
+cat >"${settingsFile}" <<EOF
 {
-  "woodleigh.managed": "v1",
-  "workbench.iconTheme": "eq-material-theme-icons-palenight",
   "security.workspace.trust.enabled": false,
   "redhat.telemetry.enabled": true,
   "explorer.confirmDelete": true,
   "editor.accessibilitySupport": "off",
-  "materialTheme.accent": "Purple",
   "editor.insertSpaces": false,
   "editor.detectIndentation": false,
   "explorer.confirmDragAndDrop": false,
@@ -25,8 +19,6 @@ if [ -f "${settingsFile}" ]; then
   "workbench.startupEditor": "none",
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "window.restoreWindows": "none",
-  "workbench.colorTheme": "Material Theme Palenight High Contrast",
-  "http.proxyStrictSSL": false,
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "python.experiments.optInto": [],
   "autopep8.args": ["--max-line-length=200"],
@@ -34,25 +26,9 @@ if [ -f "${settingsFile}" ]; then
   "workbench.settings.applyToAllProfiles": [],
 }
 EOF
-	fi
-fi
 
 # Fix permissions recursively on the Code folder
 chown -R "${loggedInUser}:staff" "/Users/${loggedInUser}/Library/Application Support/Code"
 
 # Force creation of a symbolic link for VS Code binary, overwriting if it exists
 ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" "/usr/local/bin/code"
-
-# List of extensions to install
-EXTENSIONS=(
-	"equinusocio.vsc-material-theme"
-	"equinusocio.vsc-material-theme-icons"
-	"ms-python.autopep8"
-	"ms-python.python"
-	"ms-python.vscode-pylance"
-)
-
-# Install each extension
-for ext in "${EXTENSIONS[@]}"; do
-	su "${loggedInUser}" -c "/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension ${ext} --force"
-done
