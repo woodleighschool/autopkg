@@ -40,8 +40,7 @@ if ! defaults read io.macadmins.Outset run_once | grep -q 'ApplyBranding.sh'; th
 			"$(dock_item /Applications/Microsoft\ OneNote.app)" \
 			"$(dock_item "${TEAMSPATH}")" \
 			"$(dock_item /System/Applications/System\ Settings.app)" \
-			"$(dock_item /Applications/Self\ Service.app)" \
-			"$(dock_item /Applications/Vivi.app)"
+			"$(dock_item /Applications/Self\ Service.app)"
 
 		defaults write com.apple.dock minimize-to-application -bool true
 		defaults write com.apple.dock show-recents -bool false

@@ -5,7 +5,7 @@
 		<key>recipes</key>
 		<array>
 			<string>com.github.woodleighschool.jamf.1Password</string>
-			<string>com.github.woodleighschool.jamf.AutodeskFusion360</string>
+			<string>com.github.woodleighschool.jamf.AutodeskFusion</string>
 			<string>com.github.woodleighschool.jamf.BambuStudio</string>
 			<string>com.github.woodleighschool.jamf.Blender</string>
 			<string>com.github.woodleighschool.jamf.CricutDesignSpace</string>
