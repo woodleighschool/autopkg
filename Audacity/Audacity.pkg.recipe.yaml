@@ -1,9 +1,14 @@
-Identifier: com.github.woodleighschool.pkg.XCreds
+Identifier: com.github.woodleighschool.pkg.Audacity
+ParentRecipe: com.github.woodleighschool.download.Audacity
 
 Input:
-  NAME: XCreds
+  NAME: Audacity
 
 Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: "%pathname%"
+
   - Processor: PkgRootCreator
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
@@ -12,29 +17,17 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Assets/Applications"
-      destination_path: "%pkgroot%/Applications"
+      source_path: "%pathname%/%app_name%"
+      destination_path: "%pkgroot%/Applications/%app_name%"
       overwrite: True
-
-  - Processor: Copier
-    Arguments:
-      source_path: "%RECIPE_DIR%/Scripts"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-      overwrite: True
-
-  - Processor: PlistReader
-    Arguments:
-      info_path: "%pkgroot%/Applications/%NAME%.app"
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
         pkgname: "%NAME%-%version%"
         version: "%version%"
-        id: "com.twocanoes.xcreds"
+        id: "%bundleid%"
         options: purge_ds_store
-        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-        pkgroot: "%pkgroot%"
         chown:
           - path: Applications
             user: root

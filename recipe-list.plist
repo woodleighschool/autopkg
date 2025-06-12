@@ -5,6 +5,7 @@
 		<key>recipes</key>
 		<array>
 			<string>com.github.woodleighschool.jamf.1Password</string>
+			<string>com.github.woodleighschool.jamf.Audacity</string>
 			<string>com.github.woodleighschool.jamf.AutodeskFusion</string>
 			<string>com.github.woodleighschool.jamf.BambuStudio</string>
 			<string>com.github.woodleighschool.jamf.Blender</string>
@@ -22,7 +23,6 @@
 			<string>com.github.woodleighschool.jamf.MicrosoftOneNote</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftOutlook</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftPowerPoint</string>
-			<string>com.github.woodleighschool.jamf.WindowsApp</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftTeams</string>
 			<string>com.github.woodleighschool.jamf.MicrosoftWord</string>
 			<string>com.github.woodleighschool.jamf.MinecraftEducation</string>
@@ -35,6 +35,7 @@
 			<string>com.github.woodleighschool.jamf.VisualStudioCode</string>
 			<string>com.github.woodleighschool.jamf.Vivi</string>
 			<string>com.github.woodleighschool.jamf.WacomTabletDriver</string>
+			<string>com.github.woodleighschool.jamf.WindowsApp</string>
 			<string>com.github.woodleighschool.jamf.Zoom</string>
 			<string>com.github.woodleighschool.jamf.swiftDialog</string>
 		</array>
