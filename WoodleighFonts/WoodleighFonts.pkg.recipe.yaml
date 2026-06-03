@@ -1,0 +1,39 @@
+---
+Description: Packages the Woodleigh School font bundle.
+Identifier: com.github.woodleighschool.pkg.WoodleighFonts
+MinimumVersion: "1.1.0"
+
+Input:
+  NAME: Woodleigh Fonts
+  PKG_ID: au.edu.vic.woodleigh.fonts
+  VERSION: "1.0.0"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Library/Fonts: "0755"
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%pkgroot%/Library/Fonts"
+      overwrite: true
+      source_path: "%RECIPE_DIR%/Assets"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            path: Library/Fonts
+            user: root
+        id: "%PKG_ID%"
+        options: purge_ds_store
+        pkgname: "%NAME%-%VERSION%"
+        version: "%VERSION%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

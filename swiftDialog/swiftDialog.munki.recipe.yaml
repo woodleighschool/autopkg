@@ -1,0 +1,63 @@
+---
+Description: Downloads the latest version of swiftDialog and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.swiftDialog
+MinimumVersion: "1.1.0"
+ParentRecipe: com.github.zentralpro.download.swiftDialog
+
+Input:
+  NAME: swiftDialog
+  MUNKI_CATEGORY: Utilities
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - Dialog
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      swiftDialog is an open source admin utility for macOS 12 or later
+      written in SwiftUI that presents custom dialogs, displays informative
+      messages or can be used as a form to request user input.
+    developer: CSIRO
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    unattended_install: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/tmp-package.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Library/Application Support/Dialog/Dialog.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Application Support/Dialog/Dialog.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/unpack"

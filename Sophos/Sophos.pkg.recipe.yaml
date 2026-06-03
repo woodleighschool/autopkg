@@ -1,46 +1,47 @@
+---
 Identifier: com.github.woodleighschool.pkg.Sophos
-ParentRecipe: com.github.woodleighschool.download.Sophos
 
 Input:
   NAME: Sophos
 
 Process:
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: "%RECIPE_DIR%/Assets/SophosInstall.zip"
+      destination_path: "%RECIPE_CACHE_DIR%/unzip"
+      purge_destination: true
+
   - Processor: PkgRootCreator
     Arguments:
       pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
       pkgdirs:
-        tmp: "0777"
+        Library/Application Support/Woodleigh/Sophos: "0755"
 
   - Processor: Copier
     Arguments:
       source_path: "%RECIPE_CACHE_DIR%/unzip"
-      destination_path: "%pkgroot%/tmp/sophostemp"
-      overwrite: True
+      destination_path: "%pkgroot%/Library/Application Support/Woodleigh/Sophos"
+      overwrite: true
 
-  - Processor: Copier
+  - Processor: PlistReader
     Arguments:
-      source_path: "%RECIPE_DIR%/Scripts"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-      overwrite: True
-
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app/Contents/Info.plist"
-      plist_version_key: "CFBundleShortVersionString"
+      info_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app"
+      plist_keys:
+        CFBundleIdentifier: bundle_id
+        CFBundleShortVersionString: version
+        CFBundleVersion: build_version
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: "%NAME%-%version%"
-        version: "%version%"
-        id: "com.sophos.installer"
-        options: purge_ds_store
-        scripts: "%RECIPE_CACHE_DIR%/%NAME%/Scripts"
-        pkgroot: "%pkgroot%"
         chown:
-          - path: tmp
+          - group: wheel
+            path: Library/Application Support/Woodleigh/Sophos
             user: root
-            group: wheel
+        id: "%bundle_id%"
+        options: purge_ds_store
+        pkgname: "%NAME%-%version%-%REVISION%"
+        version: "%version%-%REVISION%"
 
   - Processor: PathDeleter
     Arguments:

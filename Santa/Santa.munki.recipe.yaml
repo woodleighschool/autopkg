@@ -1,0 +1,111 @@
+---
+Description: Downloads the latest version of Santa and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.Santa
+MinimumVersion: "2.7.6"
+ParentRecipe: com.github.autopkg.zentral.download.santa
+
+Input:
+  NAME: Santa
+  MUNKI_CATEGORY: Security
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications: []
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Santa is a binary and file access authorization system for macOS. It
+      consists of a system extension that monitors for executions and file
+      access.
+    developer: North Pole Security
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    unattended_install: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/app.pkg/Payload"
+      purge_destination: true
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/faux_root"
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: FileMover
+    Arguments:
+      source: "%RECIPE_CACHE_DIR%/payload/var/db/santa/migration/Santa.app"
+      target: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app/Contents/Info.plist"
+      plist_version_key: CFBundleVersion
+
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        installcheck_script: |-
+          #!/bin/zsh
+
+          minimum="%version%"
+          SANTACTL="/Applications/Santa.app/Contents/MacOS/santactl"
+          INFOPLIST="/Applications/Santa.app/Contents/Info.plist"
+          PLISTBUDDY="/usr/libexec/PlistBuddy"
+
+          if [[ ! -x "${SANTACTL}" ]]; then
+            exit 0
+          fi
+
+          current="$("${PLISTBUDDY}" -c "Print :CFBundleVersion" "${INFOPLIST}" 2>/dev/null || true)"
+          if [[ -z "${current}" ]]; then
+            exit 0
+          fi
+
+          autoload -Uz is-at-least
+          if ! is-at-least "${minimum}" "${current}"; then
+            exit 0
+          fi
+
+          if ! "${SANTACTL}" status >/dev/null 2>&1; then
+            exit 0
+          fi
+
+          exit 1
+        version: "%version%"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/faux_root"
+      installs_item_paths:
+        - /Applications/Santa.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/faux_root"
+        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/unpack"

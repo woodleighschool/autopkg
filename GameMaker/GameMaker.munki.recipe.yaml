@@ -1,0 +1,65 @@
+---
+Description: Downloads the latest version of GameMaker and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.GameMaker
+MinimumVersion: "2.3.0"
+ParentRecipe: com.github.davidbpirie.download.GameMaker
+
+Input:
+  NAME: GameMaker
+  MUNKI_CATEGORY: Programming
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - GameMaker
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      GameMaker makes designing games easy, regardless of your background or
+      skill level. All you need is an idea!
+    developer: YoYo Games
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: removepackages
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/GameMakerStudio2-Installer.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/GameMaker.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"

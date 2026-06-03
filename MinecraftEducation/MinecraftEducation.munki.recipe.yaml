@@ -1,0 +1,61 @@
+---
+Description: Downloads the latest version of Minecraft Education and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.MinecraftEducation
+MinimumVersion: "2.7"
+ParentRecipe: com.github.aysiu.download.MinecraftEducation
+
+Input:
+  NAME: Minecraft Education
+  MUNKI_CATEGORY: Education
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - minecraft-edu
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Engage students in game-based learning across the curriculum. Minecraft
+      Education is a game-based platform that inspires creative, inclusive
+      learning through play. Explore blocky words that unlock new ways to take on
+      any subject or challenge.
+    developer: Microsoft
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: remove_copied_items
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      source_path: "%pathname%/minecraft-edu.app"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
+      overwrite: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/minecraft-edu.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      munkiimport_appname: minecraft-edu.app
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"

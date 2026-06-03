@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# this should preconfigure docker, so that docker runs as the user
-# and cant access files they dont have permission to see
-
-loggedInUser=$(stat -f%Su /dev/console)
-/tmp/dockertemp/Docker.app/Contents/MacOS/install --accept-license --user="${loggedInUser}"
-rm -rf /tmp/dockertemp/

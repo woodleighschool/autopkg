@@ -1,0 +1,72 @@
+---
+Description: Downloads the latest version of Google Earth Pro and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.GoogleEarthPro
+MinimumVersion: "1.1.0"
+ParentRecipe: com.github.autopkg.download.google-earth
+
+Input:
+  NAME: Google Earth Pro
+  MUNKI_CATEGORY: Education
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - Google Earth Pro
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Google Earth Pro on desktop is available for users with advanced feature
+      needs. Import and export GIS data, and go back in time with historical
+      imagery. Available on PC, Mac, or Linux.
+    developer: Google
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: removepackages
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: "%pathname%/Install Google Earth*.pkg"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/expanded"
+      flat_pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/expanded/Google_Earth_Pro.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/Google Earth Pro.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+        - "%RECIPE_CACHE_DIR%/expanded"
+        - "%RECIPE_CACHE_DIR%/payload"

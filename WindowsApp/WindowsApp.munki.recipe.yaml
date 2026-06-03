@@ -1,0 +1,86 @@
+---
+Description: Downloads the latest version of Windows App and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.WindowsApp
+MinimumVersion: "1.1.0"
+ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp
+
+Input:
+  NAME: Windows App
+  MUNKI_CATEGORY: Productivity
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - Windows App
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Windows App (formerly Microsoft Remote Desktop) is your gateway to Azure Virtual Desktop,
+      Windows 365, Microsoft Dev Box, Remote Desktop Services, and remote PCs, securely connecting
+      you to Windows devices and apps.
+    developer: Microsoft
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: removepackages
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+    postinstall_script: |-
+      #!/bin/bash
+      loggedInUser=$(stat -f%Su /dev/console)
+      userId=$(id -u "$loggedInUser")
+      app="/Applications/Windows App.app/Contents/MacOS/Windows App"
+      hostAddress="rds.woodleigh.vic.edu.au"
+      friendlyName="RDS"
+      killall "Windows App" 2>/dev/null || true
+      existingUUID=$(launchctl asuser "$userId" "$app" --script bookmark list \
+        | awk -v name="$friendlyName" -F ', ' '$0 ~ "\""name"\"" {print $2; exit}')
+      uuid="${existingUUID:-$(uuidgen)}"
+      launchctl asuser "$userId" "$app" --script bookmark write "$uuid" \
+        --hostname "$hostAddress" \
+        --friendlyname "$friendlyName" \
+        --redirectprinters True \
+        --username "$loggedInUser"
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: "%RECIPE_CACHE_DIR%/unpacked/*rdc*.pkg"
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%found_filename%/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/Windows App.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"

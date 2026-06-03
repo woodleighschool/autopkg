@@ -1,0 +1,84 @@
+---
+Description: Downloads the latest version of Python 3.13 and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.Python
+MinimumVersion: "2.7"
+ParentRecipe: com.github.woodleighschool.download.Python
+
+Input:
+  NAME: Python 3.13
+  PYTHON_BRANCH: "3.13"
+  MUNKI_CATEGORY: Programming
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - IDLE
+      - Python Launcher
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Python is a high-level, general-purpose programming language. Its design
+      philosophy emphasizes code readability with the use of significant
+      indentation. Python is dynamically typed and garbage-collected. It
+      supports multiple programming paradigms, including structured,
+      object-oriented and functional programming.
+    developer: Python Software Foundation
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    minimum_os_version: "11.0"
+    name: "%NAME%"
+    installer_choices_xml:
+      - attributeSetting: 0
+        choiceAttribute: selected
+        choiceIdentifier: org.python.Python.PythonProfileChanges-%PYTHON_BRANCH%
+    uninstall_method: removepackages
+    uninstallable: true
+    unattended_install: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/Python_Framework.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app/Contents/Info.plist"
+      plist_version_key: CFBundleVersion
+
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app
+      version_comparison_key: CFBundleVersion
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/unpack"

@@ -1,0 +1,59 @@
+---
+Description: Downloads the latest version of Vernier Graphical Analysis and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.VernierGraphicalAnalysis
+MinimumVersion: "1.1.0"
+ParentRecipe: com.github.nstrauss.download.VernierGraphicalAnalysis
+
+Input:
+  NAME: Vernier Graphical Analysis
+  MUNKI_CATEGORY: Education
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - Vernier Graphical Analysis
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Vernier Graphical Analysis pairs with sensors to let students collect,
+      visualise, and analyse lab data directly on their Mac.
+    developer: Vernier
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: remove_copied_items
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      source_path: "%pathname%/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      overwrite: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/%NAME%.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"

@@ -1,16 +1,28 @@
+---
 Identifier: com.github.woodleighschool.download.Python
 
 Input:
-  MAJVERSION: "3.12" # rectify postinstall if version change !!!!!
-  MINVERSION: "7"    # ^
-  VERSION: "%MAJVERSION%.%MINVERSION%"
-  NAME: "Python %MAJVERSION%"
-  DOWNLOAD_URL: "https://www.python.org/ftp/python/%VERSION%/python-%VERSION%-macos11.pkg"
+  NAME: Python 3.13
+  PYTHON_BRANCH: "3.13"
+  SEARCH_URL: https://www.python.org/downloads/macos/
 
 Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: "Python (?P<version>%PYTHON_BRANCH%\\.\\d+) - "
+      url: "%SEARCH_URL%"
+
   - Processor: URLDownloader
     Arguments:
-      url: "%DOWNLOAD_URL%"
-      filename: "Python-%MAJVERSION%.%MINVERSION%.pkg"
+      url: "https://www.python.org/ftp/python/%version%/python-%version%-macos11.pkg"
+      filename: "python-%version%-macos11.pkg"
 
   - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Python Software Foundation (BMM5U3QVKW)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
+      input_path: "%pathname%"

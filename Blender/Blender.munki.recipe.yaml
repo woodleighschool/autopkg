@@ -1,0 +1,63 @@
+---
+Description: Downloads the latest version of Blender and imports it into Munki.
+Identifier: com.github.woodleighschool.munki.Blender
+MinimumVersion: "1.1.0"
+ParentRecipe: io.github.hjuutilainen.download.Blender
+
+Input:
+  NAME: Blender
+  ARCHITECTURE: arm64
+  MAJOR_VERSION: "5"
+  MUNKI_CATEGORY: Creativity
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    blocking_applications:
+      - Blender
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Blender is a free and open-source 3D computer graphics software tool set
+      used for creating animated films, visual effects, art, 3D-printed
+      models, motion graphics, interactive 3D applications, virtual reality,
+      and, formerly, video games.
+    developer: The Blender Foundation
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    uninstall_method: remove_copied_items
+    uninstallable: true
+    unattended_install: true
+    unattended_uninstall: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      source_path: "%pathname%/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      overwrite: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/%NAME%.app
+      derive_minimum_os_version: true
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiImporter
+    Arguments:
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      NAME: "%NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"

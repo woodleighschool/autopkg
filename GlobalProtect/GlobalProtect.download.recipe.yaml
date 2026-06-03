@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.download.GlobalProtect
 
 Input:
@@ -14,8 +15,8 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: "%pathname%"
       expected_authority_names:
         - "Developer ID Installer: Palo Alto Networks (PXPZ95SK77)"
         - "Developer ID Certification Authority"
         - "Apple Root CA"
+      input_path: "%pathname%"

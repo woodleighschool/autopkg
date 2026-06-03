@@ -1,3 +1,0 @@
-#!/bin/bash
-
-chflags -R schg /usr/local/outset/{boot*,login*,on*}

@@ -1,0 +1,45 @@
+---
+Description: Imports the Sophos installer pkg into Munki to ensure Sophos Endpoint Protection is installed and present.
+Identifier: com.github.woodleighschool.munki.Sophos
+MinimumVersion: "2.7"
+ParentRecipe: com.github.woodleighschool.pkg.Sophos
+
+Input:
+  NAME: Sophos
+  MUNKI_CATEGORY: Security
+  MUNKI_REPO_SUBDIR: apps/%NAME%
+  pkginfo:
+    catalogs:
+      - testing
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      By combining cutting-edge technologies, such as deep learning and
+      endpoint detection and response, Intercept X delivers unmatched
+      protection against unknown malware, exploits, and ransomware.
+    developer: Sophos
+    display_name: "%NAME%"
+    icon_name: "%NAME%.png"
+    name: "%NAME%"
+    unattended_install: true
+    installcheck_script: |
+      #!/bin/bash
+      # Check for the actual Sophos installation, not just the bootstrapper
+      if [[ -d "/Library/Application Support/Sophos" ]]; then
+        exit 1
+      fi
+      exit 0
+    postinstall_script: |
+      #!/bin/bash
+      until pgrep -x "Dock" &>/dev/null; do
+        sleep 10
+      done
+      INSTALLER_DIR="/Library/Application Support/Woodleigh/Sophos"
+      chmod a+x "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/Sophos Installer"
+      chmod a+x "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper"
+      "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/Sophos Installer" --quiet
+
+Process:
+  - Processor: MunkiImporter
+    Arguments:
+      pkg_path: "%pkg_path%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
