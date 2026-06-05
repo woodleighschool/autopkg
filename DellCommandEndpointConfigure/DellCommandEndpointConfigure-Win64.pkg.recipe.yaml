@@ -1,3 +1,4 @@
+---
 Description: Packages Dell Command | Endpoint Configure for Microsoft Intune.
 Identifier: com.github.woodleighschool.pkg.DellCommandEndpointConfigure-Win64
 ParentRecipe: com.github.woodleighschool.download.DellCommandEndpointConfigure-Win64

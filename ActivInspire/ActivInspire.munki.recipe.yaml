@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of ActivInspire and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.ActivInspire
 ParentRecipe: com.github.dataJAR-recipes.download.ActivInspire

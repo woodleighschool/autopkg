@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Microsoft Word and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftWord
 ParentRecipe: com.github.rtrouton.download.microsoftword365

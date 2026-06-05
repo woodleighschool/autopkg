@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Audacity and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Audacity
 ParentRecipe: com.github.dataJAR-recipes.download.Audacity

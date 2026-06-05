@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of TI-Nspire CX Premium Teacher Software and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.TI-NspireTeacher
 ParentRecipe: com.github.woodleighschool.download.TI-NspireTeacher

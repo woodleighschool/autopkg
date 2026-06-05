@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Windows App and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.WindowsApp
 ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp

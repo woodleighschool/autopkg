@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest Zoom 64-bit Windows MSI.
 Identifier: com.github.woodleighschool.download.Zoom-Win64
 MinimumVersion: "2.3"

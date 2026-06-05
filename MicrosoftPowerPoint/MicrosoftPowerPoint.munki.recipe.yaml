@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Microsoft PowerPoint and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftPowerPoint
 ParentRecipe: com.github.rtrouton.download.microsoftpowerpoint365

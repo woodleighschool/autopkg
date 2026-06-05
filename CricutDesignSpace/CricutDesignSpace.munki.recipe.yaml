@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Cricut Design Space and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.CricutDesignSpace
 ParentRecipe: com.github.nstrauss.download.CricutDesignSpace

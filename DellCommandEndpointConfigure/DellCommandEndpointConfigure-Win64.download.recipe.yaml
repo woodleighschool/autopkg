@@ -1,3 +1,4 @@
+---
 Description: Downloads Dell Command | Endpoint Configure for Microsoft Intune.
 Identifier: com.github.woodleighschool.download.DellCommandEndpointConfigure-Win64
 MinimumVersion: "2.3"

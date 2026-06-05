@@ -1,3 +1,4 @@
+---
 Description: Imports the Sophos installer pkg into Munki to ensure Sophos Endpoint Protection is installed and present.
 Identifier: com.github.woodleighschool.munki.Sophos
 ParentRecipe: com.github.woodleighschool.pkg.Sophos

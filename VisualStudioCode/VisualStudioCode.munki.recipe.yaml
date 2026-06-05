@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Visual Studio Code and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.VisualStudioCode
 ParentRecipe: com.github.jc0b.download.VisualStudioCode

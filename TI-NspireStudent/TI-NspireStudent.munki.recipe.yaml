@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of TI-Nspire CX Student Software and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.TI-NspireStudent
 ParentRecipe: com.github.dataJAR-recipes.download.TI-Nspire

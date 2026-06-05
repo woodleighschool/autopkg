@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Blender and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Blender
 ParentRecipe: io.github.hjuutilainen.download.Blender

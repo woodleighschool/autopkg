@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Vernier Graphical Analysis and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.VernierGraphicalAnalysis
 ParentRecipe: com.github.nstrauss.download.VernierGraphicalAnalysis

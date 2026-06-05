@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.LenovoSystemUpdate-Win64
 ParentRecipe: com.github.woodleighschool.pkg.LenovoSystemUpdate-Win64
 MinimumVersion: "2.3"

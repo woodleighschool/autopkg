@@ -1,3 +1,4 @@
+---
 Description: Packages the Senior Campus Windows printer queue for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.SeniorCampusPrinters-Win64
 MinimumVersion: "2.3"

@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Microsoft OneNote and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftOneNote
 ParentRecipe: com.github.rtrouton.download.microsoftonenote365

@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.Sophos-Win64
 ParentRecipe: com.github.woodleighschool.pkg.Sophos-Win64
 MinimumVersion: "2.3"

@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Spotify and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Spotify
 ParentRecipe: com.github.autopkg.download.Spotify

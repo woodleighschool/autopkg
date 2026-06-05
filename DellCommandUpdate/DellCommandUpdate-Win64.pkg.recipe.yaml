@@ -1,3 +1,4 @@
+---
 Description: Packages Dell Command | Update.
 Identifier: com.github.woodleighschool.pkg.DellCommandUpdate-Win64
 ParentRecipe: com.github.woodleighschool.download.DellCommandUpdate-Win64

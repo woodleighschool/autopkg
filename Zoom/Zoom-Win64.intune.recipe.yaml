@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.Zoom-Win64
 ParentRecipe: com.github.woodleighschool.pkg.Zoom-Win64
 MinimumVersion: "2.3"

@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest Google Chrome Enterprise 64-bit Windows MSI.
 Identifier: com.github.woodleighschool.download.GoogleChrome-Win64
 MinimumVersion: "2.3"

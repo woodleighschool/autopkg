@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of GameMaker and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GameMaker
 ParentRecipe: com.github.davidbpirie.download.GameMaker

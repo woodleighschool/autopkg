@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest GlobalProtect 64-bit Windows MSI from the Woodleigh portal.
 Identifier: com.github.woodleighschool.download.GlobalProtect-Win64
 MinimumVersion: "2.3"

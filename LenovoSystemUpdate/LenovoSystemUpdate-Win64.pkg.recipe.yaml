@@ -1,3 +1,4 @@
+---
 Description: Packages Lenovo System Update.
 Identifier: com.github.woodleighschool.pkg.LenovoSystemUpdate-Win64
 MinimumVersion: "2.3"

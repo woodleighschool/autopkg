@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Unity Hub and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.UnityHub
 ParentRecipe: com.github.hansen-m.download.UnityHub

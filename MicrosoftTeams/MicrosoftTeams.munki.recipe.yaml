@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Microsoft Teams and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftTeams
 ParentRecipe: com.github.rtrouton.download.microsoftteams

@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Santa and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Santa
 ParentRecipe: com.github.autopkg.zentral.download.santa

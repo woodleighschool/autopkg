@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of GlobalProtect and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GlobalProtect
 ParentRecipe: com.github.woodleighschool.download.GlobalProtect

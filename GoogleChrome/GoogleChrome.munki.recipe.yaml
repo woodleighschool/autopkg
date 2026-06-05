@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Google Chrome Enterprise and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GoogleChrome
 ParentRecipe: com.github.autopkg.download.googlechromepkg

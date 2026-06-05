@@ -1,3 +1,4 @@
+---
 Description: Packages Sophos Endpoint for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.Sophos-Win64
 MinimumVersion: "2.3"

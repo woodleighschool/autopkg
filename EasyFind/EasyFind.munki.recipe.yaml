@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of EasyFind and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.EasyFind
 ParentRecipe: com.github.jleggat.EasyFind.download

@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Microsoft Outlook and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftOutlook
 ParentRecipe: com.github.rtrouton.download.microsoftoutlook365

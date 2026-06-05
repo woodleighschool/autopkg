@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Minecraft Education and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MinecraftEducation
 ParentRecipe: com.github.aysiu.download.MinecraftEducation

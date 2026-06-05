@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.DellCommandEndpointConfigure-Win64
 ParentRecipe: com.github.woodleighschool.pkg.DellCommandEndpointConfigure-Win64
 MinimumVersion: "2.3"

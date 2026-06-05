@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of BambuStudio and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.BambuStudio
 ParentRecipe: com.github.dataJAR-recipes.download.BambuStudio

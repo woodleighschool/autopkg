@@ -1,3 +1,4 @@
+---
 Description: Packages GlobalProtect for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.GlobalProtect-Win64
 ParentRecipe: com.github.woodleighschool.download.GlobalProtect-Win64

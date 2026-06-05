@@ -1,3 +1,4 @@
+---
 Description: Packages Google Chrome Enterprise for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.GoogleChrome-Win64
 ParentRecipe: com.github.woodleighschool.download.GoogleChrome-Win64

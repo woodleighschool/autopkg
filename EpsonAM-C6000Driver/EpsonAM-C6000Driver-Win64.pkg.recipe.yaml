@@ -1,3 +1,4 @@
+---
 Description: Packages the Epson AM-C6000 PCL6 Windows driver for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.EpsonAM-C6000Driver-Win64
 MinimumVersion: "2.3"

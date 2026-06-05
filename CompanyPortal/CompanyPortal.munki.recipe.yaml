@@ -1,3 +1,4 @@
+---
 Description: Downloads the latest version of Company Portal and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.CompanyPortal
 ParentRecipe: com.github.rtrouton.download.MicrosoftIntuneCompanyPortal

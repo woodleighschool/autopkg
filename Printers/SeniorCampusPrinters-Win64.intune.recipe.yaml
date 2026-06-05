@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.SeniorCampusPrinters-Win64
 ParentRecipe: com.github.woodleighschool.pkg.SeniorCampusPrinters-Win64
 MinimumVersion: "2.3"

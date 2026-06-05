@@ -1,3 +1,4 @@
+---
 Identifier: com.github.woodleighschool.intune.GlobalProtect-Win64
 ParentRecipe: com.github.woodleighschool.pkg.GlobalProtect-Win64
 MinimumVersion: "2.3"
