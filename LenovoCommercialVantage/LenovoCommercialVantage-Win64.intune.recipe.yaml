@@ -1,0 +1,46 @@
+Identifier: com.github.woodleighschool.intune.LenovoCommercialVantage-Win64
+ParentRecipe: com.github.woodleighschool.pkg.LenovoCommercialVantage-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DESCRIPTION: >-
+    Lenovo Commercial Vantage provides enterprise management for Lenovo device
+    health, hardware settings, and Lenovo BIOS, firmware, driver, and
+    application updates.
+  DETECTION_FILE_OR_FOLDER: SUHelper.exe
+  DETECTION_PATH: C:\Program Files\Lenovo\SUHelper
+  ICON_PATH: "%RECIPE_DIR%/Assets/CommercialVantage.png"
+  INSTALL_COMMAND: '"__SETUP_FILE__" Install -Vantage -SuHelper'
+  MINIMUM_SUPPORTED_WINDOWS_RELEASE: Windows11_23H2
+  NAME: Lenovo Commercial Vantage
+  PUBLISHER: Lenovo
+  UNINSTALL_COMMAND: '"__SETUP_FILE__" Uninstall -Vantage -SuHelper'
+  UPDATE_MODE: in_place
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppUploader
+    Arguments:
+      architecture:
+        - amd64
+        - arm64
+      assignment_info:
+        - all_assignment: AllDevices
+          assignment_filter_display_name: Lenovo
+          assignment_filter_type: include
+          intent: required
+      categories:
+        - Utilities
+      description: "%DESCRIPTION%"
+      detection_file_or_folder: "%DETECTION_FILE_OR_FOLDER%"
+      detection_path: "%DETECTION_PATH%"
+      detection_type: file_version_at_least
+      display_name: "%NAME%"
+      icon_path: "%ICON_PATH%"
+      install_command: "%INSTALL_COMMAND%"
+      intunewin_path: "%intunewin_path%"
+      minimum_supported_windows_release: "%MINIMUM_SUPPORTED_WINDOWS_RELEASE%"
+      publisher: "%PUBLISHER%"
+      setup_file: "%setup_file%"
+      uninstall_command: "%UNINSTALL_COMMAND%"
+      update_mode: "%UPDATE_MODE%"
+      version: "%version%"

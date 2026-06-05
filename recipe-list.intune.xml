@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>recipes</key>
+		<array>
+			<string>com.github.woodleighschool.intune.DellCommandEndpointConfigure-Win64</string>
+			<string>com.github.woodleighschool.intune.DellCommandUpdate-Win64</string>
+			<string>com.github.woodleighschool.intune.EpsonAM-C6000Driver-Win64</string>
+			<string>com.github.woodleighschool.intune.GlobalProtect-Win64</string>
+			<string>com.github.woodleighschool.intune.GoogleChrome-Win64</string>
+			<string>com.github.woodleighschool.intune.LenovoCommercialVantage-Win64</string>
+			<string>com.github.woodleighschool.intune.LenovoSystemUpdate-Win64</string>
+			<string>com.github.woodleighschool.intune.SeniorCampusPrinters-Win64</string>
+			<string>com.github.woodleighschool.intune.Sophos-Win64</string>
+			<string>com.github.woodleighschool.intune.Vivi-Win64</string>
+			<string>com.github.woodleighschool.intune.Zoom-Win64</string>
+		</array>
+	</dict>
+</plist>

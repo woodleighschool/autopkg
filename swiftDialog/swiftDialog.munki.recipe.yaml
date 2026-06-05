@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of swiftDialog and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.swiftDialog
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.zentralpro.download.swiftDialog
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: swiftDialog
   MUNKI_CATEGORY: Utilities
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: swiftDialog
   pkginfo:
     blocking_applications:
       - Dialog
@@ -39,10 +39,10 @@ Process:
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Library/Application Support/Dialog/Dialog.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -53,8 +53,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Application Support/Dialog/Dialog.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Application Support/Dialog/Dialog.app"
 
   - Processor: PathDeleter
     Arguments:

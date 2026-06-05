@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of Santa and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Santa
-MinimumVersion: "2.7.6"
 ParentRecipe: com.github.autopkg.zentral.download.santa
 
+MinimumVersion: "2.7.6"
+
 Input:
-  NAME: Santa
   MUNKI_CATEGORY: Security
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Santa
   pkginfo:
     blocking_applications: []
     catalogs:
@@ -38,9 +38,9 @@ Process:
 
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: "%RECIPE_CACHE_DIR%/faux_root"
       pkgdirs:
         Applications: "0775"
+      pkgroot: "%RECIPE_CACHE_DIR%/faux_root"
 
   - Processor: FileMover
     Arguments:
@@ -57,39 +57,33 @@ Process:
       additional_pkginfo:
         installcheck_script: |-
           #!/bin/zsh
-
           minimum="%version%"
           SANTACTL="/Applications/Santa.app/Contents/MacOS/santactl"
           INFOPLIST="/Applications/Santa.app/Contents/Info.plist"
           PLISTBUDDY="/usr/libexec/PlistBuddy"
-
           if [[ ! -x "${SANTACTL}" ]]; then
             exit 0
           fi
-
           current="$("${PLISTBUDDY}" -c "Print :CFBundleVersion" "${INFOPLIST}" 2>/dev/null || true)"
           if [[ -z "${current}" ]]; then
             exit 0
           fi
-
           autoload -Uz is-at-least
           if ! is-at-least "${minimum}" "${current}"; then
             exit 0
           fi
-
           if ! "${SANTACTL}" status >/dev/null 2>&1; then
             exit 0
           fi
-
           exit 1
         version: "%version%"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/faux_root"
       installs_item_paths:
         - /Applications/Santa.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -100,8 +94,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
 
   - Processor: PathDeleter
     Arguments:

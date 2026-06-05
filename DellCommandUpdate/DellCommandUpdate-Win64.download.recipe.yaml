@@ -1,0 +1,19 @@
+Description: Downloads Dell Command | Update.
+Identifier: com.github.woodleighschool.download.DellCommandUpdate-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://dl.dell.com/FOLDER14424601M/1/Dell-Command-Update-Windows-Universal-Application_FGK9X_WIN64_5.7.0_A00.EXE
+  FILENAME: Dell-Command-Update-Windows-Universal-Application_FGK9X_WIN64_5.7.0_A00.EXE
+  NAME: DellCommandUpdate
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%FILENAME%"
+      request_headers:
+        Referer: https://www.dell.com/
+        User-Agent: Mozilla/5.0
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase

@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of Zoom and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Zoom
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.hansen-m.download.zoomus
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Zoom
   MUNKI_CATEGORY: Collaboration
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Zoom
   pkginfo:
     blocking_applications:
       - zoom.us
@@ -21,10 +21,10 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -41,10 +41,10 @@ Process:
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/zoom.us.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -55,8 +55,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/zoom.us.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/zoom.us.app"
 
   - Processor: PathDeleter
     Arguments:

@@ -1,15 +1,14 @@
----
 Identifier: com.github.woodleighschool.download.GlobalProtect
 
 Input:
-  NAME: GlobalProtect
   DOWNLOAD_URL: "https://access.woodleigh.vic.edu.au/global-protect/getmsi.esp?platform=mac"
+  NAME: GlobalProtect
 
 Process:
   - Processor: URLDownloader
     Arguments:
-      url: "%DOWNLOAD_URL%"
       filename: "%NAME%.pkg"
+      url: "%DOWNLOAD_URL%"
 
   - Processor: EndOfCheckPhase
 

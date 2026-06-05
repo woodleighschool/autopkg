@@ -1,14 +1,14 @@
----
 Description: Downloads the latest Apple Silicon Adobe Creative Cloud installer package and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.CreativeCloud
-MinimumVersion: "2.7"
 ParentRecipe: com.github.rtrouton.pkg.AdobeCreativeCloudInstallerAppleSilicon
 
+MinimumVersion: "2.7"
+
 Input:
-  NAME: Adobe Creative Cloud
   MUNKI_APP_PATH: /Applications/Utilities/Adobe Creative Cloud/ACC/Creative Cloud.app
   MUNKI_CATEGORY: Creativity
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Adobe Creative Cloud
   pkginfo:
     blocking_applications:
       - Creative Cloud
@@ -31,39 +31,34 @@ Input:
       exit 0
     minimum_os_version: "11.0"
     name: "%NAME%"
-    uninstall_method: uninstall_script
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: uninstall_script
+    uninstall_script: |-
+      #!/bin/bash
+      app_path="%MUNKI_APP_PATH%"
+      uninstaller="/Applications/Utilities/Adobe Creative Cloud/Utils/Creative Cloud Uninstaller.app/Contents/MacOS/Creative Cloud Uninstaller"
+      if [[ ! -d "$app_path" ]]; then
+        exit 0
+      fi
+      if [[ ! -x "$uninstaller" ]]; then
+        echo "Adobe Creative Cloud uninstaller not found: $uninstaller"
+        exit 1
+      fi
+      "$uninstaller" --uninstall=1
+      status=$?
+      if [[ -d "$app_path" ]]; then
+        echo "Adobe Creative Cloud is still installed."
+        exit 1
+      fi
+      exit "$status"
+    uninstallable: true
     uninstallcheck_script: |-
       #!/bin/bash
       if [[ -d "%MUNKI_APP_PATH%" ]]; then
         exit 0
       fi
       exit 1
-    uninstall_script: |-
-      #!/bin/bash
-      app_path="%MUNKI_APP_PATH%"
-      uninstaller="/Applications/Utilities/Adobe Creative Cloud/Utils/Creative Cloud Uninstaller.app/Contents/MacOS/Creative Cloud Uninstaller"
-
-      if [[ ! -d "$app_path" ]]; then
-        exit 0
-      fi
-
-      if [[ ! -x "$uninstaller" ]]; then
-        echo "Adobe Creative Cloud uninstaller not found: $uninstaller"
-        exit 1
-      fi
-
-      "$uninstaller" --uninstall=1
-      status=$?
-
-      if [[ -d "$app_path" ]]; then
-        echo "Adobe Creative Cloud is still installed."
-        exit 1
-      fi
-
-      exit "$status"
 
 Process:
   - Processor: MunkiPkginfoMerger

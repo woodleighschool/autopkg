@@ -1,131 +1,40 @@
-# autopkg
+# Woodleigh AutoPkg Recipes
 
-Automagically downloads, packages and uploads packages to JAMF.
+AutoPkg recipes for Woodleigh's macOS Munki imports and Windows Intune Win32 apps.
 
-To get started, download and install [autopkg](https://github.com/autopkg/autopkg/releases), and add this repo:
-
-```bash
-autopkg repo-add https://github.com/woodleighschool/autopkg.git
-autopkg repo-add https://github.com/grahampugh/jamf-upload
-```
+## Setup
 
 ```bash
-defaults write com.github.autopkg.plist JSS_URL "https://<instance>.jamfcloud.com"
-defaults write com.github.autopkg.plist API_USERNAME '<username>'
-defaults write com.github.autopkg.plist API_PASSWORD '<password>'
+autopkg repo-add /Users/ahyde/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg
+autopkg repo-add /Users/ahyde/GitHub/woodleighschool/wintune-autopkg
 ```
 
-Looking through this repo, you will see packages that are setup to download, package and/or upload to JAMF automatically. In the structure:
+The Intune recipes use the `wintune-autopkg` processors and the standard AutoPkg preferences for Graph credentials.
 
-```
-<AppName>
-	├── <AppName>.jamf.recipe.yaml
-	├── <AppName>.pkg.recipe.yaml
-	├── <AppName>.download.recipe.yaml
-	└── <AppName>.png
-```
+## Munki
 
-## Development
-
-to be continued...
-
-## Using autopkg
-
-To build packages, use `autopkg run`, eg:
+Munki recipes use the `*.munki.recipe.yaml` suffix and are listed in `recipe-list.munki.xml`.
 
 ```bash
-autopkg run <app>.<action>.recipe.yaml
+autopkg run --recipe-list recipe-list.munki.xml
 ```
 
-You can also build all working recipies using
+Keep `blocking_applications: []` explicit where Munki must not infer blockers from the app title.
+
+## Intune
+
+Intune recipes use the Windows flow:
+
+```text
+*.download.recipe.yaml -> *.pkg.recipe.yaml -> *.intune.recipe.yaml
+```
+
+The `*.pkg.recipe.yaml` step creates an `.intunewin` in the recipe cache root. The `*.intune.recipe.yaml` step creates or updates the Win32 app in Intune.
 
 ```bash
-autopkg run --recipe-list ~/Library/AutoPkg/RecipeRepos/com.github.woodleighschool.autopkg/recipe-list.plist
+autopkg run --recipe-list recipe-list.intune.xml
 ```
 
-### Explanation of <action>
+When a vendor does not provide an AutoPkg-friendly latest version and download source, keep the installer in `Assets/` and package it directly. Local installers are intentionally ignored; recipe icons are tracked when they are used.
 
-There are 3 actions (steps) in this setup, `jamf`, `pkg` and `download`.
-
-| Action     | Explanation                                                                                                    |
-| ---------- | -------------------------------------------------------------------------------------------------------------- |
-| `jamf`     | Uploads the packaged pkg from `pkg` to jamf, and recreates policies                                            |
-| `pkg`      | Packages up the `.dmg` (if source is a `.dmg`) to a `.pkg` and auto names the `.pkg` to `<name>-<version>.pkg` |
-| `download` | downloads the `.dmg` or `.pkg` and verifies it's authenticity                                                  |
-
-## Custom Processors
-
-This repo has a few custom processors, mainly the `JamfPolicyXMLGenerator`, which dynamically generates a xml to upload to jamf via arguments
-
-### BashVariableExtractor
-
-Extracts a variable from a bash file (ie getting the version string in a script) then exports it into the autopkg enviroment
-
-```yaml
-    - Processor: com.github.woodleighschool.processors/BashVariableExtractor
-      Arguments:
-        variable_name: "scriptVersion"
-        output_variable: "version"
-        file_path: "%pkgroot%/tmp/%NAME%/SYM-Dialog.bash"
-```
-
-### JamfPolicyXMLGenerator
-
-to be continued...
-
-Example of how to scope parameters work:
-
-```yaml
-Process:
-  - Processor: com.github.woodleighschool.processors/JamfPolicyXMLGenerator
-    Arguments:
-      policy_name: ALL - %NAME% - ALL
-      policy_category: Applications
-      install_button_text: "test"
-      scope:
-        all_computers: false
-        include:
-          computers:
-            - id: 493
-              name: "UPS-HOSKC28"
-              udid: "6ECFA7A2-DBC0-53BB-AC2E-7B777ECCFA6C"
-          computer_groups:
-            - id: 68
-              name: "Penbank Campus - Students"
-            - id: 15
-              name: "Senior Campus - Students"
-          departments:
-            - id: 11
-              name: "Staff"
-            - id: 21
-              name: "IT"
-        exclude:
-```
-
-### PkgSigner
-
-to be continued...
-
-### VersionSanitizer
-
-to be continued...
-
-### FolderCreator
-
-to be continued...
-
-### Microsoft365VersionerGetter
-
-to be continued...
-
-### GitRepoCloner
-
-to be continued...
-
-### Permer
-
-to be continued...
-
-### SimpleJSONParser
-
-to be continued...
+Shared macOS and Windows recipes keep the Munki parent identifiers as the plain names. Windows recipe chains include a platform token in the filename and identifier, for example `GoogleChrome-Win64.download.recipe.yaml` and `com.github.woodleighschool.intune.GoogleChrome-Win64`. Use the same shape for future platform splits, such as `-Win32` or `-WinARM64`.

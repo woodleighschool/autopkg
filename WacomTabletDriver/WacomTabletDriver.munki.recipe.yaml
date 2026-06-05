@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of Wacom Tablet Driver and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.WacomTabletDriver
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.rustymyers.download.WacomTablet
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Wacom Tablet Driver
   MUNKI_CATEGORY: Creativity
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Wacom Tablet Driver
   pkginfo:
     blocking_applications:
       - Wacom Center
@@ -23,10 +23,10 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -67,8 +67,8 @@ Process:
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: "%pathname%/Install Wacom Tablet.pkg"
       pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+      source_pkg: "%pathname%/Install Wacom Tablet.pkg"
 
   - Processor: MunkiImporter
     Arguments:
@@ -77,8 +77,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Wacom Tablet.localized/Wacom Center.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Wacom Tablet.localized/Wacom Center.app"
 
   - Processor: com.github.woodleighschool.processors/PathChmod
     Arguments:

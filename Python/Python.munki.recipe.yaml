@@ -1,14 +1,13 @@
----
 Description: Downloads the latest version of Python 3.13 and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Python
-MinimumVersion: "2.7"
 ParentRecipe: com.github.woodleighschool.download.Python
 
+MinimumVersion: "2.7"
+
 Input:
-  NAME: Python 3.13
-  PYTHON_BRANCH: "3.13"
   MUNKI_CATEGORY: Programming
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Python 3.13
   pkginfo:
     blocking_applications:
       - IDLE
@@ -25,15 +24,16 @@ Input:
     developer: Python Software Foundation
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
-    minimum_os_version: "11.0"
-    name: "%NAME%"
     installer_choices_xml:
       - attributeSetting: 0
         choiceAttribute: selected
         choiceIdentifier: org.python.Python.PythonProfileChanges-%PYTHON_BRANCH%
+    minimum_os_version: "11.0"
+    name: "%NAME%"
+    unattended_install: true
     uninstall_method: removepackages
     uninstallable: true
-    unattended_install: true
+  PYTHON_BRANCH: "3.13"
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -74,8 +74,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
 
   - Processor: PathDeleter
     Arguments:

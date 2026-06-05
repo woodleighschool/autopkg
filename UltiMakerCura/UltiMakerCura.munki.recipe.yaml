@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of UltiMaker Cura and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.UltiMakerCura
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.dataJAR-recipes.download.Ultimaker Cura
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: UltiMaker Cura
   MUNKI_CATEGORY: STEAM
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: UltiMaker Cura
   pkginfo:
     blocking_applications:
       - UltiMaker Cura
@@ -22,24 +22,24 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: remove_copied_items
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
 
 Process:
   - Processor: Copier
     Arguments:
-      source_path: "%pathname%/%NAME%.app"
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
+      source_path: "%pathname%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/%NAME%.app
-      derive_minimum_os_version: true
       version_comparison_key: CFBundleShortVersionString
 
   - Processor: MunkiPkginfoMerger
@@ -52,8 +52,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:

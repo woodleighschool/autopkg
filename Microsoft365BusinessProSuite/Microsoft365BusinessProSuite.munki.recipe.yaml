@@ -1,14 +1,14 @@
----
 Description: Downloads the latest version of Microsoft 365 Suite and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Microsoft365BusinessProSuite
-MinimumVersion: "2.7"
 ParentRecipe: com.github.rtrouton.download.MicrosoftOffice365BusinessProSuite
 
+MinimumVersion: "2.7"
+
 Input:
-  NAME: Microsoft 365 Business Pro Suite
-  pkg_ids_set_optional_true: []
   MUNKI_CATEGORY: Productivity
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Microsoft 365 Business Pro Suite
+  pkg_ids_set_optional_true: []
   pkginfo:
     blocking_applications:
       - Microsoft Autoupdate
@@ -29,21 +29,21 @@ Input:
     icon_name: Microsoft 365 Suite.png
     minimum_os_version: "13.0"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: MunkiImporter
     Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
       additional_makepkginfo_options:
         - --pkgvers
         - "%version%"
+      pkg_path: "%pathname%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_DIR%/Microsoft 365 Suite.png"
       destination_path: "%MUNKI_REPO%/icons/Microsoft 365 Suite.png"
+      source_path: "%RECIPE_DIR%/Microsoft 365 Suite.png"

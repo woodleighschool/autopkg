@@ -1,14 +1,14 @@
----
 Description: Downloads the latest version of Spotify and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Spotify
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.autopkg.download.Spotify
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Spotify
   DOWNLOAD_ARCH: ARM64
   MUNKI_CATEGORY: Media
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Spotify
   pkginfo:
     blocking_applications:
       - Spotify
@@ -22,27 +22,27 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: remove_copied_items
-    uninstallable: true
-    unattended_install: true
-    unattended_uninstall: true
     postinstall_script: |-
       #!/bin/bash
       /bin/chmod -R go+rX /Applications/Spotify.app
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
 
 Process:
   - Processor: Copier
     Arguments:
-      source_path: "%pathname%/Spotify.app"
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/Spotify.app"
       overwrite: true
+      source_path: "%pathname%/Spotify.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/Spotify.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -54,8 +54,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:

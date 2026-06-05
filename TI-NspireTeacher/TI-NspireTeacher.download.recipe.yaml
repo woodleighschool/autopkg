@@ -1,4 +1,3 @@
----
 Description: Downloads the latest version of TI-Nspire CX Premium Teacher Software.
 Identifier: com.github.woodleighschool.download.TI-NspireTeacher
 MinimumVersion: "1.0.0"
@@ -15,8 +14,8 @@ Process:
 
   - Processor: URLDownloader
     Arguments:
-      url: https://education.ti.com/%download_path%
       filename: "%NAME%.dmg"
+      url: https://education.ti.com/%download_path%
 
   - Processor: EndOfCheckPhase
 

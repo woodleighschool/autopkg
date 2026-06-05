@@ -1,14 +1,14 @@
----
 Description: Downloads the latest version of EasyFind and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.EasyFind
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.jleggat.EasyFind.download
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: EasyFind
   APP_DESTINATION: /Applications/Utilities
   MUNKI_CATEGORY: Utilities
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: EasyFind
   pkginfo:
     blocking_applications:
       - EasyFind
@@ -25,10 +25,10 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: remove_copied_items
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
 
 Process:
   - Processor: Unarchiver
@@ -39,16 +39,16 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
       destination_path: "%RECIPE_CACHE_DIR%/payload%APP_DESTINATION%/%NAME%.app"
       overwrite: true
+      source_path: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - "%APP_DESTINATION%/%NAME%.app"
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -59,16 +59,16 @@ Process:
 
   - Processor: MunkiImporter
     Arguments:
-      pkg_path: "%dmg_path%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
       additional_makepkginfo_options:
         - --destinationpath
         - "%APP_DESTINATION%"
+      pkg_path: "%dmg_path%"
+      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:

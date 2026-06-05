@@ -1,0 +1,35 @@
+Identifier: com.github.woodleighschool.intune.EpsonAM-C6000Driver-Win64
+ParentRecipe: com.github.woodleighschool.pkg.EpsonAM-C6000Driver-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DESCRIPTION: Epson AM-C6000 Series PCL6 print driver for Windows printer queues.
+  DETECTION_SCRIPT_PATH: "%RECIPE_DIR%/Scripts/detect.ps1"
+  INSTALL_COMMAND: '"__SETUP_FILE__" /S'
+  MINIMUM_SUPPORTED_WINDOWS_RELEASE: Windows11_23H2
+  NAME: Epson AM-C6000 Driver
+  PUBLISHER: Epson
+  UNINSTALL_COMMAND: cmd.exe /c exit 0
+  UPDATE_MODE: in_place
+  VERSION: "2.71.00"
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppUploader
+    Arguments:
+      architecture:
+        - amd64
+      assignment_info: []
+      categories:
+        - Printers
+      description: "%DESCRIPTION%"
+      detection_script_path: "%DETECTION_SCRIPT_PATH%"
+      detection_type: script
+      display_name: "%NAME%"
+      install_command: "%INSTALL_COMMAND%"
+      intunewin_path: "%intunewin_path%"
+      minimum_supported_windows_release: "%MINIMUM_SUPPORTED_WINDOWS_RELEASE%"
+      publisher: "%PUBLISHER%"
+      setup_file: "%setup_file%"
+      uninstall_command: "%UNINSTALL_COMMAND%"
+      update_mode: "%UPDATE_MODE%"
+      version: "%VERSION%"

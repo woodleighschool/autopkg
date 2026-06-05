@@ -1,15 +1,14 @@
----
 Identifier: com.github.woodleighschool.download.Vivi
 
 Input:
-  NAME: Vivi
   DOWNLOAD_URL: "https://api.vivi.io/mac"
+  NAME: Vivi
 
 Process:
   - Processor: URLDownloader
     Arguments:
-      url: "%DOWNLOAD_URL%"
       filename: "%NAME%.pkg"
+      url: "%DOWNLOAD_URL%"
 
   - Processor: EndOfCheckPhase
 

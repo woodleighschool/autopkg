@@ -1,4 +1,3 @@
----
 Identifier: com.github.woodleighschool.download.Python
 
 Input:
@@ -14,8 +13,8 @@ Process:
 
   - Processor: URLDownloader
     Arguments:
-      url: "https://www.python.org/ftp/python/%version%/python-%version%-macos11.pkg"
       filename: "python-%version%-macos11.pkg"
+      url: "https://www.python.org/ftp/python/%version%/python-%version%-macos11.pkg"
 
   - Processor: EndOfCheckPhase
 

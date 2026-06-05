@@ -1,14 +1,13 @@
----
 Description: Downloads the latest version of Docker Desktop and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.DockerDesktop
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.homebysix.download.DockerDesktop
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Docker Desktop
-  PLATFORM_ARCH: arm64
   MUNKI_CATEGORY: Programming
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Docker Desktop
   pkginfo:
     blocking_applications:
       - Docker Desktop
@@ -21,28 +20,9 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: remove_copied_items
-    uninstallable: true
-    unattended_install: true
-    unattended_uninstall: true
-    preinstall_script: |-
-      #!/bin/bash
-
-      CONSOLE_USER=$(/usr/bin/stat -f%Su /dev/console)
-
-      if [ "$CONSOLE_USER" = "root" ] || [ -z "$CONSOLE_USER" ]; then
-        echo "No user logged in or at login window. Deferring installation."
-        exit 1
-      fi
-
-      echo "User $CONSOLE_USER is logged in and Docker needs updating. OK to proceed with installation."
-
-      exit 0
     postinstall_script: |-
       #!/bin/bash
-
       CONSOLE_USER=$(/usr/bin/stat -f%Su /dev/console)
-
       if [ "$CONSOLE_USER" != "root" ] && [ -n "$CONSOLE_USER" ]; then
         echo "Installing Docker Desktop for user: $CONSOLE_USER"
         /Applications/Docker.app/Contents/MacOS/install --accept-license --user="$CONSOLE_USER"
@@ -50,20 +30,9 @@ Input:
         echo "No user logged in, cannot complete Docker Desktop installation"
         exit 1
       fi
-
-      exit 0
-    preuninstall_script: |-
-      #!/bin/bash
-
-      /Applications/Docker.app/Contents/MacOS/uninstall
-      /Applications/Docker.app/Contents/MacOS/install remove-kube-host
-      /Applications/Docker.app/Contents/MacOS/install remove-socket-symlink-on-startup
-      /Applications/Docker.app/Contents/MacOS/install remove-vmnetd
-
       exit 0
     postuninstall_script: |-
       #!/bin/bash
-
       DOCKER_PATHS=(
         "/Library/Application Support/com.docker.docker"
         "/Library/LaunchDaemons/com.docker.socket.plist"
@@ -85,19 +54,37 @@ Input:
         "/usr/local/bin/kubectl"
         "/usr/local/bin/vpnkit"
       )
-
       safe_remove() {
         if [ -e "$1" ]; then
           echo "Removing: $1"
           rm -rf "$1"
         fi
       }
-
       for path in "${DOCKER_PATHS[@]}"; do
         safe_remove "$path"
       done
-
       exit 0
+    preinstall_script: |-
+      #!/bin/bash
+      CONSOLE_USER=$(/usr/bin/stat -f%Su /dev/console)
+      if [ "$CONSOLE_USER" = "root" ] || [ -z "$CONSOLE_USER" ]; then
+        echo "No user logged in or at login window. Deferring installation."
+        exit 1
+      fi
+      echo "User $CONSOLE_USER is logged in and Docker needs updating. OK to proceed with installation."
+      exit 0
+    preuninstall_script: |-
+      #!/bin/bash
+      /Applications/Docker.app/Contents/MacOS/uninstall
+      /Applications/Docker.app/Contents/MacOS/install remove-kube-host
+      /Applications/Docker.app/Contents/MacOS/install remove-socket-symlink-on-startup
+      /Applications/Docker.app/Contents/MacOS/install remove-vmnetd
+      exit 0
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+  PLATFORM_ARCH: arm64
 
 Process:
   - Processor: MunkiPkginfoMerger
@@ -107,9 +94,9 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: "%pathname%"
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%PLATFORM_ARCH%-%version%.dmg"
       overwrite: true
+      source_path: "%pathname%"
 
   - Processor: MunkiImporter
     Arguments:
@@ -119,5 +106,5 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%pathname%"
       NAME: "%NAME%"
+      pathname: "%pathname%"

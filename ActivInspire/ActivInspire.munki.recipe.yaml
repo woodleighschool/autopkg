@@ -1,14 +1,14 @@
----
 Description: Downloads the latest version of ActivInspire and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.ActivInspire
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.dataJAR-recipes.download.ActivInspire
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: ActivInspire
   ACTIVINSPIRE_SERIAL: ""
   MUNKI_CATEGORY: Education
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: ActivInspire
   pkginfo:
     blocking_applications:
       - Inspire
@@ -22,10 +22,6 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
-    unattended_install: true
-    unattended_uninstall: true
     postinstall_script: |
       #!/bin/bash
       mkdir -p "/Users/Shared/Promethean/ActivInspire"
@@ -37,6 +33,10 @@ Input:
           <serial>%ACTIVINSPIRE_SERIAL%</serial>
       </License>
       EOF
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -53,17 +53,17 @@ Process:
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/Promethean/Activsoftware Inspire/Inspire.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: "%pathname%/ActivInspire_Application_*_MAC.pkg"
       pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+      source_pkg: "%pathname%/ActivInspire_Application_*_MAC.pkg"
 
   - Processor: MunkiImporter
     Arguments:
@@ -72,8 +72,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Promethean/Activsoftware Inspire/Inspire.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Promethean/Activsoftware Inspire/Inspire.app"
 
   - Processor: PathDeleter
     Arguments:

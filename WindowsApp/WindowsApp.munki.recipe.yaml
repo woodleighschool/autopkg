@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of Windows App and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.WindowsApp
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Windows App
   MUNKI_CATEGORY: Productivity
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Windows App
   pkginfo:
     blocking_applications:
       - Windows App
@@ -22,10 +22,6 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
-    unattended_install: true
-    unattended_uninstall: true
     postinstall_script: |-
       #!/bin/bash
       loggedInUser=$(stat -f%Su /dev/console)
@@ -42,6 +38,10 @@ Input:
         --friendlyname "$friendlyName" \
         --redirectprinters True \
         --username "$loggedInUser"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -62,10 +62,10 @@ Process:
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/Windows App.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -76,8 +76,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:

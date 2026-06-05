@@ -1,13 +1,13 @@
----
 Description: Downloads the latest version of Vivi and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Vivi
-MinimumVersion: "1.1.0"
 ParentRecipe: com.github.woodleighschool.download.Vivi
 
+MinimumVersion: "1.1.0"
+
 Input:
-  NAME: Vivi
   MUNKI_CATEGORY: Education
   MUNKI_REPO_SUBDIR: apps/%NAME%
+  NAME: Vivi
   pkginfo:
     blocking_applications:
       - Vivi
@@ -23,10 +23,10 @@ Input:
     display_name: "%NAME%"
     icon_name: "%NAME%.png"
     name: "%NAME%"
-    uninstall_method: removepackages
-    uninstallable: true
     unattended_install: true
     unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -43,10 +43,10 @@ Process:
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
+      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - /Applications/Vivi.app
-      derive_minimum_os_version: true
 
   - Processor: MunkiPkginfoMerger
 
@@ -57,8 +57,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       NAME: "%NAME%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:

@@ -1,0 +1,15 @@
+Description: Downloads the latest Vivi Windows MSI.
+Identifier: com.github.woodleighschool.download.Vivi-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://api.vivi.io/windows-msi64
+  NAME: Vivi
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      prefetch_filename: true
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase

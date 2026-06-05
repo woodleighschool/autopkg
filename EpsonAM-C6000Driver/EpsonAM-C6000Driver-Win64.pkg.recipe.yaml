@@ -1,0 +1,15 @@
+Description: Packages the Epson AM-C6000 PCL6 Windows driver for Intune Win32 upload.
+Identifier: com.github.woodleighschool.pkg.EpsonAM-C6000Driver-Win64
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Epson AM-C6000 Driver
+  PACKAGE_NAME: EpsonAM-C6000Driver
+  VERSION: "2.71.00"
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      force_repack: true
+      installer_path: "%RECIPE_DIR%/Assets/AMC6000_PCL6_x64_271JAUsHomeExportAsia.exe"
+      output_path: "%RECIPE_CACHE_DIR%/%PACKAGE_NAME%-%VERSION%.intunewin"

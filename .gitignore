@@ -4,5 +4,5 @@ __pycache__
 *.pkg
 *.dmg
 *.zip
-
-GlobalProtect.download.recipe.yaml
+*.msi
+*.exe

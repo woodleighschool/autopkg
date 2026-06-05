@@ -1,0 +1,16 @@
+Description: Downloads the latest GlobalProtect 64-bit Windows MSI from the Woodleigh portal.
+Identifier: com.github.woodleighschool.download.GlobalProtect-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://access.woodleigh.vic.edu.au/global-protect/getmsi.esp?version=64&platform=windows
+  FILENAME: GlobalProtect64.msi
+  NAME: GlobalProtect
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%FILENAME%"
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase

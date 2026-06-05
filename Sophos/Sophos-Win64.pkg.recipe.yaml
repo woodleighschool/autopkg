@@ -1,0 +1,13 @@
+Description: Packages Sophos Endpoint for Intune Win32 upload.
+Identifier: com.github.woodleighschool.pkg.Sophos-Win64
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Sophos
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      force_repack: true
+      installer_path: "%RECIPE_DIR%/Assets/SophosSetup.exe"
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%.intunewin"

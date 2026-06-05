@@ -1,4 +1,3 @@
----
 Description: Imports the Woodleigh School font bundle package into Munki.
 Identifier: com.github.woodleighschool.munki.WoodleighFonts
 ParentRecipe: com.github.woodleighschool.pkg.WoodleighFonts

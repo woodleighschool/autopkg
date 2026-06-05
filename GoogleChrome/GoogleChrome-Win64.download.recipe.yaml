@@ -1,0 +1,16 @@
+Description: Downloads the latest Google Chrome Enterprise 64-bit Windows MSI.
+Identifier: com.github.woodleighschool.download.GoogleChrome-Win64
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://dl.google.com/tag/s/dl/chrome/install/googlechromestandaloneenterprise64.msi
+  FILENAME: GoogleChromeStandaloneEnterprise64.msi
+  NAME: GoogleChrome
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%FILENAME%"
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase
