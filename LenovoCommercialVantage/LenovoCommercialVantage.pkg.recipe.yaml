@@ -1,0 +1,30 @@
+Description: Packages Lenovo Commercial Vantage Enterprise.
+Identifier: com.github.woodleighschool.pkg.LenovoCommercialVantage
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Lenovo Commercial Vantage
+  PACKAGE_NAME: LenovoCommercialVantage
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneInstallerVersioner
+    Arguments:
+      installer_path: "%RECIPE_DIR%/Assets/LenovoCommercialVantage_20.2511.24.0.20251217075118.zip"
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: "%RECIPE_DIR%/Assets/LenovoCommercialVantage_20.2511.24.0.20251217075118.zip"
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked/%PACKAGE_NAME%"
+      purge_destination: true
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      force_repack: true
+      installer_path: VantageInstaller.exe
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.intunewin"
+      source_folder: "%RECIPE_CACHE_DIR%/unpacked/%PACKAGE_NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"

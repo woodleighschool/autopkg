@@ -1,22 +1,15 @@
----
+Description: Downloads the latest Vivi Windows MSI.
 Identifier: com.github.woodleighschool.download.Vivi
+MinimumVersion: "2.3"
 
 Input:
+  DOWNLOAD_URL: https://api.vivi.io/windows-msi64
   NAME: Vivi
-  DOWNLOAD_URL: "https://api.vivi.io/mac"
 
 Process:
   - Processor: URLDownloader
     Arguments:
+      prefetch_filename: true
       url: "%DOWNLOAD_URL%"
-      filename: "%NAME%.pkg"
 
   - Processor: EndOfCheckPhase
-
-  - Processor: CodeSignatureVerifier
-    Arguments:
-      expected_authority_names:
-        - "Developer ID Installer: VIVI AUSTRALIA PTY LTD (3NRCUJ8TJC)"
-        - "Developer ID Certification Authority"
-        - "Apple Root CA"
-      input_path: "%pathname%"

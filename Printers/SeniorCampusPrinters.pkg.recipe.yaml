@@ -1,0 +1,44 @@
+Description: Packages the Senior Campus Windows printer queue for Intune Win32 upload.
+Identifier: com.github.woodleighschool.pkg.SeniorCampusPrinters
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Senior Campus Printers
+  PACKAGE_NAME: SeniorCampusPrinters
+  VERSION: "1.0"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/install.ps1"
+      overwrite: true
+      source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/install.ps1"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/uninstall.ps1"
+      overwrite: true
+      source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/uninstall.ps1"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/detect.ps1"
+      overwrite: true
+      source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/detect.ps1"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      force_repack: true
+      installer_path: install.ps1
+      output_path: "%RECIPE_CACHE_DIR%/%PACKAGE_NAME%-%VERSION%.intunewin"
+      source_folder: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"

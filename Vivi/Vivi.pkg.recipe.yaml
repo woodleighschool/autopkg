@@ -1,0 +1,22 @@
+Description: Packages Vivi for Intune Win32 upload.
+Identifier: com.github.woodleighschool.pkg.Vivi
+ParentRecipe: com.github.woodleighschool.download.Vivi
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Vivi
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIconExtractor
+    Arguments:
+      icon_size: 256
+      pathname: "%pathname%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneInstallerVersioner
+    Arguments:
+      installer_path: "%pathname%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      installer_path: "%pathname%"
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.intunewin"

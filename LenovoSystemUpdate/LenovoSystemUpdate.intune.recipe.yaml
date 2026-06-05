@@ -1,0 +1,45 @@
+Identifier: com.github.woodleighschool.intune.LenovoSystemUpdate
+ParentRecipe: com.github.woodleighschool.pkg.LenovoSystemUpdate
+MinimumVersion: "2.3"
+
+Input:
+  DESCRIPTION: >-
+    Lenovo System Update downloads and installs Lenovo BIOS, firmware, driver,
+    and application updates for supported Lenovo client devices.
+  DETECTION_FILE_OR_FOLDER: tvsu.exe
+  DETECTION_PATH: C:\Program Files (x86)\Lenovo\System Update
+  ICON_PATH: "%RECIPE_DIR%/Assets/SystemUpdate.png"
+  INSTALL_COMMAND: '"__SETUP_FILE__" /VERYSILENT /NORESTART'
+  MINIMUM_SUPPORTED_WINDOWS_RELEASE: Windows11_23H2
+  NAME: Lenovo System Update
+  PUBLISHER: Lenovo
+  UNINSTALL_COMMAND: '"C:\Program Files (x86)\Lenovo\System Update\unins000.exe" /VERYSILENT /NORESTART'
+  UPDATE_MODE: in_place
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppUploader
+    Arguments:
+      architecture:
+        - amd64
+        - arm64
+      assignment_info:
+        - all_assignment: AllDevices
+          assignment_filter_display_name: Lenovo
+          assignment_filter_type: include
+          intent: required
+      categories:
+        - Utilities
+      description: "%DESCRIPTION%"
+      detection_file_or_folder: "%DETECTION_FILE_OR_FOLDER%"
+      detection_path: "%DETECTION_PATH%"
+      detection_type: file_version_at_least
+      display_name: "%NAME%"
+      icon_path: "%ICON_PATH%"
+      install_command: "%INSTALL_COMMAND%"
+      intunewin_path: "%intunewin_path%"
+      minimum_supported_windows_release: "%MINIMUM_SUPPORTED_WINDOWS_RELEASE%"
+      publisher: "%PUBLISHER%"
+      setup_file: "%setup_file%"
+      uninstall_command: "%UNINSTALL_COMMAND%"
+      update_mode: "%UPDATE_MODE%"
+      version: "%version%"

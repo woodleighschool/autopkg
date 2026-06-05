@@ -1,0 +1,17 @@
+Description: Packages Lenovo System Update.
+Identifier: com.github.woodleighschool.pkg.LenovoSystemUpdate
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Lenovo System Update
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneInstallerVersioner
+    Arguments:
+      installer_path: "%RECIPE_DIR%/Assets/system_update_5.08.03.59.exe"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      force_repack: true
+      installer_path: "%RECIPE_DIR%/Assets/system_update_5.08.03.59.exe"
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.intunewin"

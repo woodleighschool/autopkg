@@ -1,0 +1,44 @@
+Identifier: com.github.woodleighschool.intune.SeniorCampusPrinters
+ParentRecipe: com.github.woodleighschool.pkg.SeniorCampusPrinters
+MinimumVersion: "2.3"
+
+Input:
+  DEPENDENCY_NAME: Epson AM-C6000 Driver
+  DESCRIPTION: Adds the Senior Campus LPR printer queue for Windows devices.
+  DETECTION_SCRIPT_PATH: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/detect.ps1"
+  INSTALL_COMMAND: '%SystemRoot%\Sysnative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1'
+  MINIMUM_SUPPORTED_WINDOWS_RELEASE: Windows11_23H2
+  NAME: Windows Printer - Senior Campus
+  PUBLISHER: Woodleigh School
+  UNINSTALL_COMMAND: '%SystemRoot%\Sysnative\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\uninstall.ps1'
+  UPDATE_MODE: in_place
+  VERSION: "1.0"
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppUploader
+    Arguments:
+      architecture:
+        - amd64
+      assignment_info:
+        - group_id: c20bc8d2-b2d7-4257-acd1-c292c13a2acc #ITStaff
+          intent: available
+      categories:
+        - Printers
+      description: "%DESCRIPTION%"
+      detection_script_path: "%DETECTION_SCRIPT_PATH%"
+      detection_type: script
+      display_name: "%NAME%"
+      install_command: "%INSTALL_COMMAND%"
+      intunewin_path: "%intunewin_path%"
+      minimum_supported_windows_release: "%MINIMUM_SUPPORTED_WINDOWS_RELEASE%"
+      publisher: "%PUBLISHER%"
+      setup_file: "%setup_file%"
+      uninstall_command: "%UNINSTALL_COMMAND%"
+      update_mode: "%UPDATE_MODE%"
+      version: "%VERSION%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32DependencyUploader
+    Arguments:
+      dependency_display_name: "%DEPENDENCY_NAME%"
+      dependency_type: autoInstall
+      display_name: "%NAME%"

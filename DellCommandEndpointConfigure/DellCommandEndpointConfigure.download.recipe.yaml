@@ -1,0 +1,19 @@
+Description: Downloads Dell Command | Endpoint Configure for Microsoft Intune.
+Identifier: com.github.woodleighschool.download.DellCommandEndpointConfigure
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://dl.dell.com/FOLDER14507844M/1/Dell-Command-Endpoint-Configure-for-Microsoft-Intune_TFW7V_WIN64_2.0.4.278_A00.EXE
+  FILENAME: Dell-Command-Endpoint-Configure-for-Microsoft-Intune_TFW7V_WIN64_2.0.4.278_A00.EXE
+  NAME: DellCommandEndpointConfigure
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%FILENAME%"
+      request_headers:
+        Referer: https://www.dell.com/
+        User-Agent: Mozilla/5.0
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase

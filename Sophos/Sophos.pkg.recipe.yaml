@@ -1,50 +1,13 @@
----
+Description: Packages Sophos Endpoint for Intune Win32 upload.
 Identifier: com.github.woodleighschool.pkg.Sophos
+MinimumVersion: "2.3"
 
 Input:
   NAME: Sophos
 
 Process:
-  - Processor: Unarchiver
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
     Arguments:
-      archive_path: "%RECIPE_DIR%/Assets/SophosInstall.zip"
-      destination_path: "%RECIPE_CACHE_DIR%/unzip"
-      purge_destination: true
-
-  - Processor: PkgRootCreator
-    Arguments:
-      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
-      pkgdirs:
-        Library/Application Support/Woodleigh/Sophos: "0755"
-
-  - Processor: Copier
-    Arguments:
-      source_path: "%RECIPE_CACHE_DIR%/unzip"
-      destination_path: "%pkgroot%/Library/Application Support/Woodleigh/Sophos"
-      overwrite: true
-
-  - Processor: PlistReader
-    Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app"
-      plist_keys:
-        CFBundleIdentifier: bundle_id
-        CFBundleShortVersionString: version
-        CFBundleVersion: build_version
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: wheel
-            path: Library/Application Support/Woodleigh/Sophos
-            user: root
-        id: "%bundle_id%"
-        options: purge_ds_store
-        pkgname: "%NAME%-%version%-%REVISION%"
-        version: "%version%-%REVISION%"
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - "%RECIPE_CACHE_DIR%/unzip"
-        - "%RECIPE_CACHE_DIR%/%NAME%"
+      force_repack: true
+      installer_path: "%RECIPE_DIR%/Assets/SophosSetup.exe"
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%.intunewin"

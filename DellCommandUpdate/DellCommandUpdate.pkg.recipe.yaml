@@ -1,0 +1,22 @@
+Description: Packages Dell Command | Update.
+Identifier: com.github.woodleighschool.pkg.DellCommandUpdate
+ParentRecipe: com.github.woodleighschool.download.DellCommandUpdate
+MinimumVersion: "2.3"
+
+Input:
+  NAME: Dell Command Update
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIconExtractor
+    Arguments:
+      icon_size: 256
+      pathname: "%pathname%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneInstallerVersioner
+    Arguments:
+      installer_path: "%pathname%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
+    Arguments:
+      installer_path: "%pathname%"
+      output_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.intunewin"

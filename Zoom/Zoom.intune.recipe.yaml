@@ -1,0 +1,50 @@
+Identifier: com.github.woodleighschool.intune.Zoom
+ParentRecipe: com.github.woodleighschool.pkg.Zoom
+MinimumVersion: "2.3"
+
+Input:
+  DESCRIPTION: >-
+    Zoom is a cloud-based video conferencing platform that can be used for video
+    conferencing meetings, audio conferencing, webinars, meeting recordings, and
+    live chat.
+  INSTALL_COMMAND: msiexec /i "__SETUP_FILE__" /qn /norestart ZoomAutoUpdate="true"
+  KEEP_VERSION_COUNT: "1"
+  MINIMUM_SUPPORTED_WINDOWS_RELEASE: Windows11_23H2
+  NAME: Zoom
+  PUBLISHER: Zoom
+  UNINSTALL_COMMAND: msiexec /x "__MSI_PRODUCT_CODE__" /qn /norestart
+  UPDATE_MODE: available_supersedence
+
+Process:
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppUploader
+    Arguments:
+      architecture:
+        - amd64
+        - arm64
+      assignment_info:
+        - group_id: c20bc8d2-b2d7-4257-acd1-c292c13a2acc #ITStaff
+          intent: available
+      categories:
+        - Collaboration
+      description: "%DESCRIPTION%"
+      detection_type: msi_product_version_at_least
+      display_name: "%NAME%"
+      install_command: "%INSTALL_COMMAND%"
+      intunewin_path: "%intunewin_path%"
+      minimum_supported_windows_release: "%MINIMUM_SUPPORTED_WINDOWS_RELEASE%"
+      publisher: "%PUBLISHER%"
+      setup_file: "%setup_file%"
+      uninstall_command: "%UNINSTALL_COMMAND%"
+      update_mode: "%UPDATE_MODE%"
+      version: "%version%"
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32SupersedenceUploader
+    Arguments:
+      display_name: "%NAME%"
+      supersedence_type: update
+
+  - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneWin32AppCleaner
+    Arguments:
+      display_name: "%NAME%"
+      force: true
+      keep_version_count: "%KEEP_VERSION_COUNT%"

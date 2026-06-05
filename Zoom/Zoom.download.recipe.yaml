@@ -1,0 +1,19 @@
+Description: Downloads the latest Zoom 64-bit Windows MSI.
+Identifier: com.github.woodleighschool.download.Zoom
+MinimumVersion: "2.3"
+
+Input:
+  DOWNLOAD_URL: https://zoom.us/client/latest/ZoomInstallerFull.msi?archType=x64
+  FILENAME: ZoomInstallerFull.msi
+  NAME: Zoom
+  USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%FILENAME%"
+      request_headers:
+        user-agent: "%USER_AGENT%"
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase
