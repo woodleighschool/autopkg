@@ -1,18 +1,17 @@
-$ErrorActionPreference = "SilentlyContinue"
+$ErrorActionPreference = "Stop"
 
+$PrintServer = "sc-printserver"
+$PrintQueue = "SCPQ"
+$PortName = "LPR_${PrintServer}_${PrintQueue}"
 $PrinterName = "Senior Campus"
-$PortName = "LPR_sc-printserver.woodleighschool.net_SCPQ"
-$LogDir = "C:\ProgramData\Woodleigh\Logs"
-$LogPath = Join-Path $LogDir "printer-senior_campus-uninstall.log"
 
-New-Item -Path $LogDir -ItemType Directory -Force | Out-Null
-Start-Transcript -Path $LogPath -Append
-
-Remove-Printer -Name $PrinterName
-
-$StillUsed = Get-Printer | Where-Object { $_.PortName -eq $PortName }
-if (-not $StillUsed) {
-    Remove-PrinterPort -Name $PortName
+if (Get-Printer -Name $PrinterName -ErrorAction SilentlyContinue) {
+    Remove-Printer -Name $PrinterName
 }
 
-Stop-Transcript
+if (Get-PrinterPort -Name $PortName -ErrorAction SilentlyContinue) {
+    $stillUsed = Get-Printer | Where-Object { $_.PortName -eq $PortName }
+    if (-not $stillUsed) {
+        Remove-PrinterPort -Name $PortName
+    }
+}

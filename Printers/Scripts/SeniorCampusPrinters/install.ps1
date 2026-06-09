@@ -1,51 +1,43 @@
 $ErrorActionPreference = "Stop"
 
-$QueueName = "senior_campus"
-$DisplayName = "Senior Campus"
-$Location = "Senior Campus"
+$PrintServer = "sc-printserver"
+$PrintQueue  = "SCPQ"
+$PortName    = "LPR_${PrintServer}_${PrintQueue}"
+$PrinterName = "Senior Campus"
+$DriverName  = "EPSON AM-C6000 Series PCL6"
 
-$PrintServer = "sc-printserver.woodleighschool.net"
-$PrintQueue = "SCPQ"
-
-$PortName = "LPR_${PrintServer}_${PrintQueue}"
-$DriverName = "EPSON AM-C6000 Series PCL6"
-
-$LogDir = "C:\ProgramData\Woodleigh\Logs"
-$LogPath = Join-Path $LogDir "printer-$QueueName.log"
-
-New-Item -Path $LogDir -ItemType Directory -Force | Out-Null
-Start-Transcript -Path $LogPath -Append
-
-try {
-    if (-not (Get-PrinterDriver -Name $DriverName -ErrorAction SilentlyContinue)) {
-        throw "Required printer driver is missing: $DriverName"
-    }
-
-    Enable-WindowsOptionalFeature `
-        -Online `
-        -FeatureName "Printing-Foundation-LPRPortMonitor" `
-        -NoRestart `
-        -All | Out-Null
-
-    if (-not (Get-PrinterPort -Name $PortName -ErrorAction SilentlyContinue)) {
-        Add-PrinterPort `
-            -Name $PortName `
-            -LprHostAddress $PrintServer `
-            -LprQueueName $PrintQueue
-    }
-
-    if (-not (Get-Printer -Name $DisplayName -ErrorAction SilentlyContinue)) {
-        Add-Printer `
-            -Name $DisplayName `
-            -DriverName $DriverName `
-            -PortName $PortName
-    }
-
-    Set-Printer `
-        -Name $DisplayName `
-        -Location $Location `
-        -Comment $Location
+# Driver must already be installed by the driver package/app.
+if (-not (Get-PrinterDriver -Name $DriverName -ErrorAction SilentlyContinue)) {
+    throw "Driver installation prerequisite missing: $DriverName"
 }
-finally {
-    Stop-Transcript
+
+# LPR Port Monitor is required for Add-PrinterPort -LprHostAddress.
+# It is a Windows Optional Feature, disabled by default on Windows 11.
+$lprFeature = Get-WindowsOptionalFeature -Online -FeatureName "LPRMonitor" -ErrorAction SilentlyContinue
+if ($lprFeature -and $lprFeature.State -ne "Enabled") {
+    Enable-WindowsOptionalFeature -Online -FeatureName "LPRMonitor" -NoRestart | Out-Null
+}
+
+# Create the LPR TCP/IP port if missing.
+if (-not (Get-PrinterPort -Name $PortName -ErrorAction SilentlyContinue)) {
+    Add-PrinterPort `
+        -Name $PortName `
+        -LprHostAddress $PrintServer `
+        -LprQueueName $PrintQueue
+}
+
+$printer = Get-Printer -Name $PrinterName -ErrorAction SilentlyContinue
+
+if ($printer) {
+    if ($printer.DriverName -ne $DriverName -or $printer.PortName -ne $PortName) {
+        Remove-Printer -Name $PrinterName
+        $printer = $null
+    }
+}
+
+if (-not $printer) {
+    Add-Printer `
+        -Name $PrinterName `
+        -DriverName $DriverName `
+        -PortName $PortName
 }

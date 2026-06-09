@@ -16,6 +16,12 @@ Process:
 
   - Processor: Copier
     Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/detect.ps1"
+      overwrite: true
+      source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/detect.ps1"
+
+  - Processor: Copier
+    Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/install.ps1"
       overwrite: true
       source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/install.ps1"
@@ -25,12 +31,6 @@ Process:
       destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/uninstall.ps1"
       overwrite: true
       source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/uninstall.ps1"
-
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/%PACKAGE_NAME%/detect.ps1"
-      overwrite: true
-      source_path: "%RECIPE_DIR%/Scripts/SeniorCampusPrinters/detect.ps1"
 
   - Processor: com.github.woodleighschool.wintune-autopkg.processors/WintuneIntuneWinPackager
     Arguments:
