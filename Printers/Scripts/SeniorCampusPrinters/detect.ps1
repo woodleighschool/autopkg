@@ -1,15 +1,9 @@
-$PrinterName = "Senior Campus"
-$DriverName  = "EPSON AM-C6000 Series PCL6"
-$PortName    = "LPR_sc-printserver_SCPQ"
+$ConnectionName = "\\SC-PRINTSERVER\SCPQ"
 
-$printer = Get-Printer -Name $PrinterName -ErrorAction SilentlyContinue
+$existing = Get-Printer | Where-Object { $_.PortName -eq $ConnectionName } | Select-Object -First 1
 
-if (
-    $printer -and
-    $printer.DriverName -eq $DriverName -and
-    $printer.PortName -eq $PortName
-) {
-    Write-Output "Detected: $PrinterName"
+if ($existing) {
+    Write-Output "Detected: $($existing.Name)"
     exit 0
 }
 

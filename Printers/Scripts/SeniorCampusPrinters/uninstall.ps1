@@ -1,17 +1,9 @@
 $ErrorActionPreference = "Stop"
 
-$PrintServer = "sc-printserver"
-$PrintQueue = "SCPQ"
-$PortName = "LPR_${PrintServer}_${PrintQueue}"
-$PrinterName = "Senior Campus"
+$ConnectionName = "\\SC-PRINTSERVER\SCPQ"
 
-if (Get-Printer -Name $PrinterName -ErrorAction SilentlyContinue) {
-    Remove-Printer -Name $PrinterName
-}
+$existing = Get-Printer | Where-Object { $_.PortName -eq $ConnectionName } | Select-Object -First 1
 
-if (Get-PrinterPort -Name $PortName -ErrorAction SilentlyContinue) {
-    $stillUsed = Get-Printer | Where-Object { $_.PortName -eq $PortName }
-    if (-not $stillUsed) {
-        Remove-PrinterPort -Name $PortName
-    }
+if ($existing) {
+    Remove-Printer -Name $existing.Name
 }
