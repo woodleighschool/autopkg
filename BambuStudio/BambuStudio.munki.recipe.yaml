@@ -9,6 +9,7 @@ Input:
   MUNKI_CATEGORY: STEAM
   MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: BambuStudio
+  PRERELEASE: "true"
   pkginfo:
     blocking_applications:
       - BambuStudio
