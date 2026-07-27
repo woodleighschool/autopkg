@@ -19,7 +19,6 @@
 			<string>com.github.woodleighschool.munki.GlobalProtect</string>
 			<string>com.github.woodleighschool.munki.GoogleChrome</string>
 			<string>com.github.woodleighschool.munki.GoogleEarthPro</string>
-			<string>com.github.woodleighschool.munki.Microsoft365BusinessProSuite</string>
 			<string>com.github.woodleighschool.munki.MicrosoftEdge</string>
 			<string>com.github.woodleighschool.munki.MicrosoftExcel</string>
 			<string>com.github.woodleighschool.munki.MicrosoftOneNote</string>
@@ -44,7 +43,6 @@
 			<string>com.github.woodleighschool.munki.WindowsApp</string>
 			<string>com.github.woodleighschool.munki.Zoom</string>
 			<string>com.github.woodleighschool.munki.swiftDialog</string>
-			<string>com.github.autopkg.munki.makecatalogs</string>
 		</array>
 	</dict>
 </plist>

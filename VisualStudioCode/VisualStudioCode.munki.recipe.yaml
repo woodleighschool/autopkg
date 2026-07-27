@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of Visual Studio Code and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.VisualStudioCode
-ParentRecipe: com.github.jc0b.download.VisualStudioCode
-
+ParentRecipe: com.github.woodleighschool.download.VisualStudioCode
 MinimumVersion: "1.1.0"
 
 Input:
-  DOWNLOAD_ARCH: arm64
+  ARCH: arm64
   MUNKI_CATEGORY: Programming
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Visual Studio Code
   pkginfo:
     blocking_applications:
       - Visual Studio Code.app
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Visual Studio Code is a code editor redefined and optimized for building
       and debugging modern web and cloud applications.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     postinstall_script: |-
       #!/bin/bash
@@ -37,9 +30,9 @@ Input:
 Process:
   - Processor: Copier
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/Visual Studio Code.app"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/Visual Studio Code.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -50,18 +43,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

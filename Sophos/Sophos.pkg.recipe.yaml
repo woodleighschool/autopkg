@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.pkg.Sophos
 
 Input:
   NAME: Sophos
+  REVISION: "1"
 
 Process:
   - Processor: Unarchiver
@@ -25,11 +26,14 @@ Process:
 
   - Processor: PlistReader
     Arguments:
-      info_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app"
+      info_path: "%RECIPE_CACHE_DIR%/unzip/Sophos Installer.app/Contents/Info.plist"
       plist_keys:
-        CFBundleIdentifier: bundle_id
         CFBundleShortVersionString: version
-        CFBundleVersion: build_version
+        LSMinimumSystemVersion: minimum_os_version
+
+  - Processor: VariableSetter
+    Arguments:
+      version: "%version%-%REVISION%"
 
   - Processor: PkgCreator
     Arguments:
@@ -38,10 +42,10 @@ Process:
           - group: wheel
             path: Library/Application Support/Woodleigh/Sophos
             user: root
-        id: "%bundle_id%"
+        id: com.github.woodleighschool.pkg.Sophos
         options: purge_ds_store
-        pkgname: "%NAME%-%version%-%REVISION%"
-        version: "%version%-%REVISION%"
+        pkgname: "%NAME%-%version%"
+        version: "%version%"
 
   - Processor: PathDeleter
     Arguments:

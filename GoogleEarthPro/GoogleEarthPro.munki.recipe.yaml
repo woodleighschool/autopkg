@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of Google Earth Pro and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GoogleEarthPro
 ParentRecipe: com.github.autopkg.download.google-earth
-
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Education
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Google Earth Pro
   pkginfo:
     blocking_applications:
       - Google Earth Pro
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Google Earth Pro on desktop is available for users with advanced feature
       needs. Import and export GIS data, and go back in time with historical
       imagery. Available on PC, Mac, or Linux.
     developer: Google
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -29,15 +22,10 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
-      source_pkg: "%pathname%/Install Google Earth*.pkg"
-
   - Processor: FlatPkgUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/expanded"
-      flat_pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+      flat_pkg_path: "%pathname%/Install Google Earth*.pkg"
       purge_destination: true
 
   - Processor: PkgPayloadUnpacker
@@ -45,6 +33,16 @@ Process:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
       pkg_payload_path: "%RECIPE_CACHE_DIR%/expanded/Google_Earth_Pro.pkg/Payload"
       purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%/Install Google Earth*.pkg"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -55,19 +53,27 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/%NAME%.pkg"
         - "%RECIPE_CACHE_DIR%/expanded"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_uninstalls
+            label_name: All Hosts
+            package:
+              strategy: latest

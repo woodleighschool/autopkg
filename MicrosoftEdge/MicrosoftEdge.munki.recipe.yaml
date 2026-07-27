@@ -1,28 +1,21 @@
 ---
-Description: Downloads the latest version of Microsoft Edge and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftEdge
 ParentRecipe: com.github.rtrouton.download.microsoftedge
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Microsoft Edge
   pkginfo:
     blocking_applications:
       - Microsoft Edge
       - Microsoft Error Reporting
       - Microsoft AutoUpdate
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Get Microsoft Edge, your AI-powered browser, and explore a smarter way to browse, find,
       create and do beyond what you ever thought possible.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -46,6 +39,16 @@ Process:
       pkg_payload_path: "%found_filename%/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -55,14 +58,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -70,3 +69,16 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

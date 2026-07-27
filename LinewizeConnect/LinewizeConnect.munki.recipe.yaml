@@ -1,0 +1,52 @@
+---
+Identifier: com.github.woodleighschool.munki.LinewizeConnect
+ParentRecipe: com.github.woodleighschool.pkg.LinewizeConnect
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Security
+  NAME: Linewize Connect
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Linewize Connect provides school-managed web filtering and safety
+      controls for devices away from the school network.
+    developer: Qoria
+    installcheck_script: |-
+      #!/bin/bash
+      service="/Applications/FamilyZone/MobileZoneAgent/bin/fc-system-service_darwin-amd64"
+
+      if [[ ! -x "$service" ]]; then
+        exit 0
+      fi
+
+      if ! /usr/bin/pgrep -f "$service" >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      exit 1
+    name: "%NAME%"
+    requires:
+      - Linewize Authentication Agent
+      - Rosetta
+    unattended_install: true
+    uninstallable: false
+
+Process:
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Students
+            package:
+              strategy: latest

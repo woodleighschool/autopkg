@@ -1,21 +1,16 @@
 ---
-Description: Downloads the latest version of Blender and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Blender
-ParentRecipe: io.github.hjuutilainen.download.Blender
-
+ParentRecipe: com.github.woodleighschool.download.Blender
 MinimumVersion: "1.1.0"
 
 Input:
   ARCHITECTURE: arm64
   MAJOR_VERSION: "5"
   MUNKI_CATEGORY: Creativity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Blender
   pkginfo:
     blocking_applications:
       - Blender
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Blender is a free and open-source 3D computer graphics software tool set
@@ -23,8 +18,6 @@ Input:
       models, motion graphics, interactive 3D applications, virtual reality,
       and, formerly, video games.
     developer: The Blender Foundation
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -36,7 +29,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -47,18 +40,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

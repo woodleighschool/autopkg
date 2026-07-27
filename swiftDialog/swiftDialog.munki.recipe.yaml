@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of swiftDialog and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.swiftDialog
-ParentRecipe: com.github.zentralpro.download.swiftDialog
-
-MinimumVersion: "1.1.0"
+ParentRecipe: com.github.smithjw.pkg.swiftDialog
+MinimumVersion: "2.9"
 
 Input:
   MUNKI_CATEGORY: Utilities
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: swiftDialog
   pkginfo:
     blocking_applications:
       - Dialog
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       swiftDialog is an open source admin utility for macOS 12 or later
       written in SwiftUI that presents custom dialogs, displays informative
       messages or can be used as a form to request user input.
     developer: CSIRO
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
 
@@ -29,7 +22,7 @@ Process:
   - Processor: FlatPkgUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      flat_pkg_path: "%pathname%"
+      flat_pkg_path: "%pkg_path%"
       purge_destination: true
 
   - Processor: PkgPayloadUnpacker
@@ -47,14 +40,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Library/Application Support/Dialog/Dialog.app"
 
   - Processor: PathDeleter
@@ -62,3 +51,16 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpack"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

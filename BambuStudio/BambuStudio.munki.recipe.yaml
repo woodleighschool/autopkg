@@ -1,20 +1,15 @@
 ---
-Description: Downloads the latest version of BambuStudio and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.BambuStudio
-ParentRecipe: com.github.dataJAR-recipes.download.BambuStudio
-
+ParentRecipe: com.github.woodleighschool.download.BambuStudio
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: STEAM
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: BambuStudio
   PRERELEASE: "true"
   pkginfo:
     blocking_applications:
       - BambuStudio
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Bambu Studio is an open-source, cutting-edge, feature-rich slicing
@@ -22,8 +17,6 @@ Input:
       slicing algorithms, and an easy-to-use graphical interface, bringing
       users an incredibly smooth printing experience.
     developer: Bambu Lab
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -35,7 +28,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -46,18 +39,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

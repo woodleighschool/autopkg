@@ -1,28 +1,21 @@
 ---
-Description: Downloads the latest version of Microsoft Word and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftWord
 ParentRecipe: com.github.rtrouton.download.microsoftword365
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Microsoft Word
   pkginfo:
     blocking_applications:
       - Microsoft Word
       - Microsoft Error Reporting
       - Microsoft AutoUpdate
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Create and edit professional-looking documents with ease, whether it's for business
       reports, academic papers, or personal projects.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -42,6 +35,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/Microsoft_Word.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -51,14 +54,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -66,3 +65,16 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

@@ -1,28 +1,21 @@
 ---
-Description: Downloads the latest version of Microsoft Excel and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MicrosoftExcel
 ParentRecipe: com.github.rtrouton.download.microsoftexcel365
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Microsoft Excel
   pkginfo:
     blocking_applications:
       - Microsoft Excel
       - Microsoft Error Reporting
       - Microsoft AutoUpdate
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Harness the power of advanced spreadsheets to analyze data, visualize trends, and streamline
       complex calculations.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -42,6 +35,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/Microsoft_Excel.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -51,14 +54,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -66,3 +65,16 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

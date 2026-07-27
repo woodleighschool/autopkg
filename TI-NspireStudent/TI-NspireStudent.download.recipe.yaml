@@ -1,0 +1,28 @@
+---
+Identifier: com.github.woodleighschool.download.TI-NspireStudent
+MinimumVersion: "1.1.0"
+
+Input:
+  NAME: TI-Nspire CX Student Software
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'href="(/download/en/ed-tech/.*/.*/TINspireCX.*\.dmg)"'
+      result_output_var_name: download_path
+      url: https://education.ti.com/en/software/details/en/AFCFF2853BC34DEFB4C0B8B156F92404/ti-nspirecx_pc_full
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%.dmg"
+      url: https://education.ti.com/%download_path%
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Texas Instruments (TLEVLB8B5D)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%/TINspireCXStudentSoftware-*.pkg"

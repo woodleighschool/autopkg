@@ -1,0 +1,24 @@
+---
+Identifier: com.github.woodleighschool.download.DockerDesktop
+ParentRecipe: com.github.homebysix.download.DockerDesktop
+MinimumVersion: "2.7"
+
+Input:
+  NAME: Docker Desktop
+  PLATFORM_ARCH: arm64
+
+Process:
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%pathname%/Docker.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      overwrite: false
+      source_path: "%pathname%"
+
+  - Processor: VariableSetter
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"

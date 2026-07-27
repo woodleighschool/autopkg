@@ -13,13 +13,14 @@ except Exception as error:  # noqa: BLE001
 
 
 TOP_LEVEL_KEYS = [
-    "Description",
     "Identifier",
     "ParentRecipe",
     "MinimumVersion",
     "Input",
     "Process",
 ]
+
+COMPACT_HEADER_KEYS = {"Identifier", "ParentRecipe", "MinimumVersion"}
 
 
 def key_name(value: object) -> str:
@@ -51,6 +52,21 @@ def sort_value(value: object) -> None:
             sort_value(child)
 
 
+def remove_blank_line_comments(value: object) -> None:
+    if isinstance(value, CommentedMap):
+        for comments in value.ca.items.values():
+            for index, token in enumerate(comments):
+                if token is not None and not getattr(token, "value", "x").strip():
+                    comments[index] = None
+        for child in value.values():
+            remove_blank_line_comments(child)
+        return
+
+    if isinstance(value, CommentedSeq):
+        for child in value:
+            remove_blank_line_comments(child)
+
+
 def sort_process_steps(steps: object) -> None:
     if not isinstance(steps, CommentedSeq):
         return
@@ -58,7 +74,20 @@ def sort_process_steps(steps: object) -> None:
     for step in steps:
         if isinstance(step, CommentedMap):
             sort_mapping(step, ["Processor", "Arguments"])
-            sort_value(step.get("Arguments"))
+            arguments = step.get("Arguments")
+            remove_blank_line_comments(arguments)
+            sort_value(arguments)
+
+
+def sort_input(value: object) -> None:
+    if not isinstance(value, CommentedMap):
+        return
+
+    sort_mapping(value)
+    if "pkginfo" in value:
+        value.move_to_end("pkginfo")
+    for child in value.values():
+        sort_value(child)
 
 
 def sort_recipe(path: Path) -> None:
@@ -73,13 +102,43 @@ def sort_recipe(path: Path) -> None:
     if not isinstance(recipe, CommentedMap):
         return
 
+    recipe.pop("Description", None)
     sort_mapping(recipe, TOP_LEVEL_KEYS)
-    sort_value(recipe.get("Input"))
+    sort_input(recipe.get("Input"))
     sort_process_steps(recipe.get("Process"))
 
     output = StringIO()
     yaml.dump(recipe, output)
-    path.write_text(output.getvalue(), encoding="utf-8")
+    lines = output.getvalue().splitlines()
+    top_level_keys = {str(key) for key in recipe}
+    formatted: list[str] = []
+    seen_processor = False
+    for line in lines:
+        key = line.split(":", 1)[0] if line and not line[0].isspace() else None
+        starts_compact_header = key in COMPACT_HEADER_KEYS
+        starts_top_level_block = key in top_level_keys and not starts_compact_header
+        starts_processor = line.startswith("  - Processor:")
+        first_document_value = formatted == ["---"]
+        needs_separator = starts_top_level_block or (
+            starts_processor and seen_processor
+        )
+
+        if starts_compact_header or (starts_processor and not seen_processor):
+            while formatted and not formatted[-1]:
+                formatted.pop()
+
+        if (
+            needs_separator
+            and formatted
+            and not first_document_value
+        ):
+            while formatted and not formatted[-1]:
+                formatted.pop()
+            formatted.append("")
+
+        formatted.append(line)
+        seen_processor = seen_processor or starts_processor
+    path.write_text("\n".join(formatted) + "\n", encoding="utf-8")
 
 
 def main() -> int:

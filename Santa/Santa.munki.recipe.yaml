@@ -1,26 +1,19 @@
 ---
-Description: Downloads the latest version of Santa and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Santa
 ParentRecipe: com.github.autopkg.zentral.download.santa
-
 MinimumVersion: "2.7.6"
 
 Input:
   MUNKI_CATEGORY: Security
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Santa
   pkginfo:
     blocking_applications: []
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Santa is a binary and file access authorization system for macOS. It
       consists of a system extension that monitors for executions and file
       access.
     developer: North Pole Security
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
 
@@ -37,6 +30,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/app.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/var/db/santa/migration/Santa.app/Contents/Info.plist"
+      plist_version_key: CFBundleVersion
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: PkgRootCreator
     Arguments:
       pkgdirs:
@@ -47,11 +50,6 @@ Process:
     Arguments:
       source: "%RECIPE_CACHE_DIR%/payload/var/db/santa/migration/Santa.app"
       target: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
-
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app/Contents/Info.plist"
-      plist_version_key: CFBundleVersion
 
   - Processor: MunkiPkginfoMerger
     Arguments:
@@ -88,14 +86,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/faux_root/Applications/Santa.app"
 
   - Processor: PathDeleter
@@ -104,3 +98,16 @@ Process:
         - "%RECIPE_CACHE_DIR%/faux_root"
         - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpack"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

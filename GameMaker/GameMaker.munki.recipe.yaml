@@ -1,26 +1,19 @@
 ---
-Description: Downloads the latest version of GameMaker and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GameMaker
 ParentRecipe: com.github.davidbpirie.download.GameMaker
-
 MinimumVersion: "2.3.0"
 
 Input:
   MUNKI_CATEGORY: Programming
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: GameMaker
   pkginfo:
     blocking_applications:
       - GameMaker
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       GameMaker makes designing games easy, regardless of your background or
       skill level. All you need is an idea!
     developer: YoYo Games
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -40,23 +33,34 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/GameMakerStudio2-Installer.pkg/Payload"
       purge_destination: true
 
-  - Processor: MunkiInstallsItemsCreator
+  - Processor: URLTextSearcher
     Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/GameMaker.app
+      re_pattern: '(?s)<key>CFBundleShortVersionString</key>\s*<string>(?P<version>[^<]+)</string>.*?<key>LSMinimumSystemVersion</key>\s*<string>(?P<minimum_os_version>[^<]+)</string>'
+      result_output_var_name: version
+      url: "file://%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
 
   - Processor: MunkiPkginfoMerger
-
-  - Processor: MunkiImporter
     Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+      additional_pkginfo:
+        installs:
+          - CFBundleIdentifier: com.yoyogames.gms2
+            CFBundleName: GameMaker
+            CFBundleShortVersionString: "%version%"
+            path: /Applications/GameMaker.app
+            type: application
+            version_comparison_key: CFBundleShortVersionString
+        minimum_os_version: "%minimum_os_version%"
+        version: "%version%"
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -64,3 +68,17 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

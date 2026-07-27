@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of TI-Nspire CX Student Software and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.TI-NspireStudent
-ParentRecipe: com.github.dataJAR-recipes.download.TI-Nspire
-
+ParentRecipe: com.github.woodleighschool.download.TI-NspireStudent
 MinimumVersion: "1.0.0"
 
 Input:
   MUNKI_CATEGORY: Education
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: TI-Nspire CX Student Software
   pkginfo:
     blocking_applications:
       - TI-Nspire CX Student Software
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Powerful computer software with a Computer Algebra System (CAS) that
       satisfies math and science curriculum needs from middle school through
       college.
     developer: Texas Instruments
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -29,6 +22,32 @@ Input:
     uninstallable: true
 
 Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpack"
+      flat_pkg_path: "%pathname%/TINspireCXStudentSoftware-*.pkg"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/TI-NspireCXStudent.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/TI-Nspire CX Student Software.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      source_path: "%pathname%"
+
+  - Processor: VariableSetter
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -39,12 +58,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpack"
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Students
+            package:
+              strategy: latest

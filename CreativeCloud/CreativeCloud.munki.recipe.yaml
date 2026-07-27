@@ -1,35 +1,22 @@
 ---
-Description: Downloads the latest Apple Silicon Adobe Creative Cloud installer package and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.CreativeCloud
-ParentRecipe: com.github.rtrouton.pkg.AdobeCreativeCloudInstallerAppleSilicon
-
+ParentRecipe: com.github.woodleighschool.pkg.CreativeCloud
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_APP_PATH: /Applications/Utilities/Adobe Creative Cloud/ACC/Creative Cloud.app
   MUNKI_CATEGORY: Creativity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Adobe Creative Cloud
   pkginfo:
     blocking_applications:
       - Creative Cloud
       - Creative Cloud Desktop App
       - Creative Cloud Installer
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Adobe Creative Cloud provides access to Adobe desktop apps, services, and
       creative resources from the Creative Cloud desktop app.
     developer: Adobe
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
-    installcheck_script: |-
-      #!/bin/bash
-      if [[ -d "%MUNKI_APP_PATH%" ]]; then
-        exit 1
-      fi
-      exit 0
     minimum_os_version: "11.0"
     name: "%NAME%"
     unattended_install: true
@@ -65,10 +52,29 @@ Process:
   - Processor: MunkiPkginfoMerger
     Arguments:
       additional_pkginfo:
-        receipts: []
+        installs:
+          - CFBundleShortVersionString: "%version%"
+            path: "%MUNKI_APP_PATH%"
+            type: application
+            version_comparison_key: CFBundleShortVersionString
         version: "%version%"
 
-  - Processor: MunkiImporter
+  - Processor: Copier
     Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Adobe Creative Cloud.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
       pkg_path: "%pkg_path%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

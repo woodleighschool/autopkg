@@ -1,20 +1,15 @@
 ---
-Description: Downloads the latest version of EasyFind and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.EasyFind
-ParentRecipe: com.github.jleggat.EasyFind.download
-
+ParentRecipe: com.github.woodleighschool.pkg.EasyFind
 MinimumVersion: "1.1.0"
 
 Input:
   APP_DESTINATION: /Applications/Utilities
   MUNKI_CATEGORY: Utilities
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: EasyFind
   pkginfo:
     blocking_applications:
       - EasyFind
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Spotlight is great, but sometimes you need something more specialized.
@@ -23,8 +18,6 @@ Input:
       expressions. It does not require indexing, is fast, and uses very little
       memory.
     developer: DEVONtechnologies
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -32,17 +25,11 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Unarchiver
-    Arguments:
-      archive_path: "%pathname%"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%"
-      purge_destination: true
-
   - Processor: Copier
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload%APP_DESTINATION%/%NAME%.app"
       overwrite: true
-      source_path: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -53,27 +40,31 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: DmgCreator
-    Arguments:
-      dmg_path: "%RECIPE_CACHE_DIR%/%NAME%.dmg"
-      dmg_root: "%RECIPE_CACHE_DIR%/%NAME%"
-
-  - Processor: MunkiImporter
-    Arguments:
-      additional_makepkginfo_options:
-        - --destinationpath
-        - "%APP_DESTINATION%"
-      pkg_path: "%dmg_path%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
+      app_name: "%NAME%.app"
       NAME: "%NAME%"
-      pathname: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%pkg_path%"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/%NAME%"
-        - "%RECIPE_CACHE_DIR%/%NAME%.dmg"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      additional_makepkginfo_options:
+        - --destinationpath
+        - "%APP_DESTINATION%"
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

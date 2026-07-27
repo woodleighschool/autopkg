@@ -1,33 +1,25 @@
 ---
-Description: Downloads the latest version of Microsoft 365 Suite and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Microsoft365BusinessProSuite
 ParentRecipe: com.github.rtrouton.download.MicrosoftOffice365BusinessProSuite
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Microsoft 365 Business Pro Suite
-  pkg_ids_set_optional_true: []
   pkginfo:
     blocking_applications:
-      - Microsoft Autoupdate
+      - Microsoft AutoUpdate
       - Microsoft Outlook
       - Microsoft Excel
       - Microsoft PowerPoint
       - Microsoft Word
       - Microsoft OneNote
       - Microsoft Teams
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       This suite ties everything together, offering enhanced security, business-class email,
       and additional tools designed to boost efficiency and collaboration.
     developer: Microsoft
-    display_name: Microsoft 365 Suite
-    icon_name: Microsoft 365 Suite.png
     minimum_os_version: "13.0"
     name: "%NAME%"
     unattended_install: true
@@ -36,15 +28,29 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: MunkiImporter
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Microsoft 365 Suite.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       additional_makepkginfo_options:
         - --pkgvers
         - "%version%"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
-  - Processor: Copier
-    Arguments:
-      destination_path: "%MUNKI_REPO%/icons/Microsoft 365 Suite.png"
-      source_path: "%RECIPE_DIR%/Microsoft 365 Suite.png"
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

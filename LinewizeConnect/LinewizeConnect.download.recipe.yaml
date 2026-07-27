@@ -1,0 +1,23 @@
+---
+Identifier: com.github.woodleighschool.download.LinewizeConnect
+MinimumVersion: "2.7"
+
+Input:
+  DOWNLOAD_URL: https://qoria-mza-installers.linewize.net/Connect%20Installer.pkg
+  NAME: Linewize Connect
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: Connect Installer.pkg
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: FAMILY ZONE CYBER SAFETY LIMITED (5S77G864UH)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%"

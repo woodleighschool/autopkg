@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of ActivInspire and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.ActivInspire
 ParentRecipe: com.github.dataJAR-recipes.download.ActivInspire
-
 MinimumVersion: "1.1.0"
 
 Input:
   ACTIVINSPIRE_SERIAL: ""
   MUNKI_CATEGORY: Education
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: ActivInspire
   pkginfo:
     blocking_applications:
       - Inspire
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       ActivInspire lesson delivery software is a free teaching software tool
       for classroom Interactive touchboards, displays, and whiteboards.
     developer: Promethean
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     postinstall_script: |
       #!/bin/bash
@@ -34,6 +27,9 @@ Input:
           <serial>%ACTIVINSPIRE_SERIAL%</serial>
       </License>
       EOF
+    postuninstall_script: |
+      #!/bin/bash
+      rm -rf "/Users/Shared/Promethean"
     unattended_install: true
     unattended_uninstall: true
     uninstall_method: removepackages
@@ -52,6 +48,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/InspireInstaller.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Promethean/Activsoftware Inspire/Inspire.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%/ActivInspire_Application_*_MAC.pkg"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -61,19 +67,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
-      source_pkg: "%pathname%/ActivInspire_Application_*_MAC.pkg"
-
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%.pkg"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Promethean/Activsoftware Inspire/Inspire.app"
 
   - Processor: PathDeleter
@@ -81,4 +78,17 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpacked"
-        - "%RECIPE_CACHE_DIR%/%NAME%.pkg"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Staff
+            package:
+              strategy: latest

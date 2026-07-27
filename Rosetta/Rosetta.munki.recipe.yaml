@@ -1,0 +1,47 @@
+---
+Identifier: com.github.woodleighschool.munki.Rosetta
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: System
+  NAME: Rosetta
+  VERSION: "1.0"
+
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Installs Apple's Rosetta translation software on Apple silicon Macs.
+    developer: Apple
+    installcheck_script: |
+      #!/bin/sh
+      if [ "$(/usr/bin/arch)" = "arm64" ]; then
+        if ! /usr/bin/arch -x86_64 /usr/bin/true 2>/dev/null; then
+          /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+        fi
+      fi
+      exit 1
+    installer_type: nopkg
+    minimum_os_version: "11.0"
+    name: "%NAME%"
+    unattended_install: true
+    uninstallable: false
+    version: "%VERSION%"
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Rosetta.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

@@ -1,20 +1,17 @@
 ---
-Description: Downloads the latest version of Python 3.13 and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.Python
 ParentRecipe: com.github.woodleighschool.download.Python
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Programming
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Python 3.13
+  PYTHON_BRANCH: "3.13"
+
   pkginfo:
     blocking_applications:
       - IDLE
       - Python Launcher
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Python is a high-level, general-purpose programming language. Its design
@@ -23,8 +20,6 @@ Input:
       supports multiple programming paradigms, including structured,
       object-oriented and functional programming.
     developer: Python Software Foundation
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     installer_choices_xml:
       - attributeSetting: 0
         choiceAttribute: selected
@@ -34,7 +29,6 @@ Input:
     unattended_install: true
     uninstall_method: removepackages
     uninstallable: true
-  PYTHON_BRANCH: "3.13"
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -54,6 +48,11 @@ Process:
       input_plist_path: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app/Contents/Info.plist"
       plist_version_key: CFBundleVersion
 
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiPkginfoMerger
     Arguments:
       additional_pkginfo:
@@ -68,14 +67,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
 
   - Processor: PathDeleter
@@ -83,3 +78,17 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpack"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

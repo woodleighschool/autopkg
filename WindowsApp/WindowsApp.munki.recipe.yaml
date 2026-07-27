@@ -1,39 +1,43 @@
 ---
-Description: Downloads the latest version of Windows App and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.WindowsApp
 ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp
-
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Windows App
   pkginfo:
     blocking_applications:
       - Windows App
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Windows App (formerly Microsoft Remote Desktop) is your gateway to Azure Virtual Desktop,
       Windows 365, Microsoft Dev Box, Remote Desktop Services, and remote PCs, securely connecting
       you to Windows devices and apps.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     postinstall_script: |-
       #!/bin/bash
+
       loggedInUser=$(stat -f%Su /dev/console)
       userId=$(id -u "$loggedInUser")
+
       app="/Applications/Windows App.app/Contents/MacOS/Windows App"
       hostAddress="rds.woodleigh.vic.edu.au"
       friendlyName="RDS"
+      uuid="7A91ED4C-BEA5-453E-91AC-4F0A7C266390"
+
       killall "Windows App" 2>/dev/null || true
-      existingUUID=$(launchctl asuser "$userId" "$app" --script bookmark list \
-        | awk -v name="$friendlyName" -F ', ' '$0 ~ "\""name"\"" {print $2; exit}')
-      uuid="${existingUUID:-$(uuidgen)}"
+
+      launchctl asuser "$userId" "$app" --script bookmark list |
+        awk -F ', ' -v name="$friendlyName" '$1 == "\"" name "\"" {print $2}' |
+        while read -r existingUUID; do
+          if [[ "$existingUUID" != "$uuid" ]]; then
+            launchctl asuser "$userId" \
+              "$app" --script bookmark delete "$existingUUID"
+          fi
+        done
+
       launchctl asuser "$userId" "$app" --script bookmark write "$uuid" \
         --hostname "$hostAddress" \
         --friendlyname "$friendlyName" \
@@ -61,6 +65,16 @@ Process:
       pkg_payload_path: "%found_filename%/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -70,14 +84,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -85,3 +95,17 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Staff
+            package:
+              strategy: latest

@@ -1,19 +1,14 @@
 ---
-Description: Downloads the latest version of Cricut Design Space and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.CricutDesignSpace
-ParentRecipe: com.github.nstrauss.download.CricutDesignSpace
-
+ParentRecipe: com.github.woodleighschool.download.CricutDesignSpace
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Creativity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Cricut Design Space
   pkginfo:
     blocking_applications:
       - Cricut Design Space
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Enjoy total creative freedom over your next DIY project with Cricut
@@ -22,8 +17,6 @@ Input:
       thousands of images, ready-to-make projects, and unique fonts in the
       Cricut Image Library.
     developer: Cricut
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -35,7 +28,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -46,18 +39,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

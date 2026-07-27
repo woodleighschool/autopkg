@@ -1,0 +1,72 @@
+---
+Identifier: com.github.woodleighschool.munki.LinewizeAuthenticationAgent
+ParentRecipe: com.github.woodleighschool.pkg.LinewizeAuthenticationAgent
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Security
+  NAME: Linewize Authentication Agent
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      The Linewize Authentication Agent identifies the signed-in user to
+      Linewize Connect for school web-filtering policy.
+    developer: Qoria
+    installcheck_script: |-
+      #!/bin/bash
+      agent="/opt/FamilyZone/AuthenticationAgent/bin/fc-authentication-agent_darwin-amd64"
+
+      if [[ ! -x "$agent" ]]; then
+        exit 0
+      fi
+
+      if ! /usr/bin/pgrep -f "$agent" >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      exit 1
+    name: "%NAME%"
+    requires:
+      - Rosetta
+    unattended_install: true
+    uninstallable: false
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pkg_path%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/opt/FamilyZone/AuthenticationAgent"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/agent.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /opt/FamilyZone/AuthenticationAgent/bin/fc-authentication-agent_darwin-amd64
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/unpacked"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include: []

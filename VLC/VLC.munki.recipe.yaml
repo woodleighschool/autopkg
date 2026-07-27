@@ -1,28 +1,21 @@
 ---
-Description: Downloads the latest version of VLC and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.VLC
-ParentRecipe: com.github.autopkg.download.VLC
-
+ParentRecipe: com.github.woodleighschool.download.VLC
 MinimumVersion: "1.1.0"
 
 Input:
   ARCHITECTURE: arm64
   MUNKI_CATEGORY: Media
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: VLC
   pkginfo:
     blocking_applications:
       - VLC
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       VLC is a free and open source cross-platform multimedia player and
       framework that plays most multimedia files, and various streaming
       protocols.
     developer: VideoLAN
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -34,7 +27,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -45,18 +38,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

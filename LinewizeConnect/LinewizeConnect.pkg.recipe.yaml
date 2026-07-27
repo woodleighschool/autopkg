@@ -1,0 +1,42 @@
+---
+Identifier: com.github.woodleighschool.pkg.LinewizeConnect
+ParentRecipe: com.github.woodleighschool.download.LinewizeConnect
+MinimumVersion: "2.7"
+
+Input:
+  NAME: Linewize Connect
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/installer.app"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/payload.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/installer.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Linewize Connect.png"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/installer.app"
+        - "%RECIPE_CACHE_DIR%/unpacked"

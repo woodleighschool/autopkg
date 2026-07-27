@@ -1,27 +1,20 @@
 ---
-Description: Downloads the latest version of UltiMaker Cura and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.UltiMakerCura
-ParentRecipe: com.github.dataJAR-recipes.download.Ultimaker Cura
-
+ParentRecipe: com.github.woodleighschool.download.UltiMakerCura
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: STEAM
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: UltiMaker Cura
   pkginfo:
     blocking_applications:
       - UltiMaker Cura
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       UltiMaker Cura is free, easy-to-use 3D printing software trusted by millions
       of users. Fine-tune your 3D model with 400+ settings for the best slicing
       and printing results.
     developer: UltiMaker
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -33,7 +26,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
-      source_path: "%pathname%/%NAME%.app"
+      source_path: "%pkg_path%/%NAME%.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -45,18 +38,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

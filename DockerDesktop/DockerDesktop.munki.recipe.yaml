@@ -1,25 +1,20 @@
 ---
-Description: Downloads the latest version of Docker Desktop and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.DockerDesktop
-ParentRecipe: com.github.homebysix.download.DockerDesktop
-
+ParentRecipe: com.github.woodleighschool.download.DockerDesktop
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Programming
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Docker Desktop
+  PLATFORM_ARCH: arm64
+
   pkginfo:
     blocking_applications:
       - Docker Desktop
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Docker Desktop is collaborative containerization software for developers.
     developer: Docker
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     postinstall_script: |-
       #!/bin/bash
@@ -85,27 +80,48 @@ Input:
     unattended_uninstall: true
     uninstall_method: remove_copied_items
     uninstallable: true
-  PLATFORM_ARCH: arm64
 
 Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/Docker.app"
+      overwrite: true
+      source_path: "%pkg_path%/Docker.app"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/Docker.app
+
   - Processor: MunkiPkginfoMerger
     Arguments:
       additional_pkginfo:
         version: "%version%"
 
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%PLATFORM_ARCH%-%version%.dmg"
-      overwrite: true
-      source_path: "%pathname%"
-
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: Docker.app
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%PLATFORM_ARCH%-%version%.dmg"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
-      pathname: "%pathname%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Docker.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: Docker.app
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

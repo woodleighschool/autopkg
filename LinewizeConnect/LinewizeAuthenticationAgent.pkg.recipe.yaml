@@ -1,0 +1,31 @@
+---
+Identifier: com.github.woodleighschool.pkg.LinewizeAuthenticationAgent
+MinimumVersion: "2.7"
+
+Input:
+  NAME: Linewize Authentication Agent
+  VERSION: 1.4.1
+
+Process:
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: B Communications Pty Ltd (5S77G864UH)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%RECIPE_DIR%/Assets/auth_agent.woodleigh_vic_familyzone.pkg"
+
+  - Processor: VariableSetter
+    Arguments:
+      version: "%VERSION%"
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%RECIPE_DIR%/Assets/auth_agent.woodleigh_vic_familyzone.pkg"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Linewize Authentication Agent.png"

@@ -1,25 +1,18 @@
 ---
-Description: Downloads the latest version of GlobalProtect and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GlobalProtect
 ParentRecipe: com.github.woodleighschool.download.GlobalProtect
-
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Security
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: GlobalProtect
   pkginfo:
     blocking_applications: []
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       The Palo Alto VPN client is required to access organizational resources
       outside of the school network.
     developer: Palo Alto
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -27,6 +20,7 @@ Input:
     uninstall_script: |-
       #!/bin/sh
       /Applications/GlobalProtect.app/Contents/Resources/uninstall_gp.sh || :
+
     uninstallable: true
 
 Process:
@@ -42,6 +36,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/gp.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -51,18 +55,28 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
+  - Processor: Copier
     Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
-    Arguments:
-      NAME: "%NAME%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/GlobalProtect.png"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Staff
+            package:
+              strategy: latest

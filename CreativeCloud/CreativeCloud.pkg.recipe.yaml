@@ -1,0 +1,23 @@
+---
+Identifier: com.github.woodleighschool.pkg.CreativeCloud
+ParentRecipe: com.github.rtrouton.pkg.AdobeCreativeCloudInstallerAppleSilicon
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_APP_PATH: /Applications/Utilities/Adobe Creative Cloud/ACC/Creative Cloud.app
+  NAME: Adobe Creative Cloud
+
+Process:
+  - Processor: VariableSetter
+    Arguments:
+      upstream_pkg_path: "%pkg_path%"
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%upstream_pkg_path%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/AdobeCreativeCloudInstaller-AppleSilicon-%version%.pkg"

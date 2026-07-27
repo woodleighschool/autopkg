@@ -1,19 +1,14 @@
 ---
-Description: Downloads the latest version of Minecraft Education and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.MinecraftEducation
-ParentRecipe: com.github.aysiu.download.MinecraftEducation
-
+ParentRecipe: com.github.woodleighschool.download.MinecraftEducation
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Education
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Minecraft Education
   pkginfo:
     blocking_applications:
       - minecraft-edu
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Engage students in game-based learning across the curriculum. Minecraft
@@ -21,8 +16,6 @@ Input:
       learning through play. Explore blocky words that unlock new ways to take on
       any subject or challenge.
     developer: Microsoft
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -34,7 +27,7 @@ Process:
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
       overwrite: true
-      source_path: "%pathname%/minecraft-edu.app"
+      source_path: "%pkg_path%/minecraft-edu.app"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
@@ -45,18 +38,34 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      munkiimport_appname: minecraft-edu.app
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: minecraft-edu.app
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: Minecraft Education Licence
+            package:
+              strategy: latest
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Staff
+            package:
+              strategy: latest

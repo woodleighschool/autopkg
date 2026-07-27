@@ -1,28 +1,24 @@
 ---
-Description: Downloads the latest version of Google Chrome Enterprise and imports it into Munki.
 Identifier: com.github.woodleighschool.munki.GoogleChrome
 ParentRecipe: com.github.autopkg.download.googlechromepkg
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Productivity
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Google Chrome
   pkginfo:
     blocking_applications:
       - Google Chrome
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       Get more done with the new Google Chrome. A more simple, secure, and
       faster web browser than ever, with Google's smarts built-in.
     developer: Google
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
     name: "%NAME%"
     unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -37,6 +33,16 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpack/GoogleChrome.pkg/Payload"
       purge_destination: true
 
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Google Chrome.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -46,14 +52,10 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: MunkiImporter
-    Arguments:
-      pkg_path: "%pathname%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
-
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
       NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Google Chrome.app"
 
   - Processor: PathDeleter
@@ -61,3 +63,16 @@ Process:
       path_list:
         - "%RECIPE_CACHE_DIR%/payload"
         - "%RECIPE_CACHE_DIR%/unpack"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest

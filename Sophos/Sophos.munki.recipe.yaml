@@ -1,46 +1,70 @@
 ---
-Description: Imports the Sophos installer pkg into Munki to ensure Sophos Endpoint Protection is installed and present.
 Identifier: com.github.woodleighschool.munki.Sophos
 ParentRecipe: com.github.woodleighschool.pkg.Sophos
-
 MinimumVersion: "2.7"
 
 Input:
   MUNKI_CATEGORY: Security
-  MUNKI_REPO_SUBDIR: apps/%NAME%
   NAME: Sophos
   pkginfo:
-    catalogs:
-      - testing
     category: "%MUNKI_CATEGORY%"
     description: >-
       By combining cutting-edge technologies, such as deep learning and
       endpoint detection and response, Intercept X delivers unmatched
       protection against unknown malware, exploits, and ransomware.
     developer: Sophos
-    display_name: "%NAME%"
-    icon_name: "%NAME%.png"
-    installcheck_script: |
+    installcheck_script: |-
       #!/bin/bash
-      # Check for the actual Sophos installation, not just the bootstrapper
-      if [[ -d "/Library/Application Support/Sophos" ]]; then
-        exit 1
+      service="/Library/Sophos Anti-Virus/SophosServiceManager.app/Contents/MacOS/SophosServiceManager"
+
+      if [[ ! -f "$service" ]]; then
+        exit 0
       fi
-      exit 0
+
+      if ! /usr/bin/pgrep -f "$service" >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      exit 1
+    minimum_os_version: "%minimum_os_version%"
     name: "%NAME%"
     postinstall_script: |
       #!/bin/bash
       until pgrep -x "Dock" &>/dev/null; do
         sleep 10
       done
+
       INSTALLER_DIR="/Library/Application Support/Woodleigh/Sophos"
-      chmod a+x "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/Sophos Installer"
-      chmod a+x "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper"
-      "$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/Sophos Installer" --quiet
+      INSTALLER="$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/Sophos Installer"
+      HELPER="$INSTALLER_DIR/Sophos Installer.app/Contents/MacOS/tools/com.sophos.bootstrap.helper"
+
+      cleanup() {
+        /bin/rm -rf "$INSTALLER_DIR"
+      }
+      trap cleanup EXIT
+
+      /bin/chmod a+x "$INSTALLER" "$HELPER"
+      cd "$INSTALLER_DIR" || exit 1
+      "$INSTALLER" --quiet
     unattended_install: true
 
 Process:
-  - Processor: MunkiImporter
+  - Processor: Copier
     Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Sophos.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
       pkg_path: "%pkg_path%"
-      repo_subdirectory: "%MUNKI_REPO_SUBDIR%"
+      targets:
+        exclude:
+          - label_name: Defender Test
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest
