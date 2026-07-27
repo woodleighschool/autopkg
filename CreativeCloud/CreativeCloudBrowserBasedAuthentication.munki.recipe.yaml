@@ -1,0 +1,76 @@
+---
+Identifier: com.github.woodleighschool.munki.CreativeCloudBrowserBasedAuthentication
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Creativity
+  NAME: Adobe Creative Cloud Browser-Based Authentication
+  VERSION: "1.0"
+  pkginfo:
+    blocking_applications:
+      - Creative Cloud
+      - Creative Cloud Desktop App
+      - Creative Cloud Installer
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Enables browser-based authentication for Adobe Creative Cloud.
+    developer: Adobe
+    installcheck_script: |-
+      #!/bin/zsh --no-rcs
+
+      config="/Library/Application Support/Adobe/OOBE/Configs/ServiceConfig.xml"
+      assertion="count(/config/*) = 1 and count(/config/feature[
+          name = 'BrowserBasedAuthentication'
+          and enabled = 'true'
+          and count(*) = 2
+      ]) = 1"
+
+      if [[ -f "${config}" ]] &&
+          [[ "$(/usr/bin/xmllint --xpath "${assertion}" "${config}" 2>/dev/null)" == "true" ]]; then
+          exit 1
+      fi
+
+      exit 0
+    installer_type: nopkg
+    minimum_os_version: "11.0"
+    name: "%NAME%"
+    postinstall_script: |-
+      #!/bin/zsh --no-rcs
+
+      set -e
+
+      config="/Library/Application Support/Adobe/OOBE/Configs/ServiceConfig.xml"
+      /bin/mkdir -p "${config:h}"
+
+      /bin/cat > "${config}" <<'EOF'
+      <config>
+        <feature>
+          <name>BrowserBasedAuthentication</name>
+          <enabled>true</enabled>
+        </feature>
+      </config>
+      EOF
+
+      /usr/sbin/chown root:wheel "${config}"
+      /bin/chmod 0644 "${config}"
+
+      echo "Adobe Creative Cloud browser-based authentication enabled."
+    unattended_install: true
+    uninstallable: false
+    update_for:
+      - Adobe Creative Cloud
+    version: "%VERSION%"
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/%NAME%.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      targets:
+        exclude: []
+        include: []
