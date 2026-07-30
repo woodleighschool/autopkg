@@ -4,7 +4,6 @@ ParentRecipe: com.github.dataJAR-recipes.download.ActivInspire
 MinimumVersion: "1.1.0"
 
 Input:
-  ACTIVINSPIRE_SERIAL: ""
   MUNKI_CATEGORY: Education
   NAME: ActivInspire
   pkginfo:

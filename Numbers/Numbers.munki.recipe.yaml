@@ -1,0 +1,73 @@
+---
+Identifier: com.github.woodleighschool.munki.Numbers
+MinimumVersion: "2.7"
+
+Input:
+  APP_NAME: Numbers Creator Studio
+  MUNKI_CATEGORY: Productivity
+  NAME: Numbers
+  pkginfo:
+    blocking_applications:
+      - Numbers
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Numbers is Apple's spreadsheet app for creating tables, charts, and
+      collaborative workbooks.
+    developer: Apple
+    name: "%NAME%"
+    preinstall_script: |-
+      #!/bin/zsh --no-rcs
+
+      /bin/rm -rf "/Applications/Numbers.app"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: FileFinder
+    Arguments:
+      pattern: /Applications/%APP_NAME%.app
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%found_filename%"
+      plist_keys:
+        CFBundleShortVersionString: version
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%found_filename%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%APP_NAME%.app"
+      overwrite: true
+      source_path: "%found_filename%"
+
+  - Processor: DmgCreator
+    Arguments:
+      dmg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      dmg_root: "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%APP_NAME%.app"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

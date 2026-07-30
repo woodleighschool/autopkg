@@ -16,9 +16,14 @@
 			<string>com.github.woodleighschool.munki.DockerDesktop</string>
 			<string>com.github.woodleighschool.munki.EasyFind</string>
 			<string>com.github.woodleighschool.munki.GameMaker</string>
+			<string>com.github.woodleighschool.munki.GarageBand</string>
 			<string>com.github.woodleighschool.munki.GlobalProtect</string>
 			<string>com.github.woodleighschool.munki.GoogleChrome</string>
 			<string>com.github.woodleighschool.munki.GoogleEarthPro</string>
+			<string>com.github.woodleighschool.munki.iMovie</string>
+			<string>com.github.woodleighschool.munki.Keynote</string>
+			<string>com.github.woodleighschool.munki.Microsoft365BusinessProSuite</string>
+			<string>com.github.woodleighschool.munki.MicrosoftDefender</string>
 			<string>com.github.woodleighschool.munki.MicrosoftEdge</string>
 			<string>com.github.woodleighschool.munki.MicrosoftExcel</string>
 			<string>com.github.woodleighschool.munki.MicrosoftOneNote</string>
@@ -27,10 +32,14 @@
 			<string>com.github.woodleighschool.munki.MicrosoftTeams</string>
 			<string>com.github.woodleighschool.munki.MicrosoftWord</string>
 			<string>com.github.woodleighschool.munki.MinecraftEducation</string>
+			<string>com.github.woodleighschool.munki.NAPLockedDownBrowser</string>
+			<string>com.github.woodleighschool.munki.Numbers</string>
 			<string>com.github.woodleighschool.munki.OneDrive</string>
+			<string>com.github.woodleighschool.munki.Pages</string>
 			<string>com.github.woodleighschool.munki.Python</string>
 			<string>com.github.woodleighschool.munki.Santa</string>
 			<string>com.github.woodleighschool.munki.Spotify</string>
+			<string>com.github.woodleighschool.munki.swiftDialog</string>
 			<string>com.github.woodleighschool.munki.TI-NspireStudent</string>
 			<string>com.github.woodleighschool.munki.TI-NspireTeacher</string>
 			<string>com.github.woodleighschool.munki.UltiMakerCura</string>
@@ -41,8 +50,8 @@
 			<string>com.github.woodleighschool.munki.Vivi</string>
 			<string>com.github.woodleighschool.munki.WacomTabletDriver</string>
 			<string>com.github.woodleighschool.munki.WindowsApp</string>
+			<string>com.github.woodleighschool.munki.WoodSweep</string>
 			<string>com.github.woodleighschool.munki.Zoom</string>
-			<string>com.github.woodleighschool.munki.swiftDialog</string>
 		</array>
 	</dict>
 </plist>

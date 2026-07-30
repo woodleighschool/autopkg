@@ -22,10 +22,14 @@ Input:
     developer: Microsoft
     minimum_os_version: "13.0"
     name: "%NAME%"
+    # This suite is a one-shot bootstrap. MAU and the individual app recipes
+    # own updates and repair after Microsoft 365 has been installed.
+    receipts:
+      - packageid: com.microsoft.package.Frameworks
+        version: "0"
     unattended_install: true
-    unattended_uninstall: true
-    uninstall_method: removepackages
-    uninstallable: true
+    uninstall_method: ""
+    uninstallable: false
 
 Process:
   - Processor: PkgCopier
@@ -50,7 +54,7 @@ Process:
         exclude: []
         include:
           - actions:
-              - optional_installs
+              - managed_installs
             label_name: All Hosts
             package:
               strategy: latest

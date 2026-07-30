@@ -1,0 +1,18 @@
+---
+Identifier: com.github.woodleighschool.download.WoodSweep
+MinimumVersion: "2.7"
+
+Input:
+  NAME: WoodSweep
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: "^WoodSweep-[0-9]+(?:\\.[0-9]+)*\\.zip$"
+      github_repo: woodleighschool/woodsweep
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%-%version%.zip"
+
+  - Processor: EndOfCheckPhase

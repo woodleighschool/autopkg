@@ -1,0 +1,132 @@
+---
+Identifier: com.github.woodleighschool.munki.GarageBandCoreContent
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Creativity
+  NAME: GarageBand Core Content
+  VERSION: "2.0.3.1"
+  pkginfo:
+    blocking_applications:
+      - GarageBand
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Installs GarageBand's core audio content using Apple's content service
+      or a local Apple content cache.
+    developer: Apple
+    installcheck_script: |-
+      #!/bin/zsh --no-rcs
+
+      info="/Applications/GarageBand.app/Contents/Info.plist"
+      marker="/Library/Application Support/Woodleigh/Receipts/GarageBandCoreContent"
+
+      if [[ ! -r "${info}" ]]; then
+          exit 0
+      fi
+
+      garageband_version="$(/usr/libexec/PlistBuddy \
+          -c "Print :CFBundleShortVersionString" "${info}" 2>/dev/null)"
+
+      if [[ -n "${garageband_version}" ]] &&
+          [[ -f "${marker}" ]] &&
+          [[ "$(<"${marker}")" == "2.0.3.1:${garageband_version}" ]]; then
+          exit 1
+      fi
+
+      exit 0
+    minimum_os_version: "14.0"
+    name: "%NAME%"
+    postinstall_script: |-
+      #!/bin/zsh --no-rcs
+
+      set -e
+
+      workdir="/private/var/tmp/Woodleigh/GarageBandCoreContent"
+      helper="${workdir}/loopdown"
+      info="/Applications/GarageBand.app/Contents/Info.plist"
+      marker="/Library/Application Support/Woodleigh/Receipts/GarageBandCoreContent"
+
+      cleanup() {
+          /bin/rm -rf "${workdir}"
+          /bin/rmdir "/private/var/tmp/Woodleigh" 2>/dev/null || true
+      }
+
+      trap cleanup EXIT
+
+      if [[ ! -x "${helper}" ]]; then
+          echo "loopdown helper is missing or not executable" >&2
+          exit 1
+      fi
+
+      if [[ ! -d "/Applications/GarageBand.app" ]]; then
+          echo "GarageBand is not installed" >&2
+          exit 1
+      fi
+
+      garageband_version="$(/usr/libexec/PlistBuddy \
+          -c "Print :CFBundleShortVersionString" "${info}")"
+
+      "${helper}" deploy \
+          --app garageband \
+          --core \
+          --cache-server auto
+
+      /bin/mkdir -p "${marker:h}"
+      /usr/bin/printf '%s\n' "2.0.3.1:${garageband_version}" > "${marker}"
+      /usr/sbin/chown root:wheel "${marker}"
+      /bin/chmod 0644 "${marker}"
+    requires:
+      - GarageBand
+    unattended_install: true
+    uninstallable: false
+    update_for:
+      - GarageBand
+    version: "%VERSION%"
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        private/var/tmp/Woodleigh/GarageBandCoreContent: "0755"
+      pkgroot: "%RECIPE_CACHE_DIR%/pkgroot"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%pkgroot%/private/var/tmp/Woodleigh/GarageBandCoreContent"
+      source_path: "%RECIPE_DIR%/Assets/loopdown"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%pkgroot%/private/var/tmp/Woodleigh/GarageBandCoreContent"
+      source_path: "%RECIPE_DIR%/Assets/loopdown-LICENSE.txt"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            path: private/var/tmp/Woodleigh/GarageBandCoreContent
+            user: root
+        id: au.edu.vic.woodleigh.garageband-core-content
+        options: purge_ds_store
+        pkgname: "%NAME%-%VERSION%"
+        version: "%VERSION%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/%NAME%.png"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/pkgroot"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include: []

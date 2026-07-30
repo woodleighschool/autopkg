@@ -1,21 +1,25 @@
 ---
-Identifier: com.github.woodleighschool.munki.WindowsApp
-ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp
-MinimumVersion: "1.1.0"
+Identifier: com.github.woodleighschool.munki.NAPLockedDownBrowser
+ParentRecipe: com.github.woodleighschool.download.NAPLockedDownBrowser
+MinimumVersion: "2.7"
 
 Input:
-  MUNKI_CATEGORY: Productivity
-  NAME: Windows App
+  MUNKI_CATEGORY: Education
+  NAME: NAP Locked down browser
   pkginfo:
     blocking_applications:
-      - Windows App
+      - NAP Locked down browser
+      - NAP Locked down browser Uninstaller
     category: "%MUNKI_CATEGORY%"
     description: >-
-      Windows App (formerly Microsoft Remote Desktop) is your gateway to Azure Virtual Desktop,
-      Windows 365, Microsoft Dev Box, Remote Desktop Services, and remote PCs, securely connecting
-      you to Windows devices and apps.
-    developer: Microsoft
+      The NAP Locked down browser lets students securely participate in
+      NAPLAN and NAP Sample tests by preventing access to other applications
+      and unauthorised device resources during an assessment.
+    developer: ACARA
+    minimum_os_version: "14.0"
     name: "%NAME%"
+    requires:
+      - Rosetta
     unattended_install: true
     unattended_uninstall: true
     uninstall_method: removepackages
@@ -28,14 +32,10 @@ Process:
       flat_pkg_path: "%pathname%"
       purge_destination: true
 
-  - Processor: FileFinder
-    Arguments:
-      pattern: "%RECIPE_CACHE_DIR%/unpacked/*rdc*.pkg"
-
   - Processor: PkgPayloadUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
-      pkg_payload_path: "%found_filename%/Payload"
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/NAP_Locked_down_browser.pkg/Payload"
       purge_destination: true
 
   - Processor: Versioner
@@ -48,12 +48,17 @@ Process:
       pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
       source_pkg: "%pathname%"
 
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
-      derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
-        - /Applications/Windows App.app
+        - /Applications/NAP Locked down browser.app
+      version_comparison_key: CFBundleShortVersionString
 
   - Processor: MunkiPkginfoMerger
 
@@ -61,6 +66,7 @@ Process:
     Arguments:
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
+      overwrite: false
       pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
 
   - Processor: PathDeleter
@@ -77,8 +83,12 @@ Process:
         exclude: []
         include:
           - actions:
-              - optional_installs
-              - managed_updates
-            label_name: All Staff
+              - managed_installs
+            label_name: SAC MacBooks
+            package:
+              strategy: latest
+          - actions:
+              - managed_installs
+            label_name: NAPLAN Students
             package:
               strategy: latest

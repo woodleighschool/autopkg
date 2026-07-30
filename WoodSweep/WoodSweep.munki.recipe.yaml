@@ -1,0 +1,63 @@
+---
+Identifier: com.github.woodleighschool.munki.WoodSweep
+ParentRecipe: com.github.woodleighschool.pkg.WoodSweep
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Utilities
+  NAME: WoodSweep
+  pkginfo:
+    blocking_applications:
+      - WoodSweep
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      WoodSweep snapshots a configured local account, resets Microsoft Office
+      user state, and reconciles the account home after the snapshot succeeds.
+    developer: Woodleigh School
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      overwrite: true
+      source_path: "%pkg_path%/%NAME%.app"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/%NAME%.app
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      overwrite: false
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: SAC MacBooks
+            package:
+              strategy: latest

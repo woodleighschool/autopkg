@@ -1,0 +1,47 @@
+---
+Identifier: com.github.woodleighschool.pkg.Branding
+MinimumVersion: "2.7"
+
+Input:
+  NAME: Branding
+  PKG_ID: au.edu.vic.woodleigh.branding
+  VERSION: "1.0"
+  WALLPAPER_URL: https://r2-d2.woodleigh.vic.edu.au/Woodleigh.jpg
+
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%.jpg"
+      url: "%WALLPAPER_URL%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        private/var/tmp/Woodleigh/Branding: "0755"
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%/ROOT"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%pkgroot%/private/var/tmp/Woodleigh/Branding/Woodleigh.jpg"
+      overwrite: true
+      source_path: "%pathname%"
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            path: private/var/tmp/Woodleigh/Branding
+            user: root
+        id: "%PKG_ID%"
+        options: purge_ds_store
+        pkgname: "%NAME%-%VERSION%"
+        scripts: "%RECIPE_DIR%/Scripts"
+        version: "%VERSION%"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/%NAME%"

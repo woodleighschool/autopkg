@@ -1,0 +1,68 @@
+---
+Identifier: com.github.woodleighschool.munki.GarageBand
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Creativity
+  NAME: GarageBand
+  pkginfo:
+    blocking_applications:
+      - GarageBand
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      GarageBand is Apple's music creation studio for recording, playing,
+      and producing music.
+    developer: Apple
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: FileFinder
+    Arguments:
+      pattern: /Applications/GarageBand.app
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%found_filename%"
+      plist_keys:
+        CFBundleShortVersionString: version
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%found_filename%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/%NAME%.app"
+      overwrite: true
+      source_path: "%found_filename%"
+
+  - Processor: DmgCreator
+    Arguments:
+      dmg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      dmg_root: "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest

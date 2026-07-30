@@ -1,0 +1,49 @@
+---
+Identifier: com.github.woodleighschool.munki.Branding
+ParentRecipe: com.github.woodleighschool.pkg.Branding
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Utilities
+  NAME: Branding
+  VERSION: "1.1"
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Applies the Woodleigh wallpaper and initial Dock layout once. The Dock
+      and wallpaper remain customisable after setup.
+    developer: Woodleigh School
+    installs:
+      - path: /Library/Desktop Pictures/Woodleigh.jpg
+        type: file
+    name: "%NAME%"
+    requires:
+      - Google Chrome
+      - Microsoft 365 Business Pro Suite
+    unattended_install: true
+    uninstall_method: ""
+    uninstallable: false
+    version: "%VERSION%"
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/%NAME%.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      additional_makepkginfo_options:
+        - --pkgvers
+        - "%VERSION%"
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - managed_installs
+            label_name: All Hosts
+            package:
+              strategy: latest
