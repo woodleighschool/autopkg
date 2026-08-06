@@ -26,7 +26,7 @@ Input:
       fi
 
       exit 1
-    minimum_os_version: "%minimum_os_version%"
+    minimum_os_version: "13.5"
     name: "%NAME%"
     postinstall_script: |
       #!/bin/bash
