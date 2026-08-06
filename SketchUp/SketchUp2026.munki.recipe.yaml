@@ -1,0 +1,79 @@
+---
+Identifier: com.github.woodleighschool.munki.SketchUp2026
+ParentRecipe: com.github.dataJAR-recipes.download.SketchUp 2026 EN
+MinimumVersion: "2.7"
+
+Input:
+  APP_FOLDER: SketchUp 2026
+  MUNKI_CATEGORY: STEAM
+  NAME: SketchUp 2026
+  pkginfo:
+    blocking_applications:
+      - SketchUp
+      - LayOut
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      SketchUp is 3D modelling software for designing, documenting, and
+      communicating ideas.
+    developer: Trimble
+    items_to_copy:
+      - destination_path: /Applications
+        source_item: "%APP_FOLDER%"
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%pathname%/%APP_FOLDER%/SketchUp.app"
+      plist_keys:
+        CFBundleIdentifier: bundle_identifier
+        CFBundleName: bundle_name
+        CFBundleShortVersionString: short_version
+        CFBundleVersion: version
+        LSMinimumSystemVersion: minimum_os_version
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      app_name: SketchUp.app
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%pathname%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      overwrite: true
+      source_path: "%pathname%"
+
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        installs:
+          - CFBundleIdentifier: "%bundle_identifier%"
+            CFBundleName: "%bundle_name%"
+            CFBundleShortVersionString: "%short_version%"
+            CFBundleVersion: "%version%"
+            path: /Applications/%APP_FOLDER%/SketchUp.app
+            type: application
+            version_comparison_key: CFBundleVersion
+        minimum_os_version: "%minimum_os_version%"
+        version: "%version%"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%APP_FOLDER%/SketchUp.app"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest
