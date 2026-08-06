@@ -12,6 +12,14 @@ Input:
       Linewize Connect provides school-managed web filtering and safety
       controls for devices away from the school network.
     developer: Qoria
+    preinstall_script: |-
+      #!/bin/bash
+      app="/Applications/FamilyZone/MobileZoneAgent/bin/Connect.app"
+
+      if [[ -d "$app" ]]; then
+        /usr/bin/chflags -R noschg "$app" || exit 1
+      fi
+
     installcheck_script: |-
       #!/bin/bash
       service="/Applications/FamilyZone/MobileZoneAgent/bin/fc-system-service_darwin-amd64"
