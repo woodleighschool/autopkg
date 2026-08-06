@@ -1,0 +1,49 @@
+---
+Identifier: com.github.woodleighschool.munki.EPSONDrivers
+MinimumVersion: "2.7"
+
+Input:
+  MUNKI_CATEGORY: Utilities
+  NAME: EPSON Drivers
+  VERSION: "13.34"
+  pkginfo:
+    blocking_applications: []
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Installs the Epson AM-C6000 Series printer driver.
+    developer: Epson
+    installcheck_script: |-
+      #!/bin/zsh --no-rcs
+
+      ppd="/Library/Printers/PPDs/Contents/Resources/EPSON AM-C6000 Series.gz"
+
+      [[ -f "${ppd}" ]] && exit 1
+
+      exit 0
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: removepackages
+    uninstallable: true
+    version: "%VERSION%"
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%VERSION%.pkg"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/Assets/EPSON Printer.pkg"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      overwrite: false
+      source_path: "%RECIPE_DIR%/EPSON Drivers.png"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%VERSION%.pkg"
+      targets:
+        exclude: []
+        include: []
