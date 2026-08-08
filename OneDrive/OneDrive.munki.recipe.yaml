@@ -16,9 +16,8 @@ Input:
     developer: Microsoft
     name: "%NAME%"
     unattended_install: true
-    unattended_uninstall: true
-    uninstall_method: removepackages
-    uninstallable: true
+    uninstall_method: ""
+    uninstallable: false
 
 Process:
   - Processor: FlatPkgUnpacker
