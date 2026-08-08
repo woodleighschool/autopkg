@@ -68,3 +68,7 @@ Process:
             label_name: Defender Test
             package:
               strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1

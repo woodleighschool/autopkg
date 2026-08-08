@@ -77,3 +77,7 @@ Process:
             label_name: All Hosts
             package:
               strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1
