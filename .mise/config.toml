@@ -21,7 +21,7 @@ description = "Format repository files and normalize recipes"
 run = [
   "uv pip sync requirements.txt",
   "uv run python scripts/sort.py",
-  "oxfmt .",
+  "oxfmt . '!.mise/**'",
 ]
 
 [tasks.fmt-check]
@@ -29,7 +29,7 @@ description = "Check repository formatting"
 run = [
   "uv pip sync requirements.txt",
   "uv run python scripts/sort.py --check",
-  "oxfmt --check .",
+  "oxfmt --check . '!.mise/**'",
 ]
 
 [tasks.validate]
