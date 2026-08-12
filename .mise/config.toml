@@ -1,0 +1,104 @@
+[tools]
+python = "3.14.7"
+uv = "0.12.3"
+lefthook = "2.1.10"
+zizmor = "1.29.0"
+oxfmt = "0.62.0"
+"npm:@commitlint/cli" = "21.2.1"
+
+[settings]
+experimental = true
+pin = true
+lockfile = true
+minimum_release_age = "12 hours"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+WOODLEIGH_AUTOPKG_OVERRIDE_DIR = "{{env.HOME}}/Library/AutoPkg/RecipeOverrides/com.github.woodleighschool.autopkg"
+
+[tasks.format]
+description = "Format repository files and normalize recipes"
+run = [
+  "uv pip sync requirements.txt",
+  "uv run python scripts/sort.py",
+  "oxfmt .",
+]
+
+[tasks.fmt-check]
+description = "Check repository formatting"
+run = [
+  "uv pip sync requirements.txt",
+  "uv run python scripts/sort.py --check",
+  "oxfmt --check .",
+]
+
+[tasks.validate]
+description = "Validate the GitOps manifest and production recipe list"
+run = "python scripts/autopkg.py validate"
+
+[tasks.lint]
+description = "Run repository checks"
+depends = ["fmt-check", "validate", "workflow-lint"]
+
+[tasks.workflow-lint]
+description = "Lint GitHub Actions workflows"
+run = "zizmor --offline --no-ignores .github/workflows"
+
+[tasks."repos:sync"]
+description = "Materialize pinned upstream repositories"
+run = "python scripts/autopkg.py sync"
+
+[tasks."repos:diff"]
+description = "Summarize changes to pinned upstream repositories"
+run = "python scripts/autopkg.py diff --json .artifacts/upstream-changes.json --markdown .artifacts/upstream-changes.md"
+
+[tasks."autopkg:run"]
+description = "Run production recipes with pinned repositories and parent trust enforced"
+run = "python scripts/autopkg.py run"
+
+[tasks.audit]
+description = "Audit production recipe chains"
+depends = ["trust:sync"]
+run = 'autopkg audit --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" --recipe-list recipe-list.munki.xml'
+
+[tasks."trust:create"]
+description = "Create a tracked override for a Munki recipe"
+usage = '''
+arg "<recipe>" help="Parent Munki recipe identifier"
+'''
+run = 'autopkg make-override --format=yaml --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"'
+
+[tasks."trust:update"]
+description = "Accept the current parent chain for one tracked override"
+depends = ["trust:sync"]
+usage = '''
+arg "<recipe>" help="Recipe name or local override identifier"
+'''
+run = '''
+recipe="${usage_recipe?}"
+case "$recipe" in
+  local.munki.*) ;;
+  *) recipe="local.munki.$recipe" ;;
+esac
+name="${recipe#local.munki.}"
+case "$name" in
+  ""|*[!A-Za-z0-9-]*) echo "Invalid recipe name: $name" >&2; exit 1 ;;
+esac
+autopkg update-trust-info --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" "$recipe"
+cp "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR/$name.munki.recipe.yaml" "RecipeOverrides/$name.munki.recipe.yaml"
+'''
+
+[tasks."trust:sync"]
+description = "Materialize tracked overrides for AutoPkg"
+run = '''
+mkdir -p "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR"
+cp RecipeOverrides/*.munki.recipe.yaml "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR/"
+'''
+
+[tasks."trust:verify"]
+description = "Verify all production parent recipe trust information"
+depends = ["trust:sync"]
+run = 'autopkg verify-trust-info --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" --recipe-list recipe-list.munki.xml'
+
+[hooks]
+postinstall = "lefthook install"

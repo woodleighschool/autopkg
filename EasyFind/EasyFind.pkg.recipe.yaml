@@ -1,6 +1,6 @@
 ---
 Identifier: com.github.woodleighschool.pkg.EasyFind
-ParentRecipe: com.github.woodleighschool.download.EasyFind
+ParentRecipe: com.github.jleggat.EasyFind.download
 MinimumVersion: 1.1.0
 
 Input:
@@ -8,22 +8,6 @@ Input:
   NAME: EasyFind
 
 Process:
-  - Processor: Unarchiver
-    Arguments:
-      archive_path: "%pathname%"
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%"
-      purge_destination: true
-
-  - Processor: CodeSignatureVerifier
-    Arguments:
-      input_path: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app"
-      requirement: >-
-        anchor apple generic and identifier "org.grunenberg.EasyFind" and
-        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = "679S2QUWR8")
-
   - Processor: Versioner
     Arguments:
       input_plist_path: "%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app/Contents/Info.plist"

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "repositories": [
+    {
+      "name": "com.github.autopkg.aysiu-recipes",
+      "url": "https://github.com/autopkg/aysiu-recipes",
+      "ref": "master",
+      "revision": "ddcac9eec442d1fb966a3f04e941061976fdea61"
+    },
+    {
+      "name": "com.github.autopkg.dataJAR-recipes",
+      "url": "https://github.com/autopkg/dataJAR-recipes",
+      "ref": "master",
+      "revision": "7402a722a930624d67b6d0b309edb6cbb77da9a3"
+    },
+    {
+      "name": "com.github.autopkg.davidbpirie-recipes",
+      "url": "https://github.com/autopkg/davidbpirie-recipes",
+      "ref": "main",
+      "revision": "38266e669189e150389e58ebe58551384827ee80"
+    },
+    {
+      "name": "com.github.autopkg.hansen-m-recipes",
+      "url": "https://github.com/autopkg/hansen-m-recipes",
+      "ref": "master",
+      "revision": "9d3d70b1fd12aafbbe0f8e77679f70e0766062c7"
+    },
+    {
+      "name": "com.github.autopkg.hjuutilainen-recipes",
+      "url": "https://github.com/autopkg/hjuutilainen-recipes",
+      "ref": "master",
+      "revision": "29be30e3e63f297d4c0fbd8447f30ed40e775beb"
+    },
+    {
+      "name": "com.github.autopkg.homebysix-recipes",
+      "url": "https://github.com/autopkg/homebysix-recipes",
+      "ref": "master",
+      "revision": "c85276230c8f9fe48bb7b83b2b16c85c0c66177d"
+    },
+    {
+      "name": "com.github.autopkg.jc0b-recipes",
+      "url": "https://github.com/autopkg/jc0b-recipes",
+      "ref": "master",
+      "revision": "e8f2702eafd53a9a31b993d41f962f73dfdf2bc4"
+    },
+    {
+      "name": "com.github.autopkg.jleggat-recipes",
+      "url": "https://github.com/autopkg/jleggat-recipes",
+      "ref": "master",
+      "revision": "5d029b6248997a33d5c3b73fecd93db003c13eef"
+    },
+    {
+      "name": "com.github.autopkg.nstrauss-recipes",
+      "url": "https://github.com/autopkg/nstrauss-recipes",
+      "ref": "master",
+      "revision": "14fe704d171cc1d4a18b7fedf04b2f1ea1ca1366"
+    },
+    {
+      "name": "com.github.autopkg.recipes",
+      "url": "https://github.com/autopkg/recipes",
+      "ref": "master",
+      "revision": "e715832e82ddfe0617d1de19d30a1bac8ab051da"
+    },
+    {
+      "name": "com.github.autopkg.rtrouton-recipes",
+      "url": "https://github.com/autopkg/rtrouton-recipes",
+      "ref": "master",
+      "revision": "eafeefe3dac00ca3b8bcec21a1399a2f69ec6d3d"
+    },
+    {
+      "name": "com.github.autopkg.rustymyers-recipes",
+      "url": "https://github.com/autopkg/rustymyers-recipes",
+      "ref": "master",
+      "revision": "a1d909167ad455d19b15850b55ecfc42c811aedb"
+    },
+    {
+      "name": "com.github.autopkg.smithjw-recipes",
+      "url": "https://github.com/autopkg/smithjw-recipes",
+      "ref": "master",
+      "revision": "ed32255111e97b40bb5541332c74cd60c9c41fbf"
+    },
+    {
+      "name": "com.github.autopkg.zentral-recipes",
+      "url": "https://github.com/autopkg/zentral-recipes",
+      "ref": "master",
+      "revision": "d52d9bf41c68204bed06ed1a443ccef1a495ea96"
+    },
+    {
+      "name": "com.github.woodleighschool.woodstar",
+      "url": "https://github.com/woodleighschool/woodstar.git",
+      "ref": "main",
+      "revision": "71084f30b06eb3d0f11f74206a4b224896004666"
+    }
+  ]
+}

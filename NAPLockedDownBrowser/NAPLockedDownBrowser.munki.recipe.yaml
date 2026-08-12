@@ -1,6 +1,6 @@
 ---
 Identifier: com.github.woodleighschool.munki.NAPLockedDownBrowser
-ParentRecipe: com.github.woodleighschool.download.NAPLockedDownBrowser
+ParentRecipe: com.github.davidbpirie.download.naplockeddownbrowser
 MinimumVersion: "2.7"
 
 Input:
