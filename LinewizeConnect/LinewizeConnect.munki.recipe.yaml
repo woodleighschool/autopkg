@@ -58,3 +58,8 @@ Process:
             label_name: All Students
             package:
               strategy: latest
+          - actions:
+              - managed_installs
+            label_name: CRT/Spare Shared MacBooks
+            package:
+              strategy: latest
