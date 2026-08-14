@@ -449,6 +449,14 @@ def run_autopkg(manifest: dict[str, Any], repo_root: Path, recipes: list[str], o
         preferences_path = temporary_path / "autopkg-preferences.plist"
         write_autopkg_preferences(preferences_path, manifest, repo_paths, override_dir)
 
+        generated = subprocess.run(
+            [autopkg, "generate-recipe-map", f"--prefs={preferences_path}"],
+            env=child_env,
+            check=False,
+        )
+        if generated.returncode:
+            raise Error("AutoPkg could not generate the recipe map")
+
         command = [
             autopkg,
             "run",
