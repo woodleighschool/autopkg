@@ -23,6 +23,9 @@ SHA_PATTERN = re.compile(r"^[0-9a-f]{40}$")
 NAME_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
 REF_PATTERN = re.compile(r"^[A-Za-z0-9._/-]+$")
 RECIPE_PATH_PATTERN = re.compile(r"\.recipe(?:\.(?:plist|yaml|yml))?$")
+RECIPE_IDENTIFIER_PATTERN = re.compile(
+    r"^Identifier:\s*([A-Za-z0-9._-]+)\s*$", re.MULTILINE
+)
 SECRET_KEY_PATTERN = re.compile(
     r"(?:api[_-]?key|authorization|credential|password|secret|token)", re.IGNORECASE
 )
@@ -279,20 +282,43 @@ def recipe_identifiers() -> list[str]:
     return recipes
 
 
+def tracked_override_identifiers() -> set[str]:
+    identifiers: set[str] = set()
+    for path in (ROOT / "RecipeOverrides").glob("*.munki.recipe.yaml"):
+        try:
+            match = RECIPE_IDENTIFIER_PATTERN.search(path.read_text(encoding="utf-8"))
+        except OSError as error:
+            raise Error(f"Cannot read {path}: {error}") from error
+        if not match:
+            raise Error(f"{path}: missing or invalid Identifier")
+        identifier = match.group(1)
+        if identifier in identifiers:
+            raise Error(f"Duplicate tracked override identifier: {identifier}")
+        identifiers.add(identifier)
+    return identifiers
+
+
 def validate_recipes() -> None:
     recipes = recipe_identifiers()
     if len(recipes) != len(set(recipes)):
         raise Error("recipe-list.munki.xml contains duplicate recipes")
-    expected = {
-        f"local.munki.{path.name.removesuffix('.munki.recipe.yaml')}"
-        for path in (ROOT / "RecipeOverrides").glob("*.munki.recipe.yaml")
+    tracked = tracked_override_identifiers()
+    missing = sorted(set(recipes) - tracked)
+    if missing:
+        raise Error(f"Production recipes missing tracked overrides: {missing}")
+    print(f"Validated {len(recipes)} production recipes and {len(tracked)} tracked overrides")
+
+
+def resolve_recipes(requested: list[str], production: list[str]) -> list[str]:
+    recipe_inputs = {
+        input_name: identifier
+        for identifier in production
+        for input_name in (identifier, identifier.removeprefix("local.munki."))
     }
-    actual = set(recipes)
-    if actual != expected:
-        missing = sorted(expected - actual)
-        extra = sorted(actual - expected)
-        raise Error(f"Recipe list and tracked overrides differ; missing={missing}, extra={extra}")
-    print(f"Validated {len(recipes)} production recipes")
+    unknown = sorted(set(requested) - recipe_inputs.keys())
+    if unknown:
+        raise Error(f"Not a production recipe: {', '.join(unknown)}")
+    return [recipe_inputs[recipe] for recipe in requested] if requested else production
 
 
 def scrub(value: object, secrets: list[str]) -> object:
@@ -401,9 +427,9 @@ def run_autopkg(manifest: dict[str, Any], repo_root: Path, recipes: list[str], o
     if not os.environ.get("WOODSTAR_TOKEN"):
         raise Error("WOODSTAR_TOKEN is required")
 
+    selected = resolve_recipes(recipes, recipe_identifiers())
+
     repo_paths = sync_repositories(manifest, repo_root)
-    selected = recipes or recipe_identifiers()
-    selected = [recipe if recipe.startswith("local.munki.") else f"local.munki.{recipe}" for recipe in selected]
     output_dir.mkdir(parents=True, exist_ok=True)
 
     child_env = os.environ.copy()

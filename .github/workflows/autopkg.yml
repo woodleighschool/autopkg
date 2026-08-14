@@ -5,11 +5,6 @@ name: AutoPkg
 on:
   workflow_dispatch:
     inputs:
-      execute:
-        description: Run AutoPkg on the production runner
-        type: boolean
-        default: false
-        required: true
       recipe:
         description: Optional recipe name, for example GoogleChrome
         type: string
@@ -28,36 +23,9 @@ env:
   MISE_TASK_RUN_AUTO_INSTALL: "false"
 
 jobs:
-  prepare:
-    name: Prepare pinned repositories
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Setup Mise
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
-        with:
-          experimental: true
-          install_args: --locked python
-
-      - name: Validate repository inputs
-        run: mise run validate
-
-      - name: Sync pinned repositories twice
-        env:
-          WOODLEIGH_AUTOPKG_REPO_ROOT: ${{ runner.temp }}/AutoPkg/RecipeRepos
-        run: |
-          mise run repos:sync
-          mise run repos:sync
-
   run:
     name: Run AutoPkg
-    needs: prepare
-    if: ${{ inputs.execute && github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on:
       group: autopkg
     timeout-minutes: 180

@@ -64,32 +64,27 @@ run = 'autopkg audit --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" --recipe-l
 [tasks."trust:create"]
 description = "Create a tracked override for a Munki recipe"
 usage = '''
-arg "<recipe>" help="Parent Munki recipe identifier"
+arg "<recipe>" help="Source Munki recipe identifier, for example com.github.woodleighschool.munki.GoogleChrome"
 '''
-run = 'autopkg make-override --format=yaml --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"'
+run = '''
+autopkg make-override --format=yaml --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"
+uv run python scripts/sort.py RecipeOverrides/*.munki.recipe.yaml
+oxfmt RecipeOverrides
+'''
 
 [tasks."trust:update"]
 description = "Accept the current parent chain for one tracked override"
-depends = ["trust:sync"]
 usage = '''
-arg "<recipe>" help="Recipe name or local override identifier"
+arg "<recipe>" help="Tracked override identifier, for example local.munki.GoogleChrome"
 '''
 run = '''
-recipe="${usage_recipe?}"
-case "$recipe" in
-  local.munki.*) ;;
-  *) recipe="local.munki.$recipe" ;;
-esac
-name="${recipe#local.munki.}"
-case "$name" in
-  ""|*[!A-Za-z0-9-]*) echo "Invalid recipe name: $name" >&2; exit 1 ;;
-esac
-autopkg update-trust-info --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" "$recipe"
-cp "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR/$name.munki.recipe.yaml" "RecipeOverrides/$name.munki.recipe.yaml"
+autopkg update-trust-info --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"
+uv run python scripts/sort.py RecipeOverrides/*.munki.recipe.yaml
+oxfmt RecipeOverrides
 '''
 
 [tasks."trust:sync"]
-description = "Materialize tracked overrides for AutoPkg"
+description = "Materialize tracked overrides outside the recipe repository"
 run = '''
 mkdir -p "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR"
 cp RecipeOverrides/*.munki.recipe.yaml "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR/"

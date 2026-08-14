@@ -36,4 +36,11 @@ WOODSTAR_URL=https://woodstar.example \
 
 The wrapper passes the Woodstar values to AutoPkg as `AUTOPKG_WOODSTAR_URL` and `AUTOPKG_WOODSTAR_API_KEY`. Parent trust is mandatory. AutoPkg's raw report contains recipe inputs and is kept only in a temporary local directory; `.artifacts/` receives a scrubbed JSON and Markdown summary.
 
+Create an override from its source recipe identifier. Use the generated override identifier for later trust updates:
+
+```bash
+mise run trust:create com.github.woodleighschool.munki.LinewizeConnect
+mise run trust:update local.munki.LinewizeConnect
+```
+
 `scripts/sort.py` normalizes recipe structure and key order. Oxfmt owns formatting for every supported file, including recipe YAML.
