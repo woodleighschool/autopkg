@@ -1,0 +1,18 @@
+---
+Identifier: com.github.woodleighschool.download.DanteController
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Controller
+MinimumVersion: "1.1.1"
+
+Input:
+  NAME: DanteController
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      overwrite: false
+      source_path: "%pkg_path%"
+
+  - Processor: VariableSetter
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
