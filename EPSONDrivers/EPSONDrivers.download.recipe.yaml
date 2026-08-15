@@ -1,0 +1,32 @@
+---
+Identifier: com.github.woodleighschool.download.EPSONDrivers
+MinimumVersion: "2.7"
+
+Input:
+  EPSON_CTI: "2001"
+  EPSON_DEVICE_ID: AM-C6000 Series
+  EPSON_OS: MAC26
+  EPSON_REGION: GB
+  NAME: EPSON Drivers
+
+Process:
+  - Processor: com.github.woodleighschool.processors/EpsonDownloadInfoProvider
+    Arguments:
+      cti: "%EPSON_CTI%"
+      device_id: "%EPSON_DEVICE_ID%"
+      os: "%EPSON_OS%"
+      region: "%EPSON_REGION%"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%-%version%.dmg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Seiko Epson Corporation (TXAEAV5RN4)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
+      input_path: "%pathname%/EPSON Printer.pkg"
