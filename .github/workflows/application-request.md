@@ -75,6 +75,7 @@ tools:
   web-fetch:
 
 safe-outputs:
+  threat-detection: false
   github-app:
     client-id: ${{ secrets.BOT_CLIENT_ID }}
     private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
@@ -96,6 +97,13 @@ safe-outputs:
     required-title-prefix: "[app-request] "
     max: 2
     github-token-for-extra-empty-commit: app
+  update-pull-request:
+    target: "*"
+    target-repo: woodleighschool/autopkg
+    allowed-repos: [woodleighschool/autopkg-gitops]
+    required-title-prefix: "[app-request] "
+    operation: replace
+    max: 2
   add-comment:
     target: triggering
     max: 1
@@ -145,13 +153,19 @@ If the request is viable:
    `woodleighschool/autopkg-gitops` only when a new upstream repository pin was added there.
 7. If workflow-owned open pull requests already reference this issue, check out their head branches,
    amend the existing changes in response to the conversation, commit, and push to those pull
-   request branches. Do not open replacements.
+   request branches. Update their descriptions when the outcome or review direction changes. Do not
+   open replacements.
 
-Each pull request description must reference
-`${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }}` and state
-that they are the paired source and deployment declarations. Include the chosen recipe ancestry,
-download and verification boundary, source sustainability, any custom logic, the expected
-`local.munki.*` identifier, and the static checks. Do not claim that an AutoPkg recipe was executed.
+Keep each pull request description short and proportional to the change. Reference
+`${{ github.server_url }}/${{ github.repository }}/issues/${{ github.event.issue.number }}` and state:
 
-Always finish with one concise comment on the request. State the outcome and link any pull requests
-created, or explain why no pull request was created.
+- the selected parent recipe chain and its download or verification boundary;
+- whether the GitOps repository needed a new upstream pin, and which one if so; and
+- the static checks run.
+
+A few bullets are enough for a small recipe. Do not add generic application summaries, narrate the
+research process, invent a separate deployment declaration, or claim that AutoPkg or a processor was
+executed.
+
+Always finish with one concise comment on the request. Link the created or amended pull request and
+state the practical outcome, or explain why no pull request was created.
