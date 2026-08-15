@@ -14,7 +14,6 @@ minimum_release_age = "12 hours"
 
 [env]
 _.python.venv = { path = ".venv", create = true }
-WOODLEIGH_AUTOPKG_OVERRIDE_DIR = "{{env.HOME}}/Library/AutoPkg/RecipeOverrides/com.github.woodleighschool.autopkg"
 
 [tasks.format]
 description = "Format repository files and normalize recipes"
@@ -32,76 +31,13 @@ run = [
   "oxfmt --check . '!.mise/**'",
 ]
 
-[tasks.validate]
-description = "Validate the GitOps manifest and production recipe list"
-run = "python scripts/autopkg.py validate"
-
 [tasks.lint]
 description = "Run repository checks"
-depends = ["fmt-check", "validate", "workflow-lint"]
+depends = ["fmt-check", "workflow-lint"]
 
 [tasks.workflow-lint]
 description = "Lint GitHub Actions workflows"
 run = "zizmor --offline --no-ignores .github/workflows"
-
-[tasks."repos:sync"]
-description = "Materialize pinned upstream repositories"
-run = "python scripts/autopkg.py sync"
-
-[tasks."repos:diff"]
-description = "Summarize changes to pinned upstream repositories"
-run = "python scripts/autopkg.py diff --json .artifacts/upstream-changes.json --markdown .artifacts/upstream-changes.md"
-
-[tasks."autopkg:run"]
-description = "Run production recipes with pinned repositories and parent trust enforced"
-depends = ["autopkg:deps"]
-run = "python scripts/autopkg.py run"
-
-[tasks."autopkg:deps"]
-description = "Install the AutoPkg Python framework used for system-rendered icons"
-run = '''
-pyobjc_version="$(/usr/local/autopkg/python -c 'from importlib.metadata import version; print(version("pyobjc-core"))')"
-/usr/local/autopkg/python -m pip install --user --no-deps "pyobjc-framework-QuickLookThumbnailing==$pyobjc_version"
-'''
-
-[tasks.audit]
-description = "Audit production recipe chains"
-depends = ["trust:sync"]
-run = 'autopkg audit --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" --recipe-list recipe-list.munki.xml'
-
-[tasks."trust:create"]
-description = "Create a tracked override for a Munki recipe"
-usage = '''
-arg "<recipe>" help="Source Munki recipe identifier, for example com.github.woodleighschool.munki.GoogleChrome"
-'''
-run = '''
-autopkg make-override --format=yaml --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"
-uv run python scripts/sort.py RecipeOverrides/*.munki.recipe.yaml
-oxfmt RecipeOverrides
-'''
-
-[tasks."trust:update"]
-description = "Accept the current parent chain for one tracked override"
-usage = '''
-arg "<recipe>" help="Tracked override identifier, for example local.munki.GoogleChrome"
-'''
-run = '''
-autopkg update-trust-info --override-dir "$PWD/RecipeOverrides" "${usage_recipe?}"
-uv run python scripts/sort.py RecipeOverrides/*.munki.recipe.yaml
-oxfmt RecipeOverrides
-'''
-
-[tasks."trust:sync"]
-description = "Materialize tracked overrides outside the recipe repository"
-run = '''
-mkdir -p "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR"
-cp RecipeOverrides/*.munki.recipe.yaml "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR/"
-'''
-
-[tasks."trust:verify"]
-description = "Verify all production parent recipe trust information"
-depends = ["trust:sync"]
-run = 'autopkg verify-trust-info --override-dir "$WOODLEIGH_AUTOPKG_OVERRIDE_DIR" --recipe-list recipe-list.munki.xml'
 
 [hooks]
 postinstall = "lefthook install"
