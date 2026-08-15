@@ -7,6 +7,12 @@ When adding an application:
 
 - Prefer an established upstream AutoPkg recipe and recipe chain. Adding an upstream recipe
   repository is fine when it is the sustainable source.
+- Inspect an upstream `.munki.` recipe first when one exists, then work backwards through its parent
+  chain. Preserve practical Munki metadata and setup behavior that still applies to the current
+  release instead of rediscovering only the download mechanics.
+- Treat recipes hosted under `github.com/autopkg` as trusted operational evidence, not current truth.
+  Check old paths, scripts, permissions and metadata against the present payload and local policy
+  before carrying them forward.
 - Trace the complete download ancestry. The final download must be verified directly or through a
   trusted parent, normally with code-signature or signing verification.
 - Prefer maintained vendor or upstream sources. Do not use fixed-version URLs or fragile download
@@ -42,6 +48,6 @@ on-demand source recipe and must not gain a GitOps override. Local icons do not 
 dynamic recipe on-demand.
 There is no separate enabled or disabled list: every override present in GitOps is run.
 
-The pull request description should identify the chosen ancestry and verification boundary, explain
-why the source is sustainable, call out custom logic, name the resulting `local.munki.*` recipe, and
-record the static checks run.
+Keep pull request descriptions proportional to the recipe: reference the request, identify the
+chosen ancestry and verification boundary, state whether a new GitOps pin was needed, and record the
+static checks run.
