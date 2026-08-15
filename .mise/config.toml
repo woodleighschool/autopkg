@@ -54,7 +54,15 @@ run = "python scripts/autopkg.py diff --json .artifacts/upstream-changes.json --
 
 [tasks."autopkg:run"]
 description = "Run production recipes with pinned repositories and parent trust enforced"
+depends = ["autopkg:deps"]
 run = "python scripts/autopkg.py run"
+
+[tasks."autopkg:deps"]
+description = "Install the AutoPkg Python framework used for system-rendered icons"
+run = '''
+pyobjc_version="$(/usr/local/autopkg/python -c 'from importlib.metadata import version; print(version("pyobjc-core"))')"
+/usr/local/autopkg/python -m pip install --user --no-deps "pyobjc-framework-QuickLookThumbnailing==$pyobjc_version"
+'''
 
 [tasks.audit]
 description = "Audit production recipe chains"

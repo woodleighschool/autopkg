@@ -2,18 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import os
-import plistlib
+import time
 from glob import glob
 
 from AppKit import (
-    NSAlphaFirstBitmapFormat,
     NSBitmapImageFileTypePNG,
     NSBitmapImageRep,
     NSDeviceRGBColorSpace,
     NSGraphicsContext,
-    NSImage,
     NSMakeRect,
-    NSWorkspace,
+)
+from Foundation import NSDate, NSRunLoop, NSURL
+from QuickLookThumbnailing import (
+    QLThumbnailGenerationRequest,
+    QLThumbnailGenerationRequestRepresentationTypeIcon,
+    QLThumbnailGenerator,
 )
 from autopkglib import ProcessorError
 from autopkglib.DmgMounter import DmgMounter
@@ -89,7 +92,6 @@ class MunkiIconExtractor(DmgMounter):
 
         icon_path = os.path.join(output_dir, icon_name)
         if os.path.exists(icon_path) and not overwrite:
-            self._validate_existing_icon(icon_path, icon_size)
             self.output(f"Icon already exists, leaving in place: {icon_path}")
             self.env["icon_path"] = icon_path
             self.env["icon_filename"] = icon_name
@@ -207,35 +209,41 @@ class MunkiIconExtractor(DmgMounter):
         return matches[0]
 
     def _render_icon_png(self, app_path, size):
-        image = self._bundled_icon(app_path)
-        if image is None:
-            image = NSWorkspace.sharedWorkspace().iconForFile_(app_path)
+        request = QLThumbnailGenerationRequest.alloc().initWithFileAtURL_size_scale_representationTypes_(
+            NSURL.fileURLWithPath_(app_path),
+            (float(size), float(size)),
+            1.0,
+            QLThumbnailGenerationRequestRepresentationTypeIcon,
+        )
+        request.setIconMode_(True)
+        result = {"done": False, "representation": None, "error": None}
+
+        def completed(representation, error):
+            result["representation"] = representation
+            result["error"] = error
+            result["done"] = True
+
+        generator = QLThumbnailGenerator.sharedGenerator()
+        generator.generateBestRepresentationForRequest_completionHandler_(request, completed)
+        deadline = time.monotonic() + 30
+        run_loop = NSRunLoop.currentRunLoop()
+        while not result["done"] and time.monotonic() < deadline:
+            run_loop.runUntilDate_(NSDate.dateWithTimeIntervalSinceNow_(0.1))
+
+        if not result["done"]:
+            generator.cancelRequest_(request)
+            raise ProcessorError(f"Timed out rendering system icon for app: {app_path}")
+        if result["error"] is not None:
+            raise ProcessorError(f"Could not render system icon for {app_path}: {result['error']}")
+
+        representation = result["representation"]
+        if representation is None:
+            return None
+        image = representation.NSImage()
         if image is None:
             return None
 
         return self._render_image_png(image, size)
-
-    def _bundled_icon(self, app_path):
-        info_path = os.path.join(app_path, "Contents", "Info.plist")
-        try:
-            with open(info_path, "rb") as file_handle:
-                icon_name = plistlib.load(file_handle).get("CFBundleIconFile")
-        except (OSError, plistlib.InvalidFile):
-            return None
-
-        if not isinstance(icon_name, str) or not icon_name:
-            return None
-        if not os.path.splitext(icon_name)[1]:
-            icon_name = f"{icon_name}.icns"
-
-        icon_path = os.path.join(app_path, "Contents", "Resources", icon_name)
-        if not os.path.isfile(icon_path):
-            return None
-
-        image = NSImage.alloc().initWithContentsOfFile_(icon_path)
-        if image is not None:
-            self.output(f"Using bundled icon: {icon_path}")
-        return image
 
     def _render_image_png(self, image, size):
         image.setTemplate_(False)
@@ -267,34 +275,11 @@ class MunkiIconExtractor(DmgMounter):
         finally:
             NSGraphicsContext.restoreGraphicsState()
 
-        if not self._bitmap_has_visible_pixels(bitmap):
-            raise ProcessorError("Rendered icon is fully transparent")
-
         png_data = bitmap.representationUsingType_properties_(NSBitmapImageFileTypePNG, {})
         if png_data is None:
             return None
 
         return bytes(png_data)
-
-    def _validate_existing_icon(self, icon_path, size):
-        image = NSImage.alloc().initWithContentsOfFile_(icon_path)
-        if image is None:
-            raise ProcessorError(f"Existing icon is not a readable image: {icon_path}")
-        self._render_image_png(image, size)
-
-    @staticmethod
-    def _bitmap_has_visible_pixels(bitmap):
-        pixel_data = bytes(bitmap.bitmapData())
-        alpha_offset = 0 if bitmap.bitmapFormat() & NSAlphaFirstBitmapFormat else 3
-        width = bitmap.pixelsWide()
-        bytes_per_row = bitmap.bytesPerRow()
-
-        for row in range(bitmap.pixelsHigh()):
-            start = row * bytes_per_row + alpha_offset
-            end = start + width * 4
-            if any(pixel_data[start:end:4]):
-                return True
-        return False
 
     @staticmethod
     def _is_dmg_subpath(pathname):
