@@ -20,7 +20,7 @@ class GitOpsTestProcessor(Processor):
 
     def main(self):
         self.env["gitops_test_message"] = self.env["message"]
-        self.output(f"GitOps test message: {self.env['message']}")
+        self.output(f"GitOps test update: {self.env['message']}")
 
 
 if __name__ == "__main__":

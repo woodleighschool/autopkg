@@ -9,4 +9,4 @@ Input:
 Process:
   - Processor: com.github.woodleighschool.processors/GitOpsTestProcessor
     Arguments:
-      message: "%TEST_MESSAGE%"
+      message: review this diff
