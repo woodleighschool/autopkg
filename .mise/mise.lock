@@ -16,10 +16,6 @@ url = "https://github.com/evilmartians/lefthook/releases/download/v2.1.10/leftho
 url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/470227499"
 provenance = "github-attestations"
 
-[[tools."npm:@commitlint/cli"]]
-version = "21.2.2"
-backend = "npm:@commitlint/cli"
-
 [[tools.oxfmt]]
 version = "0.63.0"
 backend = "npm:oxfmt"

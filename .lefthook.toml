@@ -5,6 +5,3 @@ configs = ["lefthook.common.toml"]
 
 [pre-commit.commands.zizmor]
 glob = [".github/workflows/*.{yaml,yml}", ".github/actions/**/action.{yaml,yml}"]
-
-[commit-msg.commands.commitlint]
-run = "commitlint --default-config --edit {1}"
