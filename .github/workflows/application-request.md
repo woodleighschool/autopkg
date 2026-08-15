@@ -80,6 +80,7 @@ tools:
   github:
     toolsets: [repos, issues, pull_requests, search]
     min-integrity: approved
+    trusted-users: ["woodmin[bot]"]
     integrity-proxy: false
     github-app:
       client-id: ${{ secrets.BOT_CLIENT_ID }}
@@ -104,14 +105,12 @@ safe-outputs:
     draft: true
     auto-close-issue: false
     fallback-as-issue: false
-    github-token-for-extra-empty-commit: app
   push-to-pull-request-branch:
     target: "*"
     target-repo: "*"
     allowed-repos: [woodleighschool/autopkg, woodleighschool/autopkg-gitops]
     required-title-prefix: "[app-request] "
     max: 2
-    github-token-for-extra-empty-commit: app
   update-pull-request:
     target: "*"
     target-repo: woodleighschool/autopkg
