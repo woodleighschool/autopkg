@@ -1,0 +1,33 @@
+name: Request an application
+description: Ask for an application to be packaged for Woodleigh-managed Macs
+title: "[Application request] "
+body:
+  - type: input
+    id: application
+    attributes:
+      label: Application name
+      placeholder: Google Chrome
+    validations:
+      required: true
+
+  - type: input
+    id: product_page
+    attributes:
+      label: Vendor or product page
+      description: Add this if you know it; there is no need to find a download link.
+      placeholder: https://www.example.com/product
+
+  - type: textarea
+    id: use
+    attributes:
+      label: Intended use and users
+      description: Tell us who needs it and what they need it for.
+    validations:
+      required: true
+
+  - type: input
+    id: requirements
+    attributes:
+      label: Edition, channel, or other requirement
+      description: Leave blank if the normal current release is right.
+      placeholder: Education edition, beta channel, staff only
