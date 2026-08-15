@@ -51,7 +51,7 @@ steps:
       install_args: --locked python uv lefthook oxfmt actionlint zizmor
       cache_save: false
   - name: Install Python dependencies
-    run: mise exec -- uv pip sync requirements.txt
+    run: mise run dependencies
   - name: Fetch AutoPkg repository index
     env:
       AUTOPKG_INDEX_URL: https://raw.githubusercontent.com/autopkg/index/refs/heads/main/index.json
@@ -65,6 +65,7 @@ tools:
   bash: [":*"]
   github:
     toolsets: [repos, issues, pull_requests, search]
+    min-integrity: approved
     integrity-proxy: false
     github-app:
       client-id: ${{ secrets.BOT_CLIENT_ID }}

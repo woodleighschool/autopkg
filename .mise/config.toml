@@ -15,18 +15,22 @@ minimum_release_age = "12 hours"
 [env]
 _.python.venv = { path = ".venv", create = true }
 
+[tasks.dependencies]
+description = "Install Python dependencies"
+run = "uv pip sync requirements.txt"
+
 [tasks.format]
 description = "Format repository files and normalize recipes"
+depends = ["dependencies"]
 run = [
-  "uv pip sync requirements.txt",
   "uv run python scripts/sort.py",
   "oxfmt . '!.mise/**' '!autopkg-gitops/**'",
 ]
 
 [tasks.fmt-check]
 description = "Check repository formatting"
+depends = ["dependencies"]
 run = [
-  "uv pip sync requirements.txt",
   "uv run python scripts/sort.py --check",
   "oxfmt --check . '!.mise/**' '!autopkg-gitops/**'",
 ]
