@@ -76,6 +76,7 @@ tools:
 
 safe-outputs:
   threat-detection: false
+  footer: false
   github-app:
     client-id: ${{ secrets.BOT_CLIENT_ID }}
     private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
