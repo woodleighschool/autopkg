@@ -40,7 +40,7 @@ steps:
 
 tools:
   edit:
-  bash: ["git:*", "find:*", "mkdir:*", "mise:*", "rg:*"]
+  bash: [":*"]
   github:
     toolsets: [repos, issues, pull_requests, search]
     github-app:
