@@ -1,0 +1,90 @@
+---
+Identifier: com.github.woodleighschool.munki.DanteVirtualSoundcard
+ParentRecipe: com.github.woodleighschool.pkg.DanteVirtualSoundcard
+MinimumVersion: "1.1.0"
+
+Input:
+  MUNKI_CATEGORY: System
+  NAME: DanteVirtualSoundcard
+  pkginfo:
+    blocking_applications:
+      - Dante Virtual Soundcard
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Dante Virtual Soundcard turns your computer into a Dante-powered
+      workstation, seamlessly integrating your PC or Mac with Dante audio
+      devices on your network. Instantly connect to record, process and
+      playout using any audio application and any combination of
+      Dante-enabled devices.
+    developer: Audinate
+    display_name: Dante Virtual Soundcard
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: uninstall_script
+    uninstall_script: |
+      #!/bin/sh
+
+      # Exits 0 if uninstall is successful, 1 if unsuccessful
+
+      UNINSTALL_PATH="/Library/Application Support/Audinate/DanteVirtualSoundcard/Uninstall DVS.app/Contents/Resources/uninstall.sh"
+
+      if [ ! -f "$UNINSTALL_PATH" ]; then
+          echo "Error: DVS uninstaller not found"
+          exit 1
+      fi
+
+      "$UNINSTALL_PATH"
+      exit $?
+    uninstallable: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pkg_path%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/DVS_User_Interface.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - "/Applications/Dante Virtual Soundcard.app"
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1

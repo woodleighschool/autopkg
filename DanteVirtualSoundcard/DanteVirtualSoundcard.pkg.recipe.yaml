@@ -1,0 +1,63 @@
+---
+Identifier: com.github.woodleighschool.pkg.DanteVirtualSoundcard
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Virtual Soundcard
+MinimumVersion: "1.1.0"
+
+Input:
+  NAME: DanteVirtualSoundcard
+  POSTINSTALL_SCRIPT_PATH: "%RECIPE_DIR%/Scripts/postinstall"
+  PREINSTALL_SCRIPT_PATH: "%RECIPE_DIR%/Scripts/preinstall"
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/pkg_unpack"
+      flat_pkg_path: "%pathname%/DanteVirtualSoundcard.pkg"
+      purge_destination: true
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/pkg_unpack/DanteVirtualSoundcard.pkg/Scripts/preinstall"
+      source_path: "%PREINSTALL_SCRIPT_PATH%"
+
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/pkg_unpack/DanteVirtualSoundcard.pkg/Scripts/postinstall"
+      source_path: "%POSTINSTALL_SCRIPT_PATH%"
+
+  - Processor: com.github.woodleighschool.processors/PathChmod
+    Arguments:
+      mode: 0o755
+      path_list:
+        - "%RECIPE_CACHE_DIR%/pkg_unpack/DanteVirtualSoundcard.pkg/Scripts/preinstall"
+        - "%RECIPE_CACHE_DIR%/pkg_unpack/DanteVirtualSoundcard.pkg/Scripts/postinstall"
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: "%RECIPE_CACHE_DIR%/payload/root"
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/root/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/pkg_unpack/DVS_User_Interface.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/root/Applications/Dante Virtual Soundcard.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs: {}
+      pkgroot: "%RECIPE_CACHE_DIR%/repack"
+
+  - Processor: FlatPkgPacker
+    Arguments:
+      destination_pkg: "%RECIPE_CACHE_DIR%/repack/%NAME%-%version%.pkg"
+      source_flatpkg_dir: "%RECIPE_CACHE_DIR%/pkg_unpack"
+
+  - Processor: VariableSetter
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/repack/%NAME%-%version%.pkg"
