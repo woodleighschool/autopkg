@@ -63,7 +63,7 @@ steps:
       install_args: --locked python lefthook oxfmt actionlint zizmor
       cache_save: false
   - name: Install Python dependencies
-    run: mise deps install pip
+    run: mise deps install --force pip
   - name: Fetch AutoPkg repository index
     env:
       AUTOPKG_INDEX_URL: https://raw.githubusercontent.com/autopkg/index/refs/heads/main/index.json
