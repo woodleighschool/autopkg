@@ -4,7 +4,6 @@ ParentRecipe: com.github.jleggat.EasyFind.download
 MinimumVersion: 1.1.0
 
 Input:
-  APP_DESTINATION: /Applications/Utilities
   NAME: EasyFind
 
 Process:

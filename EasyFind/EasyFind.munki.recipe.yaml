@@ -4,7 +4,6 @@ ParentRecipe: com.github.woodleighschool.pkg.EasyFind
 MinimumVersion: "1.1.0"
 
 Input:
-  APP_DESTINATION: /Applications/Utilities
   MUNKI_CATEGORY: Utilities
   NAME: EasyFind
   pkginfo:
@@ -27,7 +26,7 @@ Input:
 Process:
   - Processor: Copier
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload%APP_DESTINATION%/%NAME%.app"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
       overwrite: true
       source_path: "%pkg_path%/%NAME%.app"
 
@@ -36,7 +35,7 @@ Process:
       derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
-        - "%APP_DESTINATION%/%NAME%.app"
+        - /Applications/%NAME%.app
 
   - Processor: MunkiPkginfoMerger
 
@@ -54,9 +53,6 @@ Process:
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      additional_makepkginfo_options:
-        - --destinationpath
-        - "%APP_DESTINATION%"
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
       pkg_path: "%pkg_path%"
       targets:

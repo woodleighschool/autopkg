@@ -16,3 +16,17 @@ Process:
       filename: "%NAME%-%version%.zip"
 
   - Processor: EndOfCheckPhase
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: "%pathname%"
+      destination_path: "%RECIPE_CACHE_DIR%/%NAME%"
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Application: Woodleigh School (SMLKBTR495)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%destination_path%/%NAME%.app"
