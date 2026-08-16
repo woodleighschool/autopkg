@@ -1,14 +1,13 @@
 ---
 Identifier: com.github.woodleighschool.munki.DanteVirtualSoundcard
-ParentRecipe: com.github.woodleighschool.pkg.DanteVirtualSoundcard
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Virtual Soundcard
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: System
-  NAME: DanteVirtualSoundcard
+  NAME: Dante Virtual Soundcard
   pkginfo:
-    blocking_applications:
-      - Dante Virtual Soundcard
+    blocking_applications: []
     category: "%MUNKI_CATEGORY%"
     description: >-
       Dante Virtual Soundcard turns your computer into a Dante-powered
@@ -17,7 +16,6 @@ Input:
       playout using any audio application and any combination of
       Dante-enabled devices.
     developer: Audinate
-    display_name: Dante Virtual Soundcard
     name: "%NAME%"
     unattended_install: true
     unattended_uninstall: true
@@ -42,14 +40,24 @@ Process:
   - Processor: FlatPkgUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpacked"
-      flat_pkg_path: "%pkg_path%"
+      flat_pkg_path: "%pathname%/DanteVirtualSoundcard.pkg"
       purge_destination: true
 
   - Processor: PkgPayloadUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/DVS_User_Interface.pkg/Payload"
       purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%/DanteVirtualSoundcard.pkg"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
