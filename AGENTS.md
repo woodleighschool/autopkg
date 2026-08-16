@@ -5,14 +5,32 @@ separately owns the pinned repositories, generated trust overrides, and recipes 
 
 When adding an application:
 
+- All managed Macs are Apple Silicon. Use the `arm64` or Apple Silicon variant when upstream offers
+  an architecture choice. Intel support is unnecessary unless the request explicitly requires it;
+  do not ask for clarification about this.
+- `All Hosts` is the normal target and means the managed Apple Silicon fleet. Default ordinary
+  requests to `All Hosts` with `optional_installs` and `managed_updates`; do not ask which target to
+  use unless the request calls for a narrower audience or different update behaviour.
 - Prefer an established upstream AutoPkg recipe and recipe chain. Adding an upstream recipe
   repository is fine when it is the sustainable source.
 - Inspect an upstream `.munki.` recipe first when one exists, then work backwards through its parent
-  chain. Preserve practical Munki metadata and setup behavior that still applies to the current
-  release instead of rediscovering only the download mechanics.
+  chain. Establish what each parent contributes before selecting the local shape.
 - Treat recipes hosted under `github.com/autopkg` as trusted operational evidence, not current truth.
-  Check old paths, scripts, permissions and metadata against the present payload and local policy
-  before carrying them forward.
+  Check old paths, scripts, permissions and metadata against the present payload and Woodleigh's
+  intended behaviour before carrying them forward.
+- Keep the local chain as small as Woodleigh policy allows. A `.download` recipe obtains and verifies
+  the source artifact. Add a local `.pkg` recipe only when Woodleigh must construct or materially
+  modify the deployable artifact. The `.munki` recipe owns Woodleigh and Munki behaviour, including
+  metadata, installs detection, icon extraction, cache filename normalization, targeting, import and
+  cleanup.
+- Do not add an intermediate recipe merely to rename or copy a verified artifact, extract an icon,
+  establish Munki metadata, expose `pkg_path`, or imitate the upstream hierarchy. Those operations
+  can live in the local `.munki` recipe.
+- When an upstream `.pkg` changes installer scripts, permissions, UI, prompts or other installation
+  behaviour, determine whether the transformation is required to produce a usable artifact or is an
+  operational preference. Reuse required transformations. If adopting optional behaviour would make
+  Woodleigh own extra maintenance or fragility and the desired experience is unknown, ask one concise
+  question before implementing it.
 - Trace the complete download ancestry. The final download must be verified directly or through a
   trusted parent, normally with code-signature or signing verification.
 - Prefer maintained vendor or upstream sources. Do not use fixed-version URLs or fragile download
@@ -22,9 +40,13 @@ When adding an application:
 - Use `com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter` as the final
   Munki-oriented import step where appropriate.
 - Woodstar targets may use only the generic labels `All Hosts`, `All Staff`, and `All Students`.
-  Default ordinary requested applications to `All Hosts` with `optional_installs` and
-  `managed_updates`; narrow to staff or students only when the request calls for it. Do not invent,
-  enumerate, or reuse other operational labels merely because an existing recipe exposes one.
+  Narrow to staff or students only when the request calls for it. Do not invent, enumerate, or reuse
+  other operational labels merely because an existing recipe exposes one.
+- Resolve ordinary implementation choices yourself, including processors, cache filenames and
+  obvious recipe-layer decisions. Ask only when missing information materially changes the user or
+  device experience, such as optional upstream installer modifications, a genuinely ambiguous
+  edition, channel or licence, incompatible uninstall/update behaviour, or the absence of a
+  sustainable verified source. When clarification is required, do not make a speculative recipe.
 - If no sustainable, verifiable source exists, stop and explain the problem instead of fabricating
   a recipe.
 - Keep the change limited to the requested application.
