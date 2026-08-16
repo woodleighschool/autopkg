@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.UltiMakerCura
 ParentRecipe: com.github.woodleighschool.download.UltiMakerCura
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: STEAM
   NAME: UltiMaker Cura

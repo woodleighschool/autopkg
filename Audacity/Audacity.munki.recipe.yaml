@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Audacity
 ParentRecipe: com.github.woodleighschool.download.Audacity
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   ARCHITECTURE: arm64
   MUNKI_CATEGORY: Creativity

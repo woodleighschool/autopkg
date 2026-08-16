@@ -1,6 +1,6 @@
 ---
 name: Application request
-description: Research an application request and prepare its source and optional GitOps pull requests
+description: Research an application request and prepare its recipe pull request
 
 on:
   issues:
@@ -49,16 +49,6 @@ network:
 checkout:
   - fetch-depth: 0
     fetch: ["refs/pulls/open/*"]
-  - repository: woodleighschool/autopkg-gitops
-    ref: main
-    path: autopkg-gitops
-    fetch-depth: 0
-    fetch: ["refs/pulls/open/*"]
-    github-app:
-      client-id: ${{ secrets.BOT_CLIENT_ID }}
-      private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
-      owner: woodleighschool
-      repositories: [autopkg, autopkg-gitops]
 
 permissions:
   contents: read
@@ -94,7 +84,7 @@ tools:
       client-id: ${{ secrets.BOT_CLIENT_ID }}
       private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
       owner: woodleighschool
-      repositories: [autopkg, autopkg-gitops]
+      repositories: [autopkg]
   web-fetch:
 
 safe-outputs:
@@ -105,25 +95,22 @@ safe-outputs:
     client-id: ${{ secrets.BOT_CLIENT_ID }}
     private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
     owner: woodleighschool
-    repositories: [autopkg, autopkg-gitops]
+    repositories: [autopkg]
   create-pull-request:
     target-repo: woodleighschool/autopkg
-    allowed-repos: [woodleighschool/autopkg-gitops]
     title-prefix: "[app-request] "
-    max: 2
+    max: 1
     draft: false
     auto-close-issue: false
     fallback-as-issue: false
   push-to-pull-request-branch:
     target: "*"
-    target-repo: "*"
-    allowed-repos: [woodleighschool/autopkg, woodleighschool/autopkg-gitops]
+    target-repo: woodleighschool/autopkg
     required-title-prefix: "[app-request] "
-    max: 2
+    max: 1
   update-pull-request:
     target: "*"
     target-repo: woodleighschool/autopkg
-    allowed-repos: [woodleighschool/autopkg-gitops]
     required-title-prefix: "[app-request] "
     operation: replace
     max: 2
@@ -134,10 +121,9 @@ safe-outputs:
 
 # Handle an application request
 
-Read `AGENTS.md` and `autopkg-gitops/AGENTS.md`. The source repository is checked out at the
-workspace root and the GitOps repository is checked out at `autopkg-gitops/`.
+Read `AGENTS.md`. The recipe repository is checked out at the workspace root.
 
-On an issue trigger, read the full application-request conversation and search both repositories for
+On an issue trigger, read the full application-request conversation and search this repository for
 existing pull requests that reference it. A human reply on the original issue can answer a
 clarification and resume work on those pull requests. On a pull request comment or review, read the
 PR body, diff, full conversation and reviews, then follow its linked application-request issue for
@@ -206,18 +192,16 @@ If the request is viable:
 1. In the workspace root, make the narrow recipe or source change. Prefer an existing upstream
    recipe chain and avoid new processors unless there is no reasonable alternative. Follow the
    Woodstar target-label allowlist in `AGENTS.md`; never discover or infer additional labels.
-2. Decide whether the recipe is suitable for unattended recurring checks. Fixed-version recipes and
-   payloads copied from `Assets`, `/Applications`, or another local folder are on-demand and must not
-   enter GitOps. Local icons do not make an otherwise dynamic recipe on-demand.
-3. In `autopkg-gitops/`, add exact pins only for genuinely new upstream recipe repositories. Do not
-   add a recipe selector, change the pinned Woodleigh AutoPkg revision, or edit `RecipeOverrides`.
-4. Run `mise run lint` from the workspace root. If the GitOps repository changed, run its `mise run lint`
-   check from `autopkg-gitops/` too.
-5. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
-6. If no open pull request references this issue, commit and request one pull request targeting
-   `woodleighschool/autopkg`. Request a second pull request targeting
-   `woodleighschool/autopkg-gitops` only when a new upstream repository pin was added there.
-7. If workflow-owned open pull requests already reference this request, check out their head branches,
+2. Decide whether the recipe is suitable for unattended recurring checks. Add top-level
+   `GitOps: true` only when the complete chain discovers a current versioned download without local
+   input. Fixed-version recipes and payloads copied from `Assets`, `/Applications`, or another local
+   folder are on-demand and must omit it. Local icons do not make an otherwise dynamic recipe
+   on-demand.
+3. Run `mise run lint` from the workspace root.
+4. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
+5. If no open pull request references this issue, commit and request one pull request targeting
+   `woodleighschool/autopkg`.
+6. If a workflow-owned open pull request already references this request, check out its head branch,
    amend the existing changes in response to PR feedback, commit, and push to those pull request
    branches. Update their descriptions when the outcome changes. Do not open replacements or push an
    empty commit when only PR metadata changed.
@@ -231,12 +215,11 @@ Keep each pull request description short and proportional to the change. Referen
 application-request issue and state:
 
 - the selected parent recipe chain and its download or verification boundary;
-- whether the GitOps repository needed a new upstream pin, and which one if so; and
+- whether the recipe declares `GitOps: true`; and
 - the static checks run.
 
 A few bullets are enough for a small recipe. Do not add generic application summaries, narrate the
-research process, invent a separate deployment declaration, or claim that AutoPkg or a processor was
-executed.
+research process or claim that AutoPkg or a processor was executed.
 
 Always finish with one concise comment on the triggering issue or pull request. Link the created or
 amended pull request and state the practical outcome, or explain why no pull request was created.

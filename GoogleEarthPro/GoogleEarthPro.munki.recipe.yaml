@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.GoogleEarthPro
 ParentRecipe: com.github.autopkg.download.google-earth
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: Google Earth Pro

@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.MicrosoftOneNote
 ParentRecipe: com.github.rtrouton.download.microsoftonenote365
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: Microsoft OneNote

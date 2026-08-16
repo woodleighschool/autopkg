@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.MinecraftEducation
 ParentRecipe: com.github.woodleighschool.download.MinecraftEducation
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: Minecraft Education

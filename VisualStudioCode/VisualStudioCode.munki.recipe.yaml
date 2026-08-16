@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.VisualStudioCode
 ParentRecipe: com.github.woodleighschool.download.VisualStudioCode
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   ARCH: arm64
   MUNKI_CATEGORY: Programming

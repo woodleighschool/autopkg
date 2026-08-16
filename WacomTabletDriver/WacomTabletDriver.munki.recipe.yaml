@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.WacomTabletDriver
 ParentRecipe: com.github.rustymyers.download.WacomTablet
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Creativity
   NAME: Wacom Tablet Driver

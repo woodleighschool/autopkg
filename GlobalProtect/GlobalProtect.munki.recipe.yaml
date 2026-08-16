@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.GlobalProtect
 ParentRecipe: com.github.woodleighschool.download.GlobalProtect
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Security
   NAME: GlobalProtect

@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.MicrosoftExcel
 ParentRecipe: com.github.rtrouton.download.microsoftexcel365
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: Microsoft Excel

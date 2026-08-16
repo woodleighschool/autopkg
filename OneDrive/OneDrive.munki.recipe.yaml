@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.OneDrive
 ParentRecipe: com.github.rtrouton.download.microsoftonedrive
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: OneDrive

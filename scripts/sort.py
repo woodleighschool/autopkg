@@ -14,7 +14,14 @@ except Exception as error:  # noqa: BLE001
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TOP_LEVEL_KEYS = ["Identifier", "ParentRecipe", "MinimumVersion", "Input", "Process"]
+TOP_LEVEL_KEYS = [
+    "Identifier",
+    "ParentRecipe",
+    "MinimumVersion",
+    "GitOps",
+    "Input",
+    "Process",
+]
 
 
 def key_name(value: object) -> str:

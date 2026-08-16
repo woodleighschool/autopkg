@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Python
 ParentRecipe: com.github.woodleighschool.download.Python
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Programming
   NAME: Python 3.13

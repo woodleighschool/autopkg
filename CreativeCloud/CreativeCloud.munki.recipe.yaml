@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.CreativeCloud
 ParentRecipe: com.github.woodleighschool.pkg.CreativeCloud
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_APP_PATH: /Applications/Utilities/Adobe Creative Cloud/ACC/Creative Cloud.app
   MUNKI_CATEGORY: Creativity

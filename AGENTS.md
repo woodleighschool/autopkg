@@ -1,7 +1,7 @@
 # AutoPkg recipe work
 
-This repository owns Woodleigh's reviewed AutoPkg recipes and processors. `autopkg-gitops`
-separately owns the pinned repositories, generated trust overrides, and recipes allowed to run.
+This repository owns Woodleigh's reviewed AutoPkg recipes and processors. A top-level
+`GitOps: true` on a Munki recipe declares that it is suitable for unattended recurring execution.
 
 When adding an application:
 
@@ -63,21 +63,15 @@ Never execute an AutoPkg recipe or a local processor while handling an issue or 
 reviewing a pull request. In particular, do not run `autopkg run` or `mise run local`. Pre-review
 validation is limited to `mise run lint` and other repository-owned static checks.
 
-Application additions always produce a pull request in this repository. A second pull
-request in `woodleighschool/autopkg-gitops` is needed only when the recipe introduces a new upstream
-recipe repository:
+Application additions always produce one pull request in this repository. Never read, edit, or open
+a pull request in the downstream GitOps repository.
 
-1. This repository contains the recipe or source change.
-2. The optional GitOps pull request pins the new upstream repository. Leave the Woodleigh source
-   revision for Renovate to update after this pull request merges. Do not edit generated
-   `RecipeOverrides` by hand.
-
-Only recipes suitable for unattended recurring checks belong in GitOps. A recipe with a fixed
-version or a payload copied from `Assets`, `/Applications`, or another local folder remains an
-on-demand source recipe and must not gain a GitOps override. Local icons do not make an otherwise
-dynamic recipe on-demand.
-There is no separate enabled or disabled list: every override present in GitOps is run.
+Add `GitOps: true` only when the complete recipe chain is suitable for unattended recurring checks
+and discovers a current versioned download without local input. A recipe with a fixed version or a
+payload copied from `Assets`, `/Applications`, or another local folder remains on-demand and must
+omit the marker. Local icons do not make an otherwise dynamic recipe on-demand. Treat adding or
+removing the marker as a deployment change that must be clear in review.
 
 Keep pull request descriptions proportional to the recipe: reference the request, identify the
-chosen ancestry and verification boundary, state whether a new GitOps pin was needed, and record the
-static checks run.
+chosen ancestry and verification boundary, state whether the recipe declares `GitOps: true`, and
+record the static checks run.

@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Vivi
 ParentRecipe: com.github.woodleighschool.download.Vivi
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: Vivi

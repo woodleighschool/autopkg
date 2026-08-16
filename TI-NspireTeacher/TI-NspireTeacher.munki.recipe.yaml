@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.TI-NspireTeacher
 ParentRecipe: com.github.woodleighschool.download.TI-NspireTeacher
 MinimumVersion: "1.0.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: TI-Nspire CX Premium Teacher Software

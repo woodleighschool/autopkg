@@ -19,10 +19,15 @@ def validate(root: Path) -> None:
     recipes = sorted(root.rglob("*.munki.recipe.yaml"))
     if not recipes:
         raise ValueError(f"{root}: no Munki recipes found")
+    gitops = 0
     for path in recipes:
         recipe = yaml.load(path.read_text(encoding="utf-8"))
         if not isinstance(recipe, Mapping):
             raise ValueError(f"{path}: recipe must be a mapping")
+        marker = recipe.get("GitOps")
+        if marker is not None and marker is not True:
+            raise ValueError(f"{path}: GitOps must be true when present")
+        gitops += marker is True
         process = recipe.get("Process")
         if not isinstance(process, list):
             raise ValueError(f"{path}: Process must be an array")
@@ -33,7 +38,7 @@ def validate(root: Path) -> None:
         ]
         if len(importers) != 1:
             raise ValueError(f"{path}: expected exactly one {WOODSTAR_IMPORTER}")
-    print(f"Validated {len(recipes)} Woodstar Munki recipes")
+    print(f"Validated {len(recipes)} Woodstar Munki recipes ({gitops} GitOps)")
 
 
 def main() -> int:

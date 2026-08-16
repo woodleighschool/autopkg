@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Spotify
 ParentRecipe: com.github.woodleighschool.download.Spotify
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   DOWNLOAD_ARCH: ARM64
   MUNKI_CATEGORY: Media

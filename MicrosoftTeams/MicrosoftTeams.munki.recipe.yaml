@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.MicrosoftTeams
 ParentRecipe: com.github.rtrouton.download.microsoftteams
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: Microsoft Teams

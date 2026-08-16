@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.MicrosoftDefender
 ParentRecipe: com.github.rtrouton.pkg.microsoftdefender
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Security
   NAME: Microsoft Defender

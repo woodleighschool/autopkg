@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Santa
 ParentRecipe: com.github.autopkg.zentral.download.santa
 MinimumVersion: "2.7.6"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Security
   NAME: Santa

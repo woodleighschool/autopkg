@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.AutodeskFusion
 ParentRecipe: com.github.homebysix.download.AutodeskFusion360
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: STEAM
   NAME: Autodesk Fusion

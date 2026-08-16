@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.WindowsApp
 ParentRecipe: com.github.rtrouton.download.microsoftwindowsapp
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: Windows App

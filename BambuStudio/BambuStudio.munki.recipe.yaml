@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.BambuStudio
 ParentRecipe: com.github.woodleighschool.download.BambuStudio
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: STEAM
   NAME: BambuStudio
