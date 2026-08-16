@@ -39,6 +39,14 @@ When adding an application:
   Do not rename Munki recipes to `.woodstar.`.
 - Use `com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter` as the final
   Munki-oriented import step where appropriate.
+- Set recipe input `NAME` to the application's normal human-facing name, not an identifier-style
+  slug. Use it for Munki's `name` and leave `display_name` unset.
+- Omit `blocking_applications` when it would only repeat the application name; Munki derives that
+  default itself. Use an explicit empty list only when the installer safely handles the running app
+  or its services and Munki must not apply its inferred block. For example, GlobalProtect requires
+  `blocking_applications: []` because its GUI cannot permanently stop the supervised service and the
+  vendor package safely installs while it is running. Use a non-empty list only for additional or
+  non-obvious processes that genuinely make installation unsafe.
 - Woodstar targets may use only the generic labels `All Hosts`, `All Staff`, and `All Students`.
   Narrow to staff or students only when the request calls for it. Do not invent, enumerate, or reuse
   other operational labels merely because an existing recipe exposes one.

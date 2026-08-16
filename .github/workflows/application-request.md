@@ -172,6 +172,14 @@ Produce the smallest Woodleigh recipe chain that expresses Woodleigh policy:
 - `.munki` owns Woodleigh and Munki behaviour, including metadata, installs detection, icon
   extraction, cache filename normalization, targeting, import and cleanup.
 
+In the local `.munki` recipe, set input `NAME` to the application's normal human-facing name rather
+than an identifier-style slug. Use it for Munki's `name` and leave `display_name` unset. Omit
+`blocking_applications` when it would only repeat that application name because Munki derives the
+same default. Use `blocking_applications: []` only to override that inference when the installer
+safely handles the running app or its supervised services; GlobalProtect is the canonical example
+because its vendor package safely installs while the GUI cannot permanently stop the service. Use a
+non-empty list only for additional or non-obvious processes that genuinely make installation unsafe.
+
 Do not add an intermediate recipe merely to rename or copy an already verified artifact, extract an
 icon, establish Munki metadata, expose `pkg_path`, or imitate the upstream hierarchy. Put those
 operations directly in the local `.munki` recipe. If an upstream `.pkg` changes scripts, permissions,
