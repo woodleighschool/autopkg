@@ -1,6 +1,5 @@
 [tools]
 python = "3.14.7"
-uv = "0.12.4"
 lefthook = "2.1.10"
 actionlint = "1.7.12"
 zizmor = "1.29.0"
@@ -15,23 +14,17 @@ minimum_release_age = "12 hours"
 [env]
 _.python.venv = { path = ".venv", create = true }
 
-[tasks.dependencies]
-description = "Install Python dependencies"
-run = "uv pip sync requirements.txt"
+[deps.pip]
+auto = true
 
 [tasks.format]
 description = "Format repository files and normalize recipes"
-depends = ["dependencies"]
-run = [
-  "uv run python scripts/sort.py",
-  "oxfmt . '!.mise/**' '!autopkg-gitops/**'",
-]
+run = ["python scripts/sort.py", "oxfmt . '!.mise/**' '!autopkg-gitops/**'"]
 
 [tasks.fmt-check]
 description = "Check repository formatting"
-depends = ["dependencies"]
 run = [
-  "uv run python scripts/sort.py --check",
+  "python scripts/sort.py --check",
   "oxfmt --check . '!.mise/**' '!autopkg-gitops/**'",
 ]
 

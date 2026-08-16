@@ -64,10 +64,8 @@ steps:
     uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654
     with:
       experimental: true
-      install_args: --locked python uv lefthook oxfmt actionlint zizmor
+      install_args: --locked python lefthook oxfmt actionlint zizmor
       cache_save: false
-  - name: Install Python dependencies
-    run: mise run dependencies
   - name: Fetch AutoPkg repository index
     env:
       AUTOPKG_INDEX_URL: https://raw.githubusercontent.com/autopkg/index/refs/heads/main/index.json
