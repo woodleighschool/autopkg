@@ -1,14 +1,12 @@
 ---
 Identifier: com.github.woodleighschool.munki.DanteController
-ParentRecipe: com.github.woodleighschool.download.DanteController
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Controller
 MinimumVersion: "1.1.0"
 
 Input:
   MUNKI_CATEGORY: Utilities
-  NAME: DanteController
+  NAME: Dante Controller
   pkginfo:
-    blocking_applications:
-      - Dante Controller
     category: "%MUNKI_CATEGORY%"
     description: >-
       Dante Controller provides essential device status information and
@@ -19,7 +17,6 @@ Input:
       restore, move, and reuse Dante network configurations using Presets,
       and edit Dante routing configurations offline.
     developer: Audinate
-    display_name: Dante Controller
     name: "%NAME%"
     unattended_install: true
     uninstallable: true
@@ -41,6 +38,11 @@ Process:
     Arguments:
       input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Controller.app/Contents/Info.plist"
       plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pkg_path%"
 
   - Processor: MunkiInstallsItemsCreator
     Arguments:
