@@ -55,7 +55,7 @@ Never execute an AutoPkg recipe or a local processor while handling an issue or 
 reviewing a pull request. In particular, do not run `autopkg run` or `mise run local`. Pre-review
 validation is limited to `mise run lint` and other repository-owned static checks.
 
-Application additions always produce a draft pull request in this repository. A second draft pull
+Application additions always produce a pull request in this repository. A second pull
 request in `woodleighschool/autopkg-gitops` is needed only when the recipe introduces a new upstream
 recipe repository:
 

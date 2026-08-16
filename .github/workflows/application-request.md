@@ -107,7 +107,7 @@ safe-outputs:
     allowed-repos: [woodleighschool/autopkg-gitops]
     title-prefix: "[app-request] "
     max: 2
-    draft: true
+    draft: false
     auto-close-issue: false
     fallback-as-issue: false
   push-to-pull-request-branch:
@@ -203,8 +203,8 @@ If the request is viable:
 4. Run `mise run lint` from `autopkg/`. If the GitOps repository changed, run its `mise run lint`
    check from `autopkg-gitops/` too.
 5. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
-6. If no open pull request references this issue, commit and request one draft pull request targeting
-   `woodleighschool/autopkg`. Request a second draft pull request targeting
+6. If no open pull request references this issue, commit and request one pull request targeting
+   `woodleighschool/autopkg`. Request a second pull request targeting
    `woodleighschool/autopkg-gitops` only when a new upstream repository pin was added there.
 7. If workflow-owned open pull requests already reference this request, check out their head branches,
    amend the existing changes in response to PR feedback, commit, and push to those pull request

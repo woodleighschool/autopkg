@@ -27,7 +27,11 @@ run = ["python scripts/sort.py --check", "oxfmt --check . '!.mise/**'"]
 
 [tasks.lint]
 description = "Run repository checks"
-depends = ["fmt-check", "workflow-lint"]
+depends = ["fmt-check", "validate", "workflow-lint"]
+
+[tasks.validate]
+description = "Validate Woodstar Munki recipes"
+run = "python scripts/validate.py"
 
 [tasks.workflow-lint]
 description = "Lint GitHub Actions workflows"
