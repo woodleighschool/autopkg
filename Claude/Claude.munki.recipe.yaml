@@ -1,0 +1,66 @@
+---
+Identifier: com.github.woodleighschool.munki.Claude
+ParentRecipe: com.github.woodleighschool.download.Claude
+MinimumVersion: "1.1.0"
+
+GitOps: true
+Input:
+  MUNKI_CATEGORY: Productivity
+  NAME: Claude
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Claude is Anthropic's AI assistant for desktop, designed for deep work
+      and focused, fast collaboration.
+    developer: Anthropic
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      overwrite: true
+      source_path: "%pkg_path%/%NAME%.app"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/%NAME%.app
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Staff
+            package:
+              strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1
