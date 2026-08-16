@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.Rekordbox
 ParentRecipe: com.github.davidbpirie.pkg.rekordbox7
 MinimumVersion: "2.7"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Creativity
   NAME: rekordbox7
