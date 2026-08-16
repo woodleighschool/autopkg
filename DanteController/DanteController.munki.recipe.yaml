@@ -1,0 +1,84 @@
+---
+Identifier: com.github.woodleighschool.munki.DanteController
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Controller
+MinimumVersion: "1.1.0"
+
+GitOps: true
+Input:
+  MUNKI_CATEGORY: Utilities
+  NAME: Dante Controller
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Dante Controller provides essential device status information and
+      powerful real-time network monitoring, including device-level latency
+      and clock stability stats, multicast bandwidth usage, and customized
+      event logging, enabling you to quickly identify and resolve any
+      potential network issues. You can also quickly and easily backup,
+      restore, move, and reuse Dante network configurations using Presets,
+      and edit Dante routing configurations offline.
+    developer: Audinate
+    name: "%NAME%"
+    unattended_install: true
+    uninstallable: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pkg_path%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/DanteController.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Controller.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pkg_path%"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - "/Applications/Dante Controller.app"
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Controller.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+            label_name: All Hosts
+            package:
+              strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1
