@@ -40,11 +40,15 @@ max-daily-ai-credits: -1
 features:
   group-concurrency-queue: false
 
+network:
+  allowed:
+    - defaults
+    - miseversions.jdx.dev
+    - releaseassets.githubusercontent.com
+
 checkout:
   - fetch-depth: 0
     fetch: ["refs/pulls/open/*"]
-    path: autopkg
-    current: true
   - repository: woodleighschool/autopkg-gitops
     ref: main
     path: autopkg-gitops
@@ -69,7 +73,6 @@ steps:
       install_args: --locked python lefthook oxfmt actionlint zizmor
       cache_save: false
   - name: Install Python dependencies
-    working-directory: autopkg
     run: mise deps install pip
   - name: Fetch AutoPkg repository index
     env:
@@ -96,6 +99,7 @@ tools:
 
 safe-outputs:
   threat-detection: false
+  report-failure-as-issue: false
   footer: false
   github-app:
     client-id: ${{ secrets.BOT_CLIENT_ID }}
@@ -130,9 +134,8 @@ safe-outputs:
 
 # Handle an application request
 
-Read `autopkg/AGENTS.md` and `autopkg-gitops/AGENTS.md`. The source and GitOps repositories are
-sibling checkouts under the workspace; work from the appropriate repository directory rather than
-the workspace root.
+Read `AGENTS.md` and `autopkg-gitops/AGENTS.md`. The source repository is checked out at the
+workspace root and the GitOps repository is checked out at `autopkg-gitops/`.
 
 On an issue trigger, read the full application-request conversation and search both repositories for
 existing pull requests that reference it. A human reply on the original issue can answer a
@@ -200,7 +203,7 @@ pull request. A human reply on the original issue will resume the workflow natur
 
 If the request is viable:
 
-1. In `autopkg/`, make the narrow recipe or source change. Prefer an existing upstream
+1. In the workspace root, make the narrow recipe or source change. Prefer an existing upstream
    recipe chain and avoid new processors unless there is no reasonable alternative. Follow the
    Woodstar target-label allowlist in `AGENTS.md`; never discover or infer additional labels.
 2. Decide whether the recipe is suitable for unattended recurring checks. Fixed-version recipes and
@@ -208,7 +211,7 @@ If the request is viable:
    enter GitOps. Local icons do not make an otherwise dynamic recipe on-demand.
 3. In `autopkg-gitops/`, add exact pins only for genuinely new upstream recipe repositories. Do not
    add a recipe selector, change the pinned Woodleigh AutoPkg revision, or edit `RecipeOverrides`.
-4. Run `mise run lint` from `autopkg/`. If the GitOps repository changed, run its `mise run lint`
+4. Run `mise run lint` from the workspace root. If the GitOps repository changed, run its `mise run lint`
    check from `autopkg-gitops/` too.
 5. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
 6. If no open pull request references this issue, commit and request one pull request targeting
@@ -218,6 +221,11 @@ If the request is viable:
    amend the existing changes in response to PR feedback, commit, and push to those pull request
    branches. Update their descriptions when the outcome changes. Do not open replacements or push an
    empty commit when only PR metadata changed.
+
+The runner filesystem is ephemeral. A local commit is published only after the matching
+`create_pull_request` or `push_to_pull_request_branch` safe-output request succeeds. If publication
+fails, report the work as incomplete without calling the local commit ready, recoverable, or available
+to a rerun; a later run starts from the remote branch and must recreate the change.
 
 Keep each pull request description short and proportional to the change. Reference the original
 application-request issue and state:
