@@ -3,6 +3,7 @@ Identifier: com.github.woodleighschool.munki.DanteController
 ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Controller
 MinimumVersion: "1.1.0"
 
+GitOps: true
 Input:
   MUNKI_CATEGORY: Utilities
   NAME: Dante Controller
