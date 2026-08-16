@@ -19,14 +19,11 @@ auto = true
 
 [tasks.format]
 description = "Format repository files and normalize recipes"
-run = ["python scripts/sort.py", "oxfmt . '!.mise/**' '!autopkg-gitops/**'"]
+run = ["python scripts/sort.py", "oxfmt . '!.mise/**'"]
 
 [tasks.fmt-check]
 description = "Check repository formatting"
-run = [
-  "python scripts/sort.py --check",
-  "oxfmt --check . '!.mise/**' '!autopkg-gitops/**'",
-]
+run = ["python scripts/sort.py --check", "oxfmt --check . '!.mise/**'"]
 
 [tasks.lint]
 description = "Run repository checks"

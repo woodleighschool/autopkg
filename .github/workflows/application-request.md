@@ -43,6 +43,8 @@ features:
 checkout:
   - fetch-depth: 0
     fetch: ["refs/pulls/open/*"]
+    path: autopkg
+    current: true
   - repository: woodleighschool/autopkg-gitops
     ref: main
     path: autopkg-gitops
@@ -66,6 +68,9 @@ steps:
       experimental: true
       install_args: --locked python lefthook oxfmt actionlint zizmor
       cache_save: false
+  - name: Install Python dependencies
+    working-directory: autopkg
+    run: mise deps install pip
   - name: Fetch AutoPkg repository index
     env:
       AUTOPKG_INDEX_URL: https://raw.githubusercontent.com/autopkg/index/refs/heads/main/index.json
@@ -125,8 +130,9 @@ safe-outputs:
 
 # Handle an application request
 
-Read the root `AGENTS.md` in both checked-out repositories. The source repository is the workspace
-root; the GitOps repository is in `autopkg-gitops/`.
+Read `autopkg/AGENTS.md` and `autopkg-gitops/AGENTS.md`. The source and GitOps repositories are
+sibling checkouts under the workspace; work from the appropriate repository directory rather than
+the workspace root.
 
 On an issue trigger, read the full application-request conversation and search both repositories for
 existing pull requests that reference it. A human reply on the original issue can answer a
@@ -186,7 +192,7 @@ pull request. A human reply on the original issue will resume the workflow natur
 
 If the request is viable:
 
-1. Make the narrow recipe or source change in the workspace root. Prefer an existing upstream
+1. In `autopkg/`, make the narrow recipe or source change. Prefer an existing upstream
    recipe chain and avoid new processors unless there is no reasonable alternative. Follow the
    Woodstar target-label allowlist in `AGENTS.md`; never discover or infer additional labels.
 2. Decide whether the recipe is suitable for unattended recurring checks. Fixed-version recipes and
@@ -194,8 +200,8 @@ If the request is viable:
    enter GitOps. Local icons do not make an otherwise dynamic recipe on-demand.
 3. In `autopkg-gitops/`, add exact pins only for genuinely new upstream recipe repositories. Do not
    add a recipe selector, change the pinned Woodleigh AutoPkg revision, or edit `RecipeOverrides`.
-4. Run `mise run lint` in the source repository. If the GitOps repository changed, run its
-   `mise run lint` check too.
+4. Run `mise run lint` from `autopkg/`. If the GitOps repository changed, run its `mise run lint`
+   check from `autopkg-gitops/` too.
 5. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
 6. If no open pull request references this issue, commit and request one draft pull request targeting
    `woodleighschool/autopkg`. Request a second draft pull request targeting

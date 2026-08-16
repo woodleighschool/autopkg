@@ -39,5 +39,8 @@ jobs:
           experimental: true
           install_args: --locked python oxfmt actionlint zizmor
 
+      - name: Install Python dependencies
+        run: mise deps install pip
+
       - name: Check repository
         run: mise run lint
