@@ -1,0 +1,84 @@
+---
+Identifier: com.github.woodleighschool.munki.Rekordbox
+ParentRecipe: com.github.davidbpirie.pkg.rekordbox7
+MinimumVersion: "2.7"
+
+GitOps: true
+Input:
+  MUNKI_CATEGORY: Creativity
+  NAME: rekordbox7
+  pkginfo:
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      rekordbox is Pioneer DJ's all-in-one software for track preparation,
+      performance, and management, used for DJ and music production.
+    developer: AlphaTheta Corporation
+    display_name: rekordbox
+    name: rekordbox
+    postinstall_script: |
+      #!/bin/bash
+
+      # Create directories and set permissions needed to stop admin prompt on launch
+      /bin/mkdir -p /private/var/slmdata ; /bin/chmod 777 /private/var/slmdata
+      /bin/mkdir -p /private/var/.slm ; /bin/chmod 777 /private/var/.slm
+      /bin/mkdir -p /private/var/.slmbackup ; /bin/chmod 777 /private/var/.slmbackup
+      /bin/mkdir -p /private/var/.slmauth ; /bin/chmod 777 /private/var/.slmauth
+
+      exit 0
+    unattended_install: true
+    uninstallable: true
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pkg_path%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/rekordbox.pkg/Payload"
+      purge_destination: true
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/rekordbox.app
+
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
+  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+    Arguments:
+      NAME: rekordbox
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/rekordbox.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/rekordbox.png"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1
