@@ -44,6 +44,9 @@ When adding an application:
   Munki-oriented import step where appropriate.
 - Set recipe input `NAME` to the application's normal human-facing name, not an identifier-style
   slug. Use it for Munki's `name` and leave `display_name` unset.
+- Derive one folder, filename, and identifier slug by removing spaces and punctuation from that
+  official product name while preserving its product casing. For example, `rekordbox 7` becomes
+  `rekordbox7`; use the same slug at all three boundaries.
 - Omit `blocking_applications` when it would only repeat the application name; Munki derives that
   default itself. Use an explicit empty list only when the installer safely handles the running app
   or its services and Munki must not apply its inferred block. For example, GlobalProtect requires

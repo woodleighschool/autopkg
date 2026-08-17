@@ -1,20 +1,21 @@
 ---
-Identifier: com.github.woodleighschool.munki.Rekordbox
+Identifier: com.github.woodleighschool.munki.rekordbox7
 ParentRecipe: com.github.davidbpirie.pkg.rekordbox7
-MinimumVersion: "2.7"
+MinimumVersion: "3.0"
 
 GitOps: true
 Input:
   MUNKI_CATEGORY: Creativity
-  NAME: rekordbox7
+  NAME: rekordbox 7
   pkginfo:
+    blocking_applications:
+      - rekordbox.app
     category: "%MUNKI_CATEGORY%"
     description: >-
       rekordbox is Pioneer DJ's all-in-one software for track preparation,
       performance, and management, used for DJ and music production.
     developer: AlphaTheta Corporation
-    display_name: rekordbox
-    name: rekordbox
+    name: "%NAME%"
     postinstall_script: |
       #!/bin/bash
 
@@ -26,6 +27,12 @@ Input:
 
       exit 0
     unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: uninstall_script
+    uninstall_script: |
+      #!/bin/sh
+
+      /bin/rm -rf "/Applications/rekordbox 7"
     uninstallable: true
 
 Process:
@@ -37,7 +44,7 @@ Process:
 
   - Processor: PkgPayloadUnpacker
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/rekordbox 7"
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/rekordbox.pkg/Payload"
       purge_destination: true
 
@@ -46,7 +53,9 @@ Process:
       derive_minimum_os_version: true
       faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
-        - /Applications/rekordbox.app
+        - /Applications/rekordbox 7/rekordbox.app
+
+  - Processor: MunkiPkginfoMerger
 
   - Processor: MunkiPkginfoMerger
     Arguments:
@@ -55,9 +64,8 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      NAME: rekordbox
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/rekordbox.app"
+      app_name: rekordbox.app
+      pathname: "%RECIPE_CACHE_DIR%/payload"
 
   - Processor: PathDeleter
     Arguments:
@@ -67,7 +75,7 @@ Process:
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/rekordbox.png"
+      icon_path: "%icon_path%"
       pkg_path: "%pkg_path%"
       targets:
         exclude: []

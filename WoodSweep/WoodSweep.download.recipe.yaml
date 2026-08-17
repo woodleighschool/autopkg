@@ -25,8 +25,10 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      expected_authority_names:
-        - "Developer ID Application: Woodleigh School (SMLKBTR495)"
-        - Developer ID Certification Authority
-        - Apple Root CA
       input_path: "%destination_path%/%NAME%.app"
+      requirement: >-
+        anchor apple generic and identifier "au.edu.vic.woodleigh.WoodSweep" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = SMLKBTR495)

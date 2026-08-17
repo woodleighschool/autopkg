@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.DanteVirtualSoundcard
-ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Virtual Soundcard
-MinimumVersion: "1.1.0"
+ParentRecipe: com.github.dataJAR-recipes.pkg.Audinate Dante Virtual Soundcard
+MinimumVersion: "3.0"
 
 GitOps: true
 Input:
@@ -38,53 +38,34 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: FlatPkgUnpacker
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
-      flat_pkg_path: "%pathname%/DanteVirtualSoundcard.pkg"
-      purge_destination: true
-
-  - Processor: PkgPayloadUnpacker
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload"
-      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/DVS_User_Interface.pkg/Payload"
-      purge_destination: true
-
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
-
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      source_pkg: "%pathname%/DanteVirtualSoundcard.pkg"
-
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      faux_root: "%RECIPE_CACHE_DIR%/payload/root"
       installs_item_paths:
         - "/Applications/Dante Virtual Soundcard.app"
 
   - Processor: MunkiPkginfoMerger
 
+  - Processor: MunkiPkginfoMerger
+    Arguments:
+      additional_pkginfo:
+        version: "%version%"
+
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app"
+      pathname: "%RECIPE_CACHE_DIR%/payload/root/Applications/Dante Virtual Soundcard.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/pkg_unpack"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      icon_path: "%icon_path%"
+      pkg_path: "%RECIPE_CACHE_DIR%/repack/%NAME%-%version%.pkg"
       targets:
         exclude: []
         include:

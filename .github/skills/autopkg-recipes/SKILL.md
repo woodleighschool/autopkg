@@ -1,6 +1,6 @@
 ---
 name: autopkg-recipes
-description: Use when creating, reviewing, or fixing AutoPkg recipes in Woodleigh's recipe repository, especially when selecting a parent chain, mapping a source artifact into Munki, deciding install and uninstall behavior, or reviewing GitOps suitability.
+description: Use when creating, reviewing, or fixing AutoPkg download, package, or Munki recipes in Woodleigh's recipe repository, including parent selection, source inspection, installs detection, uninstall behavior, and GitOps suitability.
 ---
 
 # Woodleigh AutoPkg recipes
@@ -13,19 +13,32 @@ This skill adapts the practical recipe structure from
 [dataJAR's AutoPkg skill](https://github.com/autopkg/dataJAR-recipes/blob/master/.github/skills/autopkg-recipes/SKILL.md)
 to Woodleigh's direct Woodstar importer, naming, targeting, and static-review boundaries.
 
-## Start with the artifact contract
+## Build an evidence ladder
 
-Read `AGENTS.md`, then establish these facts before editing:
+Read `AGENTS.md`, then gather only enough evidence to choose a likely-working chain:
 
 1. Search the prepared AutoPkg index by the application name, vendor, and aliases.
-2. Inspect a promising upstream `.munki.` recipe first. Work backwards through every parent and
-   record what each layer adds, what artifact reaches the child, and which variable names it emits.
-3. Confirm the current source shape: DMG containing an app, signed installer package, archive
-   containing an app, archive containing a package, or an actual oddball.
-4. Confirm the verification boundary. The selected chain must verify the final downloaded app or
-   installer through a maintained parent or a local `CodeSignatureVerifier`.
-5. Confirm the installed application path and version source. For packages, inspect upstream
-   payload layout and scripts rather than assuming the package installs one app at its display name.
+2. Inspect the strongest current upstream `.munki.` recipe first, then work backwards through its
+   full parent chain. Treat its payload paths, installs, removal, scripts, and artifact variables as
+   operational evidence. Do not copy a child's paths while skipping the parent that creates them.
+3. Classify the source shape and complexity from that chain. A DMG containing one app or a package
+   imported directly by a maintained Munki recipe usually needs no further asset inspection.
+4. If material facts remain uncertain and a direct vendor asset URL is available, call
+   `inspect-apple-archive` when the tool exists. Good triggers are component or conditional
+   packages, nested installers, missing upstream Munki recipes, conflicting paths, or a package
+   parent that rewrites scripts or rebuilds the installer.
+5. Treat archive inspection as best-effort structural evidence. If it fails once, do not fight the
+   tool or recreate macOS archive handling. Fall back to the strongest evidence that has not been
+   contradicted by a real run, and keep the resulting assumptions clear in review. Runtime evidence
+   outranks an upstream recipe's historical paths.
+
+Do not download and inspect every asset. The tool cannot prove that macOS will mount or install an
+artifact, that conditional package choices will execute, or that the resulting app will work. Its
+purpose is to replace consequential path guesses cheaply when upstream evidence is incomplete.
+
+The selected chain must still verify the final downloaded app or installer through a maintained
+parent or local `CodeSignatureVerifier`. With AutoPkg 3, pin app bundles using their designated
+`requirement`; `expected_authority_names` pins installer packages only.
 
 Use `references/source-templates.md` once the source shape is known. Replace every template token
 with observed data. Do not leave guessed paths, signatures, receipt identifiers, or scripts.
@@ -38,7 +51,9 @@ Prefer these shapes, in order:
   recipe and consume the parent's actual artifact output directly, commonly `%dmg_path%` or
   `%pathname%`.
 - A maintained parent already yields a verified deployable package: add one local `.munki` recipe
-  and consume the parent's `%pkg_path%` or `%pathname%` directly, whichever it actually exports.
+  and consume the parent's actual package output directly. If the upstream `.munki` uses a package
+  parent that modifies scripts, payload layout, permissions, or installer behavior, reuse that
+  parent rather than partially recreating it below the download recipe.
 - A maintained parent yields a verified archive or app that must be converted into a deployable
   DMG: perform only that required conversion in the local `.munki` recipe.
 - No sustainable parent exists: add the smallest local `.download` recipe that resolves the latest
@@ -58,18 +73,25 @@ URL; it is not a reason to rename the downloaded file.
 
 ## Construct honest Munki metadata
 
-- Use the human-facing application name for `NAME` and Munki `name`. Leave `display_name` unset.
-- Use compact folder, filename, and identifier slugs without spaces, matching this repository.
+- Use the exact official product title, including its version where applicable, for `NAME`. Derive
+  one folder, filename, and identifier slug by stripping spaces and punctuation while preserving
+  product casing: `rekordbox 7` becomes `rekordbox7`, while `Visual Studio Code` becomes
+  `VisualStudioCode`. Use `NAME` for Munki `name` and leave `display_name` unset.
 - Default to `All Hosts` with `optional_installs` and `managed_updates` unless the request narrows
   the audience. Use only labels allowed by `AGENTS.md`.
 - Let `makepkginfo` derive installs and version metadata for an ordinary DMG containing an app.
   Pass the exact app bundle to `munkiimport_appname` when selection is useful.
 - For a package, unpack only far enough to derive accurate installs metadata, minimum OS, or an
-  icon. Import the original verified package, not the inspection copy.
+  icon. Use paths established by its upstream Munki chain or best-effort inspection; do not paste a
+  generic component path. Import the original verified package, not the inspection copy.
 - Add `MunkiInstallsItemsCreator` only when `makepkginfo` cannot derive correct application installs
-  from the imported artifact. Merge its output immediately with `MunkiPkginfoMerger`.
+  from the imported artifact. Merge its output immediately with an argument-free
+  `MunkiPkginfoMerger`; a later explicit version merge is a separate processor step.
 - Add an explicit version merge or `version_comparison_key` only when the real app or package proves
   the automatically selected version is wrong.
+- Conditional component packages can leave package receipts that do not prove the intended
+  component installed. When upstream behavior or a first run exposes that case, declare `installs`
+  against a persistent versioned app, bundle, or support path instead of trusting the receipt.
 - Extract the icon from the existing DMG or inspected payload. Do not copy an app solely for icon
   extraction.
 - Keep application-specific install or postinstall scripts only when current upstream behavior or
@@ -98,6 +120,11 @@ fact, such as a nested installer, multiple payload apps, a vendor bootstrapper, 
 transformation, or nonstandard version comparison. State that fact and the smallest template delta
 in the pull request. Do not call a source an oddball merely because an existing recipe has more
 layers or processors.
+
+The goal is a small recipe that probably works from the best available evidence, not a claim that
+static review eliminated runtime failures. A first real run may expose conditional installer or
+payload behavior that requires a narrow follow-up; record static checks honestly and do not claim
+the recipe or processor ran.
 
 Stop for one concise clarification only when the missing answer changes installation, removal,
 edition, channel, licensing, or whether Woodleigh must own a fragile transformation. Stop without a
