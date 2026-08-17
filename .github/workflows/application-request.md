@@ -11,7 +11,7 @@ on:
     types: [submitted]
   pull_request_review_comment:
     types: [created]
-  roles: [admin, maintainer, write, triage, read]
+  roles: [admin, maintainer, write]
   skip-bots: [woodmin]
   status-comment: true
   github-app:
@@ -43,8 +43,6 @@ features:
 network:
   allowed:
     - defaults
-    - miseversions.jdx.dev
-    - releaseassets.githubusercontent.com
 
 checkout:
   - fetch-depth: 0
