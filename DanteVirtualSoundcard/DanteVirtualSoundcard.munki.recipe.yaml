@@ -1,6 +1,6 @@
 ---
 Identifier: com.github.woodleighschool.munki.DanteVirtualSoundcard
-ParentRecipe: com.github.dataJAR-recipes.pkg.Audinate Dante Virtual Soundcard
+ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Virtual Soundcard
 MinimumVersion: "3.0"
 
 GitOps: true
@@ -18,6 +18,11 @@ Input:
       Dante-enabled devices.
     developer: Audinate
     name: "%NAME%"
+    preinstall_script: |
+      #!/bin/sh
+
+      # Audinate's package suppresses installer dialogs while this marker exists.
+      /usr/bin/touch /tmp/DVS_silent_install
     unattended_install: true
     unattended_uninstall: true
     uninstall_method: uninstall_script
@@ -38,10 +43,32 @@ Input:
     uninstallable: true
 
 Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pathname%/DanteVirtualSoundcard.pkg"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/DVS_User_Interface.pkg/Payload"
+      purge_destination: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app/Contents/Info.plist"
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      source_pkg: "%pathname%/DanteVirtualSoundcard.pkg"
+
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload/root"
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
       installs_item_paths:
         - "/Applications/Dante Virtual Soundcard.app"
 
@@ -54,18 +81,18 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/root/Applications/Dante Virtual Soundcard.app"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
         - "%RECIPE_CACHE_DIR%/payload"
-        - "%RECIPE_CACHE_DIR%/pkg_unpack"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       icon_path: "%icon_path%"
-      pkg_path: "%RECIPE_CACHE_DIR%/repack/%NAME%-%version%.pkg"
+      pkg_path: "%pkg_path%"
       targets:
         exclude: []
         include:
