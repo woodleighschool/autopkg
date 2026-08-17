@@ -3,6 +3,9 @@
 This repository owns Woodleigh's reviewed AutoPkg recipes and processors. A top-level
 `GitOps: true` on a Munki recipe declares that it is suitable for unattended recurring execution.
 
+Before creating, reviewing, or fixing a recipe, use the `autopkg-recipes` skill in
+`.github/skills/autopkg-recipes/SKILL.md` and load the matching source template it names.
+
 When adding an application:
 
 - All managed Macs are Apple Silicon. Use the `arm64` or Apple Silicon variant when upstream offers
