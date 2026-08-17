@@ -1,6 +1,6 @@
 ---
 Identifier: com.github.woodleighschool.munki.Claude
-ParentRecipe: com.github.woodleighschool.download.Claude
+ParentRecipe: com.github.almenscorner.download.Claude
 MinimumVersion: "1.1.0"
 
 GitOps: true
@@ -20,18 +20,11 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-      overwrite: true
-      source_path: "%pkg_path%/%NAME%.app"
-
   - Processor: MunkiInstallsItemsCreator
     Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      faux_root: "%RECIPE_CACHE_DIR%/unpacked"
       installs_item_paths:
-        - /Applications/%NAME%.app
+        - /Applications/Claude.app
 
   - Processor: MunkiPkginfoMerger
 
@@ -39,18 +32,13 @@ Process:
     Arguments:
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+      pathname: "%RECIPE_CACHE_DIR%/unpacked/Claude.app"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
       munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pkg_path%"
+      pkg_path: "%dmg_path%"
       targets:
         exclude: []
         include:
