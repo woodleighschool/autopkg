@@ -1,0 +1,7 @@
+rules:
+  template-injection:
+    ignore:
+      # gh-aw v0.87.0 emits these generated guard-policy values directly.
+      - application-request.lock.yml:1051
+      - application-request.lock.yml:1052
+      - application-request.lock.yml:1055

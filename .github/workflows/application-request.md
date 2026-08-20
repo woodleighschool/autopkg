@@ -58,7 +58,7 @@ permissions:
 
 steps:
   - name: Setup Mise
-    uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654
+    uses: jdx/mise-action@v4.2.4
     with:
       experimental: true
       install_args: --locked python lefthook oxfmt actionlint zizmor
