@@ -1,10 +1,4 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["local>woodleighschool/renovate-config"],
-  packageRules: [
-    {
-      matchManagers: ["mise"],
-      minimumReleaseAge: "12 hours",
-    },
-  ],
 }
