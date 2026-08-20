@@ -9,7 +9,6 @@ oxfmt = "0.64.0"
 experimental = true
 pin = true
 lockfile = true
-minimum_release_age = "12 hours"
 
 [env]
 _.python.venv = { path = ".venv", create = true }
