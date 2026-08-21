@@ -63,3 +63,8 @@ Process:
             label_name: CRT/Spare Shared MacBooks
             package:
               strategy: latest
+          - actions:
+              - managed_installs
+            label_name: SAC MacBooks
+            package:
+              strategy: latest

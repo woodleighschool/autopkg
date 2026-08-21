@@ -70,7 +70,8 @@ Process:
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
       pkg_path: "%pkg_path%"
       targets:
-        exclude: []
+        exclude:
+          - label_name: SAC MacBooks
         include:
           - actions:
               - managed_installs
