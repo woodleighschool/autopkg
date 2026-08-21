@@ -6,9 +6,13 @@ Input:
   REVISION: "1"
 
 Process:
+  - Processor: URLDownloader
+    Arguments:
+      url: "%SOPHOS_DOWNLOAD_URL%"
+
   - Processor: Unarchiver
     Arguments:
-      archive_path: "%RECIPE_DIR%/Assets/SophosInstall.zip"
+      archive_path: "%pathname%"
       destination_path: "%RECIPE_CACHE_DIR%/unzip"
       purge_destination: true
 
