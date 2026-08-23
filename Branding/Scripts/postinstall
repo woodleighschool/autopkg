@@ -56,12 +56,9 @@ run_as_user /usr/bin/killall -KILL Dock 2>/dev/null || true
 /usr/sbin/chown root:wheel "${wallpaper}"
 /bin/chmod 0644 "${wallpaper}"
 
-if ! run_as_user /usr/bin/osascript \
-    -e "tell application \"Finder\" to set desktop picture to POSIX file \"${wallpaper}\""; then
-    /bin/rm -f "${wallpaper}"
-    /bin/echo "Unable to apply the Woodleigh wallpaper." >&2
-    exit 1
-fi
+run_as_user /usr/bin/osascript \
+    -e "tell application \"Finder\" to set desktop picture to POSIX file \"${wallpaper}\"" \
+    >/dev/null 2>&1 &!
 
 /bin/rm -rf "/private/var/tmp/Woodleigh/Branding"
 /bin/rmdir "/private/var/tmp/Woodleigh" 2>/dev/null || true
