@@ -1,0 +1,26 @@
+---
+Identifier: com.github.woodleighschool.download.Munki
+MinimumVersion: "3.0"
+
+Input:
+  NAME: Munki
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: "^munkitools-[0-9]+(?:\\.[0-9]+)+\\.pkg$"
+      github_repo: munki/munki
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%-%version%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Mac Admins Open Source (T4SK8ZXCXG)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
+      input_path: "%pathname%"
