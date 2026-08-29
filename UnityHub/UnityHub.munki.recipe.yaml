@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.UnityHub
 ParentRecipe: com.github.woodleighschool.download.UnityHub
 MinimumVersion: "0.6.1"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Programming
   NAME: Unity Hub

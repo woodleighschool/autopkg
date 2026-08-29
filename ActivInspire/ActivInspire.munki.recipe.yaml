@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.ActivInspire
 ParentRecipe: com.github.dataJAR-recipes.download.ActivInspire
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: ActivInspire

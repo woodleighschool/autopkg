@@ -18,7 +18,6 @@ TOP_LEVEL_KEYS = [
     "Identifier",
     "ParentRecipe",
     "MinimumVersion",
-    "GitOps",
     "Input",
     "Process",
 ]
@@ -120,7 +119,7 @@ def recipe_paths(arguments: list[str]) -> list[Path]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Normalize AutoPkg recipe structure")
+    parser = argparse.ArgumentParser(description="Normalize recipes")
     parser.add_argument("--check", action="store_true")
     parser.add_argument("recipes", nargs="*")
     arguments = parser.parse_args()
@@ -130,10 +129,10 @@ def main() -> int:
     if arguments.check and changed:
         for recipe in changed:
             print(recipe.relative_to(ROOT) if recipe.is_relative_to(ROOT) else recipe)
-        print(f"{len(changed)} AutoPkg recipes need normalization")
+        print(f"{len(changed)} recipes need normalization")
         return 1
 
-    print(f"Normalized {len(changed)} of {len(recipes)} AutoPkg recipes")
+    print(f"Normalized {len(changed)} of {len(recipes)} recipes")
     return 0
 
 

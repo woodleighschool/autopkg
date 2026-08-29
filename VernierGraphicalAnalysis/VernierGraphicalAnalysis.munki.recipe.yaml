@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.VernierGraphicalAnalysis
 ParentRecipe: com.github.woodleighschool.download.VernierGraphicalAnalysis
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Education
   NAME: Vernier Graphical Analysis

@@ -29,8 +29,6 @@ Replace these tokens everywhere:
   `%RECIPE_CACHE_DIR%/payload/root`
 - metadata, paths, signing requirements, and certificate authorities: observed current values
 
-All dynamic templates show `GitOps: true`. Remove it for fixed-version or locally sourced recipes.
-
 ## Verified DMG containing an app
 
 When an existing parent produces a verified DMG, identify the exact output variable holding that
@@ -43,7 +41,6 @@ Identifier: com.github.woodleighschool.munki.APP_SLUG
 ParentRecipe: PARENT_RECIPE
 MinimumVersion: "3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: CATEGORY
   NAME: Application Name
@@ -101,7 +98,6 @@ Identifier: com.github.woodleighschool.munki.APP_SLUG
 ParentRecipe: PARENT_RECIPE
 MinimumVersion: "3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: CATEGORY
   NAME: Application Name
@@ -149,7 +145,6 @@ Identifier: com.github.woodleighschool.munki.APP_SLUG
 ParentRecipe: PARENT_RECIPE
 MinimumVersion: "3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: CATEGORY
   NAME: Application Name
@@ -344,7 +339,6 @@ Identifier: com.github.woodleighschool.munki.APP_SLUG
 ParentRecipe: com.github.woodleighschool.download.APP_SLUG
 MinimumVersion: "3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: CATEGORY
   NAME: Application Name

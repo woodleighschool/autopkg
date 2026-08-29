@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.DanteVirtualSoundcard
 ParentRecipe: com.github.dataJAR-recipes.download.Audinate Dante Virtual Soundcard
 MinimumVersion: "3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: System
   NAME: Dante Virtual Soundcard

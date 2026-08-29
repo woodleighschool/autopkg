@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.Zoom
 ParentRecipe: com.github.hansen-m.download.zoomus
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Collaboration
   NAME: Zoom

@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.GameMaker
 ParentRecipe: com.github.davidbpirie.download.GameMaker
 MinimumVersion: "2.3.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Programming
   NAME: GameMaker

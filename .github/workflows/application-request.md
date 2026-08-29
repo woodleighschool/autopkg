@@ -235,16 +235,11 @@ If the request is viable:
 
 1. In the workspace root, make the narrow recipe or source change from the matching skill template.
    Follow the Woodstar target-label allowlist in `AGENTS.md`; never discover or infer more labels.
-2. Decide whether the recipe is suitable for unattended recurring checks. Add top-level
-   `GitOps: true` only when the complete chain discovers a current versioned download without local
-   input. Fixed-version recipes and payloads copied from `Assets`, `/Applications`, or another local
-   folder are on-demand and must omit it. Local icons do not make an otherwise dynamic recipe
-   on-demand.
-3. Run `mise run lint` from the workspace root.
-4. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
-5. If no open pull request references this issue, commit and request one pull request targeting
+2. Run `mise run lint` from the workspace root.
+3. Never run an AutoPkg recipe, `autopkg run`, `mise run local`, or any local processor.
+4. If no open pull request references this issue, commit and request one pull request targeting
    `woodleighschool/autopkg`.
-6. If a workflow-owned open pull request already references this request, check out its head branch,
+5. If a workflow-owned open pull request already references this request, check out its head branch,
    amend the existing changes in response to PR feedback, commit, and push to those pull request
    branches. Update their descriptions when the outcome changes. Do not open replacements or push an
    empty commit when only PR metadata changed.
@@ -258,7 +253,6 @@ Keep each pull request description short and proportional to the change. Referen
 application-request issue and state:
 
 - the selected parent recipe chain and its download or verification boundary;
-- whether the recipe declares `GitOps: true`; and
 - the static checks run.
 
 A few bullets are enough for a small recipe. Do not add generic application summaries, narrate the

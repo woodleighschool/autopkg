@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.Blender
 ParentRecipe: com.github.woodleighschool.download.Blender
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   ARCHITECTURE: arm64
   MAJOR_VERSION: "5"

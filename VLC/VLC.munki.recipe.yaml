@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.VLC
 ParentRecipe: com.github.woodleighschool.download.VLC
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   ARCHITECTURE: arm64
   MUNKI_CATEGORY: Media

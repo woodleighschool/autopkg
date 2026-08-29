@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.swiftDialog
 ParentRecipe: com.github.smithjw.pkg.swiftDialog
 MinimumVersion: "2.9"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Utilities
   NAME: swiftDialog

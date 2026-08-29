@@ -1,6 +1,6 @@
 ---
 name: autopkg-recipes
-description: Use when creating, reviewing, or fixing AutoPkg download, package, or Munki recipes in Woodleigh's recipe repository, including parent selection, source inspection, installs detection, uninstall behavior, and GitOps suitability.
+description: Use when creating, reviewing, or fixing AutoPkg download, package, Munki, or Intune recipes in Woodleigh's recipe repository, including parent selection, source inspection, installs detection, and uninstall behavior.
 ---
 
 # Woodleigh AutoPkg recipes
@@ -140,8 +140,7 @@ Reject a change that does any of the following without an observed necessity:
 - stages an app only to generate installs metadata or an icon for a DMG import;
 - copies `display_name`, redundant `blocking_applications`, scripts, or uninstall metadata from an
   old upstream recipe without checking current behavior;
-- claims safe uninstall, version detection, architecture, or verification without evidence;
-- adds `GitOps: true` to a fixed-version or locally sourced recipe.
+- claims safe uninstall, version detection, architecture, or verification without evidence.
 
 Never run `autopkg run`, `mise run local`, or a local processor while preparing or reviewing a pull
 request. Run only `mise run lint` and repository-owned static checks. Keep the change and pull

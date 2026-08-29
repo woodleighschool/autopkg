@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.DockerDesktop
 ParentRecipe: com.github.woodleighschool.download.DockerDesktop
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Programming
   NAME: Docker Desktop

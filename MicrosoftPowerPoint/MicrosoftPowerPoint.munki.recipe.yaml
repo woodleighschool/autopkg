@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.MicrosoftPowerPoint
 ParentRecipe: com.github.rtrouton.download.microsoftpowerpoint365
 MinimumVersion: "2.7"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Productivity
   NAME: Microsoft PowerPoint

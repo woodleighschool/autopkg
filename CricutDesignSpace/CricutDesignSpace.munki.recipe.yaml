@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.CricutDesignSpace
 ParentRecipe: com.github.woodleighschool.download.CricutDesignSpace
 MinimumVersion: "1.1.0"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Creativity
   NAME: Cricut Design Space

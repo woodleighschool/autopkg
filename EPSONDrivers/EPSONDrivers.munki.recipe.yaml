@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.EPSONDrivers
 ParentRecipe: com.github.woodleighschool.download.EPSONDrivers
 MinimumVersion: "2.7"
 
-GitOps: true
 Input:
   MUNKI_CATEGORY: Utilities
   NAME: EPSON Drivers

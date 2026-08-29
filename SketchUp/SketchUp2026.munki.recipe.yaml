@@ -3,7 +3,6 @@ Identifier: com.github.woodleighschool.munki.SketchUp2026
 ParentRecipe: com.github.dataJAR-recipes.download.SketchUp 2026 EN
 MinimumVersion: "2.7"
 
-GitOps: true
 Input:
   APP_FOLDER: SketchUp 2026
   MUNKI_CATEGORY: STEAM
