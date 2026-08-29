@@ -47,7 +47,7 @@ Process:
 
   - Processor: com.github.almenscorner.intune-upload.processors/IntuneAppUploader
     Arguments:
-      app_file: "%pathname%"
+      app_file: "%flat_pkg_path%"
       assignment_info:
         - all_assignment: AllDevices
           #intent: Required
