@@ -63,7 +63,7 @@ Prefer these shapes, in order:
 Bind a parent's real output variable at the processor that consumes it. Never insert a recipe or a
 `VariableSetter`, `Copier`, `Versioner`, or `PkgCopier` merely to rename the artifact, expose
 `pkg_path`, create a versioned cache filename, or mirror an upstream layer. In particular, a
-verified DMG can be passed from its real parent output to `MunkiIconExtractor` and
+verified DMG can be passed from its real parent output to `SwiftIconExtractor` and
 `WoodstarMunkiImporter` as-is.
 
 A `.download` recipe owns only source resolution, download, extraction when verification requires

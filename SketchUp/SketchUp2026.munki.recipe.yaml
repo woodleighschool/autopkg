@@ -36,7 +36,7 @@ Process:
         CFBundleVersion: version
         LSMinimumSystemVersion: minimum_os_version
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: SketchUp.app
       NAME: "%NAME%"

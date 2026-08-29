@@ -38,7 +38,7 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"

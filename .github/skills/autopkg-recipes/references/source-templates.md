@@ -56,7 +56,7 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: Application Name.app
       pathname: PARENT_DMG_PATH
@@ -178,7 +178,7 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: Application Name.app
       pathname: "%RECIPE_CACHE_DIR%/payload"
@@ -360,7 +360,7 @@ Process:
       plist_keys:
         CFBundleShortVersionString: version
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       pathname: "%RECIPE_CACHE_DIR%/expanded/Application Name.app"
 

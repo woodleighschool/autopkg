@@ -22,11 +22,8 @@ from autopkglib import ProcessorError
 from autopkglib.DmgMounter import DmgMounter
 
 
-class MunkiIconExtractor(DmgMounter):
-    description = (
-        "Extracts a rendered app icon from a .app, .dmg, or directory and writes "
-        "a PNG into the Munki icons directory."
-    )
+class SwiftIconExtractor(DmgMounter):
+    description = "Renders an app icon from a .app, .dmg, or directory and writes a PNG."
 
     input_variables = {
         "pathname": {
@@ -296,5 +293,5 @@ class MunkiIconExtractor(DmgMounter):
 
 
 if __name__ == "__main__":
-    PROCESSOR = MunkiIconExtractor()
+    PROCESSOR = SwiftIconExtractor()
     PROCESSOR.execute_shell()

@@ -57,7 +57,7 @@ Process:
         minimum_os_version: "%minimum_os_version%"
         version: "%version%"
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"

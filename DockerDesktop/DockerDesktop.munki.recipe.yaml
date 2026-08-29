@@ -100,7 +100,7 @@ Process:
       additional_pkginfo:
         version: "%version%"
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"

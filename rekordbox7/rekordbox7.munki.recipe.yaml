@@ -61,7 +61,7 @@ Process:
       additional_pkginfo:
         version: "%version%"
 
-  - Processor: com.github.woodleighschool.processors/MunkiIconExtractor
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: rekordbox.app
       pathname: "%RECIPE_CACHE_DIR%/payload"
