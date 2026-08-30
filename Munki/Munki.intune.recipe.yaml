@@ -49,8 +49,9 @@ Process:
     Arguments:
       app_file: "%flat_pkg_path%"
       assignment_info:
-        - all_assignment: AllDevices
-          #intent: Required
+        #- all_assignment: AllDevices
+        #  intent: Required
+        - all_assignment: AllUsers
           intent: Available
       bundleId: "%bundle_id%"
       bundleVersion: "%bundle_version%"
