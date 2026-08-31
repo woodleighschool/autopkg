@@ -1,0 +1,26 @@
+---
+Identifier: com.github.woodleighschool.download.swiftDialog
+MinimumVersion: "3.0"
+
+Input:
+  NAME: swiftDialog
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^dialog-[0-9.]+-[0-9]+\.pkg$'
+      github_repo: swiftDialog/swiftDialog
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: swiftDialog.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Commonwealth Scientific and Industrial Research Organisation (PWA5E9TQ59)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%"

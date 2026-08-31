@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.AutodeskFusion
-ParentRecipe: com.github.homebysix.download.AutodeskFusion360
-MinimumVersion: "1.1.0"
+ParentRecipe: com.github.nstrauss.download.AutodeskFusion360
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: STEAM
@@ -33,16 +33,6 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/Payload"
       purge_destination: true
 
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
-
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      source_pkg: "%pathname%"
-
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -67,7 +57,7 @@ Process:
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

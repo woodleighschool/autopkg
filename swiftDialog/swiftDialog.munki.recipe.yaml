@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.swiftDialog
-ParentRecipe: com.github.smithjw.pkg.swiftDialog
-MinimumVersion: "2.9"
+ParentRecipe: com.github.woodleighschool.download.swiftDialog
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Utilities
@@ -22,7 +22,7 @@ Process:
   - Processor: FlatPkgUnpacker
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/unpack"
-      flat_pkg_path: "%pkg_path%"
+      flat_pkg_path: "%pathname%"
       purge_destination: true
 
   - Processor: PkgPayloadUnpacker
@@ -55,7 +55,7 @@ Process:
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

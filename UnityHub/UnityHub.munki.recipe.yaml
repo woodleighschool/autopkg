@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.UnityHub
 ParentRecipe: com.github.woodleighschool.download.UnityHub
-MinimumVersion: "0.6.1"
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Programming
@@ -21,37 +21,16 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-      overwrite: true
-      source_path: "%pkg_path%/%NAME%.app"
-
-  - Processor: MunkiInstallsItemsCreator
-    Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/Unity Hub.app
-
-  - Processor: MunkiPkginfoMerger
-
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+      app_name: Unity Hub.app
+      pathname: "%pathname%"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%icon_path%"
       munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

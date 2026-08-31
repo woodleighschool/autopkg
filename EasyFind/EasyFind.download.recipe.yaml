@@ -1,0 +1,36 @@
+---
+Identifier: com.github.woodleighschool.download.EasyFind
+MinimumVersion: "3.0"
+
+Input:
+  NAME: EasyFind
+  SEARCH_URL: https://www.devontechnologies.com/apps/freeware
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '(?P<download_url>https://[^"\s]+EasyFind\.app\.zip)'
+      url: "%SEARCH_URL%"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: EasyFind.zip
+      url: "%download_url%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: "%pathname%"
+      destination_path: "%RECIPE_CACHE_DIR%/expanded"
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/expanded/EasyFind.app"
+      requirement: >-
+        anchor apple generic and identifier "org.grunenberg.EasyFind" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "679S2QUWR8")

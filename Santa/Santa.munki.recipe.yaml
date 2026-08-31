@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.Santa
-ParentRecipe: com.github.autopkg.zentral.download.santa
-MinimumVersion: "2.7.6"
+ParentRecipe: com.github.woodleighschool.download.Santa
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Security
@@ -34,11 +34,6 @@ Process:
     Arguments:
       input_plist_path: "%RECIPE_CACHE_DIR%/payload/var/db/santa/migration/Santa.app/Contents/Info.plist"
       plist_version_key: CFBundleVersion
-
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      source_pkg: "%pathname%"
 
   - Processor: PkgRootCreator
     Arguments:
@@ -102,7 +97,7 @@ Process:
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

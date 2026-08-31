@@ -1,0 +1,23 @@
+---
+Identifier: com.github.woodleighschool.download.Zoom
+MinimumVersion: "3.0"
+
+Input:
+  DOWNLOAD_URL: https://zoom.us/client/latest/ZoomInstallerIT.pkg
+
+  NAME: Zoom
+Process:
+  - Processor: URLDownloader
+    Arguments:
+      filename: Zoom.pkg
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Zoom Video Communications, Inc. (BJ4HAAB9B3)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%"

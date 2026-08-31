@@ -1,0 +1,28 @@
+---
+Identifier: com.github.woodleighschool.download.NAPLockedDownBrowser
+MinimumVersion: "3.0"
+
+Input:
+  NAME: NAP Locked down browser
+  SEARCH_URL: https://www.assessform.edu.au/naplan-online/locked-down-browser
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'href="(?P<download_url>https://[^"]+\.pkg)"[^>]*>Download for MacOS'
+      url: "%SEARCH_URL%"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: NAPLockedDownBrowser.pkg
+      url: "%download_url%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Janison (KU9HRE5GET)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%"

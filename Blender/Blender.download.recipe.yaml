@@ -1,25 +1,34 @@
 ---
 Identifier: com.github.woodleighschool.download.Blender
-ParentRecipe: io.github.hjuutilainen.download.Blender
-MinimumVersion: "2.7"
+MinimumVersion: "3.0"
 
 Input:
-  ARCHITECTURE: arm64
   MAJOR_VERSION: "5"
   NAME: Blender
 
 Process:
-  - Processor: Versioner
+  - Processor: URLTextSearcher
     Arguments:
-      input_plist_path: "%pathname%/Blender.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
+      re_pattern: '(?s)(?P<release_path>Blender%MAJOR_VERSION%\.\d+/)(?!.*Blender%MAJOR_VERSION%\.\d+/)'
+      url: https://download.blender.org/release/
 
-  - Processor: Copier
+  - Processor: URLTextSearcher
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
-      overwrite: false
-      source_path: "%pathname%"
+      re_pattern: '(?s)(?P<download_filename>blender-(?P<version>\d+\.\d+\.\d+)-macos-arm64\.dmg)(?!.*blender-\d+\.\d+\.\d+-macos-arm64\.dmg)'
+      url: "https://download.blender.org/release/%release_path%"
 
-  - Processor: VariableSetter
+  - Processor: URLDownloader
     Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      filename: Blender.dmg
+      url: "https://download.blender.org/release/%release_path%%download_filename%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%/Blender.app"
+      requirement: >-
+        identifier "org.blenderfoundation.blender" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "68UA947AUU"

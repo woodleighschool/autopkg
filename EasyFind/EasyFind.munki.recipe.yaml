@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.EasyFind
-ParentRecipe: com.github.woodleighschool.pkg.EasyFind
-MinimumVersion: "1.1.0"
+ParentRecipe: com.github.woodleighschool.download.EasyFind
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Utilities
@@ -24,37 +24,31 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
+  - Processor: PlistReader
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-      overwrite: true
-      source_path: "%pkg_path%/%NAME%.app"
-
-  - Processor: MunkiInstallsItemsCreator
-    Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/%NAME%.app
-
-  - Processor: MunkiPkginfoMerger
+      info_path: "%RECIPE_CACHE_DIR%/expanded/EasyFind.app/Contents/Info.plist"
+      plist_keys:
+        CFBundleShortVersionString: version
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      app_name: "%NAME%.app"
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%pkg_path%"
+      pathname: "%RECIPE_CACHE_DIR%/expanded/EasyFind.app"
+
+  - Processor: DmgCreator
+    Arguments:
+      dmg_path: "%RECIPE_CACHE_DIR%/EasyFind-%version%.dmg"
+      dmg_root: "%RECIPE_CACHE_DIR%/expanded"
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+        - "%RECIPE_CACHE_DIR%/expanded"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      icon_path: "%icon_path%"
+      munkiimport_appname: EasyFind.app
+      pkg_path: "%RECIPE_CACHE_DIR%/EasyFind-%version%.dmg"
       targets:
         exclude: []
         include:

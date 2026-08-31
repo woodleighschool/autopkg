@@ -1,24 +1,28 @@
 ---
 Identifier: com.github.woodleighschool.download.DockerDesktop
-ParentRecipe: com.github.homebysix.download.DockerDesktop
-MinimumVersion: "2.7"
+MinimumVersion: "3.0"
 
 Input:
   NAME: Docker Desktop
-  PLATFORM_ARCH: arm64
 
 Process:
-  - Processor: Versioner
+  - Processor: URLTextSearcher
     Arguments:
-      input_plist_path: "%pathname%/Docker.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
+      re_pattern: '(?P<download_url>https://desktop\.docker\.com/mac/main/arm64/[A-Za-z0-9]+/Docker\.dmg)'
+      url: https://docs.docker.com/desktop/release-notes/
 
-  - Processor: Copier
+  - Processor: URLDownloader
     Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
-      overwrite: false
-      source_path: "%pathname%"
+      filename: DockerDesktop.dmg
+      url: "%download_url%"
 
-  - Processor: VariableSetter
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
     Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      input_path: "%pathname%/Docker.app"
+      requirement: >-
+        identifier "com.docker.docker" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "9BNSXJN65R"

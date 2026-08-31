@@ -1,12 +1,11 @@
 ---
 Identifier: com.github.woodleighschool.munki.DockerDesktop
 ParentRecipe: com.github.woodleighschool.download.DockerDesktop
-MinimumVersion: "1.1.0"
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Programming
   NAME: Docker Desktop
-  PLATFORM_ARCH: arm64
 
   pkginfo:
     blocking_applications:
@@ -82,40 +81,16 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/Docker.app"
-      overwrite: true
-      source_path: "%pkg_path%/Docker.app"
-
-  - Processor: MunkiInstallsItemsCreator
-    Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/Docker.app
-
-  - Processor: MunkiPkginfoMerger
-    Arguments:
-      additional_pkginfo:
-        version: "%version%"
-
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Docker.app"
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+      app_name: Docker.app
+      pathname: "%pathname%"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%icon_path%"
       munkiimport_appname: Docker.app
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

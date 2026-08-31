@@ -1,0 +1,32 @@
+---
+Identifier: com.github.woodleighschool.download.WacomTabletDriver
+MinimumVersion: "3.0"
+
+Input:
+  NAME: Wacom Tablet Driver
+  SEARCH_URL: https://www.wacom.com/en-us/support/product-support/drivers
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '(?P<download_url>https://cdn\.wacom\.com/u/productsupport/drivers/mac/professional/WacomTablet_(?P<version>\d+(?:\.\d+)*(?:-\d+)?)\.dmg)'
+      request_headers:
+        user-agent: curl/8.7.1
+      url: "%SEARCH_URL%"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: WacomTabletDriver.dmg
+      request_headers:
+        user-agent: Mozilla/5.0
+      url: "%download_url%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Wacom Technology Corp. (EG27766DY7)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%/Install Wacom Tablet.pkg"

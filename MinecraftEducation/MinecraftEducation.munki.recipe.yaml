@@ -1,7 +1,7 @@
 ---
 Identifier: com.github.woodleighschool.munki.MinecraftEducation
 ParentRecipe: com.github.woodleighschool.download.MinecraftEducation
-MinimumVersion: "2.7"
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Education
@@ -23,37 +23,16 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
-      overwrite: true
-      source_path: "%pkg_path%/minecraft-edu.app"
-
-  - Processor: MunkiInstallsItemsCreator
-    Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/minecraft-edu.app
-
-  - Processor: MunkiPkginfoMerger
-
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/minecraft-edu.app"
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+      app_name: minecraft-edu.app
+      pathname: "%pathname%"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%icon_path%"
       munkiimport_appname: minecraft-edu.app
-      pkg_path: "%pkg_path%"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

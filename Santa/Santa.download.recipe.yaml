@@ -1,0 +1,26 @@
+---
+Identifier: com.github.woodleighschool.download.Santa
+MinimumVersion: "3.0"
+
+Input:
+  NAME: Santa
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^santa-[0-9.]+\.pkg$'
+      github_repo: northpolesec/santa
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: Santa.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: North Pole Security, Inc. (ZMCG7MLDV9)"
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: "%pathname%"

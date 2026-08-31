@@ -1,23 +1,24 @@
 ---
 Identifier: com.github.woodleighschool.download.MinecraftEducation
-ParentRecipe: com.github.aysiu.download.MinecraftEducation
-MinimumVersion: "2.7"
+MinimumVersion: "3.0"
 
 Input:
+  DOWNLOAD_URL: https://aka.ms/meeclientmacos
+
   NAME: Minecraft Education
-
 Process:
-  - Processor: Versioner
+  - Processor: URLDownloader
     Arguments:
-      input_plist_path: "%pathname%/minecraft-edu.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
+      filename: MinecraftEducation.dmg
+      url: "%DOWNLOAD_URL%"
 
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
-      overwrite: false
-      source_path: "%pathname%"
+  - Processor: EndOfCheckPhase
 
-  - Processor: VariableSetter
+  - Processor: CodeSignatureVerifier
     Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"
+      input_path: "%pathname%/minecraft-edu.app"
+      requirement: >-
+        identifier "com.microsoft.minecraft-edu" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = UBF8T346G9

@@ -1,10 +1,9 @@
 ---
 Identifier: com.github.woodleighschool.intune.swiftDialog
-ParentRecipe: com.github.smithjw.download.swiftDialog
+ParentRecipe: com.github.woodleighschool.download.swiftDialog
 MinimumVersion: "3.0"
 
 Input:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: "True"
   description: >-
     swiftDialog is an open source admin utility for macOS 12 or later
     written in SwiftUI that presents custom dialogs, displays informative
