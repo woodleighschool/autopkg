@@ -50,8 +50,7 @@ Process:
       app_file: "%flat_pkg_path%"
       assignment_info:
         - all_assignment: AllDevices
-          #intent: Required
-          intent: Available
+          intent: Required
       bundleId: "%bundle_id%"
       bundleVersion: "%bundle_version%"
       description: "%description%"
