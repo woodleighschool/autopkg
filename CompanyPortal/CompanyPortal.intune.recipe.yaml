@@ -1,0 +1,62 @@
+---
+Identifier: com.github.woodleighschool.intune.CompanyPortal
+ParentRecipe: com.github.rtrouton.download.MicrosoftIntuneCompanyPortal
+MinimumVersion: "3.0"
+
+Input:
+  description: >-
+    The Company Portal provides access to corporate apps and resources from
+    almost any network. Your company must already subscribe to Microsoft
+    Intune, and your IT admin must set up your account before you can use
+    this app.
+  NAME: Company Portal
+  publisher: Microsoft
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/unpacked"
+      flat_pkg_path: "%pathname%"
+      purge_destination: true
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload"
+      pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/CompanyPortal-Component.pkg/Payload"
+      purge_destination: true
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
+      plist_keys:
+        CFBundleIdentifier: bundle_id
+        CFBundleShortVersionString: bundle_version
+
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      overwrite: true
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/unpacked"
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.almenscorner.intune-upload.processors/IntuneAppUploader
+    Arguments:
+      app_file: "%flat_pkg_path%"
+      assignment_info:
+        - all_assignment: AllDevices
+          intent: Required
+      bundleId: "%bundle_id%"
+      bundleVersion: "%bundle_version%"
+      description: "%description%"
+      displayname: "%NAME%"
+      icon: "%icon_path%"
+      ignore_version_detection: true
+      minimumSupportedOperatingSystem: v14_0
+      publisher: "%publisher%"
+      sync_assignments: true
