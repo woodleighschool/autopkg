@@ -56,7 +56,7 @@ Process:
       description: "%description%"
       displayname: "%NAME%"
       icon: "%icon_path%"
-      ignore_version_detection: true
+      ignore_version_detection: false
       minimumSupportedOperatingSystem: v11_0
       publisher: "%publisher%"
       sync_assignments: true
