@@ -1,0 +1,27 @@
+---
+Identifier: com.github.woodleighschool.intune.assetcache-exporter
+ParentRecipe: com.github.woodleighschool.download.assetcache-exporter
+MinimumVersion: "3.0"
+
+Input:
+  description: >-
+    assetcache-exporter exposes Apple Content Caching metrics for Prometheus.
+  NAME: assetcache-exporter
+  publisher: Woodleigh School
+
+Process:
+  - Processor: com.github.almenscorner.intune-upload.processors/IntuneAppUploader
+    Arguments:
+      app_file: "%pathname%"
+      assignment_info:
+        - group_id: 88208ef5-07a0-4627-ad8f-e9c1c0ff5f15 # Intune - Apple Content Caches
+          intent: Required
+      bundleId: au.edu.vic.woodleigh.assetcache-exporter
+      bundleVersion: "%version%"
+      description: "%description%"
+      displayname: "%NAME%"
+      ignore_version_detection: false
+      lob_app: true
+      minimumSupportedOperatingSystem: v11_0
+      publisher: "%publisher%"
+      sync_assignments: true

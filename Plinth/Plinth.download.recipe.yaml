@@ -1,0 +1,26 @@
+---
+Identifier: com.github.woodleighschool.download.Plinth
+MinimumVersion: "3.0"
+
+Input:
+  NAME: Plinth
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: "^Plinth-[0-9]+(?:\\.[0-9]+)+\\.pkg$"
+      github_repo: woodleighschool/plinth
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: "%NAME%-%version%.pkg"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Woodleigh School (SMLKBTR495)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
+      input_path: "%pathname%"
