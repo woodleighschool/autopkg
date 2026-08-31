@@ -1,0 +1,68 @@
+---
+Identifier: com.github.woodleighschool.munki.Godot
+ParentRecipe: com.github.woodleighschool.download.Godot
+MinimumVersion: "0.6.1"
+
+Input:
+  MUNKI_CATEGORY: Programming
+  NAME: Godot
+  pkginfo:
+    blocking_applications:
+      - Godot
+    category: "%MUNKI_CATEGORY%"
+    description: >-
+      Godot is a free and open-source game development engine, supporting both 2D and 3D game types 
+      with a simple scene/node structure that can be extended with the syntaticaly simple GDScript 
+      language.
+    developer: Godot Foundation
+    name: "%NAME%"
+    unattended_install: true
+    unattended_uninstall: true
+    uninstall_method: remove_copied_items
+    uninstallable: true
+
+Process:
+  - Processor: Copier
+    Arguments:
+      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      overwrite: true
+      source_path: "%pkg_path%/%NAME%.app"
+
+  - Processor: MunkiInstallsItemsCreator
+    Arguments:
+      derive_minimum_os_version: true
+      faux_root: "%RECIPE_CACHE_DIR%/payload"
+      installs_item_paths:
+        - /Applications/Godot.app
+
+  - Processor: MunkiPkginfoMerger
+
+  - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
+    Arguments:
+      NAME: "%NAME%"
+      output_dir: "%RECIPE_CACHE_DIR%"
+      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%RECIPE_CACHE_DIR%/payload"
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
+    Arguments:
+      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      munkiimport_appname: "%NAME%.app"
+      pkg_path: "%pkg_path%"
+      targets:
+        exclude: []
+        include:
+          - actions:
+              - optional_installs
+              - managed_updates
+            label_name: All Hosts
+            package:
+              strategy: latest
+
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiPackageCleaner
+    Arguments:
+      keep_version_count: 1
