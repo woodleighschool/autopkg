@@ -26,7 +26,7 @@ class SwiftIconExtractor(DmgMounter):
     description = "Renders an app icon from a .app, .dmg, or directory and writes a PNG."
 
     input_variables = {
-        "pathname": {
+        "input_path": {
             "required": True,
             "description": (
                 "Path to a .app, a .dmg, a directory containing a .app, or a "
@@ -78,14 +78,14 @@ class SwiftIconExtractor(DmgMounter):
     }
 
     def main(self):
-        pathname = self.env["pathname"]
+        input_path = self.env["input_path"]
         icon_name = self._resolve_icon_name()
         output_dir = self._resolve_output_dir()
         icon_size = int(self.env.get("icon_size", 256))
         overwrite = self._as_bool(self.env.get("overwrite", False))
 
-        if not os.path.exists(pathname) and not self._is_dmg_subpath(pathname):
-            raise ProcessorError(f"Source path does not exist: {pathname}")
+        if not os.path.exists(input_path) and not self._is_dmg_subpath(input_path):
+            raise ProcessorError(f"Source path does not exist: {input_path}")
 
         icon_path = os.path.join(output_dir, icon_name)
         if os.path.exists(icon_path) and not overwrite:
@@ -96,7 +96,7 @@ class SwiftIconExtractor(DmgMounter):
 
         mounted_dmg = None
         try:
-            app_path, mounted_dmg = self._resolve_app_path(pathname, self.env.get("app_name"))
+            app_path, mounted_dmg = self._resolve_app_path(input_path, self.env.get("app_name"))
             png_data = self._render_icon_png(app_path, icon_size)
             if png_data is None:
                 raise ProcessorError(f"Could not extract icon from app: {app_path}")
@@ -146,21 +146,21 @@ class SwiftIconExtractor(DmgMounter):
 
         return icon_name
 
-    def _resolve_app_path(self, pathname, app_name):
-        if pathname.lower().endswith(".app"):
-            if not os.path.isdir(pathname):
-                raise ProcessorError(f"App bundle not found: {pathname}")
-            return pathname, None
+    def _resolve_app_path(self, input_path, app_name):
+        if input_path.lower().endswith(".app"):
+            if not os.path.isdir(input_path):
+                raise ProcessorError(f"App bundle not found: {input_path}")
+            return input_path, None
 
-        dmg_path, dmg, dmg_source_path = self.parsePathForDMG(pathname)
+        dmg_path, dmg, dmg_source_path = self.parsePathForDMG(input_path)
         if dmg:
             mount_point = self.mount(dmg_path)
             matches = glob(os.path.join(mount_point, dmg_source_path))
             if not matches:
-                raise ProcessorError(f"No valid path found in disk image: {pathname}")
+                raise ProcessorError(f"No valid path found in disk image: {input_path}")
             if len(matches) > 1:
                 raise ProcessorError(
-                    f"Multiple source paths found in disk image path '{pathname}': {', '.join(matches)}"
+                    f"Multiple source paths found in disk image path '{input_path}': {', '.join(matches)}"
                 )
 
             resolved = matches[0]
@@ -170,14 +170,14 @@ class SwiftIconExtractor(DmgMounter):
                 return self._find_app(resolved, app_name), dmg_path
             raise ProcessorError(f"Resolved path is not an app or directory: {resolved}")
 
-        if pathname.lower().endswith(".dmg"):
-            mount_point = self.mount(pathname)
-            return self._find_app(mount_point, app_name), pathname
+        if input_path.lower().endswith(".dmg"):
+            mount_point = self.mount(input_path)
+            return self._find_app(mount_point, app_name), input_path
 
-        if os.path.isdir(pathname):
-            return self._find_app(pathname, app_name), None
+        if os.path.isdir(input_path):
+            return self._find_app(input_path, app_name), None
 
-        raise ProcessorError(f"Unsupported source type: {pathname}")
+        raise ProcessorError(f"Unsupported source type: {input_path}")
 
     def _find_app(self, root_path, app_name=None):
         bundle_name = None

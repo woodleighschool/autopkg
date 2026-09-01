@@ -59,7 +59,7 @@ Process:
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: Application Name.app
-      pathname: PARENT_DMG_PATH
+      input_path: PARENT_DMG_PATH
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
@@ -181,7 +181,7 @@ Process:
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: Application Name.app
-      pathname: "%RECIPE_CACHE_DIR%/payload"
+      input_path: "%RECIPE_CACHE_DIR%/payload"
 
   - Processor: PathDeleter
     Arguments:
@@ -362,7 +362,7 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/expanded/Application Name.app"
+      input_path: "%RECIPE_CACHE_DIR%/expanded/Application Name.app"
 
   - Processor: DmgCreator
     Arguments:

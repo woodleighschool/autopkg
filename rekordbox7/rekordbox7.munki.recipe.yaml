@@ -64,7 +64,7 @@ Process:
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: rekordbox.app
-      pathname: "%RECIPE_CACHE_DIR%/payload"
+      input_path: "%RECIPE_CACHE_DIR%/payload"
 
   - Processor: PathDeleter
     Arguments:

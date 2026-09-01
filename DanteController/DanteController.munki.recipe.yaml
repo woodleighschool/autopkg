@@ -50,10 +50,10 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Controller.app"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Controller.app"
-
   - Processor: PathDeleter
     Arguments:
       path_list:

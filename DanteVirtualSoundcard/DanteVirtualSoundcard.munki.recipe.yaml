@@ -80,7 +80,7 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app"
+      input_path: "%RECIPE_CACHE_DIR%/payload/Applications/Dante Virtual Soundcard.app"
 
   - Processor: PathDeleter
     Arguments:

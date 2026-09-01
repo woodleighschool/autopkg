@@ -32,7 +32,7 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      pathname: "%RECIPE_CACHE_DIR%/expanded/EasyFind.app"
+      input_path: "%RECIPE_CACHE_DIR%/expanded/EasyFind.app"
 
   - Processor: DmgCreator
     Arguments:

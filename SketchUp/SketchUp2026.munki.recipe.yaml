@@ -39,10 +39,10 @@ Process:
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: SketchUp.app
+      input_path: "%pathname%"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%pathname%"
-
   - Processor: Copier
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.dmg"

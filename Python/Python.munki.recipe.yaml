@@ -69,10 +69,10 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Library/Frameworks/Python.framework/Versions/%PYTHON_BRANCH%/Resources/Python.app"
-
   - Processor: PathDeleter
     Arguments:
       path_list:

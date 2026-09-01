@@ -37,10 +37,10 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
+      input_path: "%found_filename%"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%found_filename%"
-
   - Processor: Copier
     Arguments:
       destination_path: "%RECIPE_CACHE_DIR%/payload/%APP_NAME%.app"

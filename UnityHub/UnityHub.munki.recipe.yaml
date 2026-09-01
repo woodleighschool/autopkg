@@ -24,7 +24,7 @@ Process:
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
       app_name: Unity Hub.app
-      pathname: "%pathname%"
+      input_path: "%pathname%"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:

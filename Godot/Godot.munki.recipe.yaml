@@ -11,9 +11,7 @@ Input:
       - Godot
     category: "%MUNKI_CATEGORY%"
     description: >-
-      Godot is a free and open-source game development engine, supporting both 2D and 3D game types 
-      with a simple scene/node structure that can be extended with the syntaticaly simple GDScript 
-      language.
+      Godot is a free and open-source game development engine, supporting both 2D and 3D game types  with a simple scene/node structure that can be extended with the syntaticaly simple GDScript  language.
     developer: Godot Foundation
     name: "%NAME%"
     unattended_install: true
@@ -39,10 +37,10 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-
   - Processor: PathDeleter
     Arguments:
       path_list:

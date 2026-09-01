@@ -5,10 +5,7 @@ MinimumVersion: "3.0"
 
 Input:
   description: >-
-    Munki is a set of tools that, used together with a webserver-based 
-    repository of packages and package metadata, can be used by macOS 
-    administrators to manage software installs (and in many cases removals) 
-    on macOS client machines.
+    Munki is a set of tools that, used together with a webserver-based  repository of packages and package metadata, can be used by macOS  administrators to manage software installs (and in many cases removals)  on macOS client machines.
   NAME: Munki
   publisher: Mac Admins Open Source
 
@@ -34,11 +31,11 @@ Process:
 
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/payload/Applications/Managed Software Center.app"
+
       NAME: "%NAME%"
       output_dir: "%RECIPE_CACHE_DIR%"
       overwrite: true
-      pathname: "%RECIPE_CACHE_DIR%/payload/Applications/Managed Software Center.app"
-
   - Processor: PathDeleter
     Arguments:
       path_list:
