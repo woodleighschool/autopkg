@@ -49,15 +49,9 @@ Input:
     unattended_install: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      overwrite: false
-      source_path: "%RECIPE_DIR%/Sophos.png"
-
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%RECIPE_REPO_DIR%/com.github.woodleighschool.autopkg/Sophos/Sophos.png"
       pkg_path: "%pkg_path%"
       targets:
         exclude:

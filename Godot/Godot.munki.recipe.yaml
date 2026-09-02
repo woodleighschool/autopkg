@@ -1,17 +1,17 @@
 ---
 Identifier: com.github.woodleighschool.munki.Godot
-ParentRecipe: com.github.woodleighschool.download.Godot
-MinimumVersion: "0.6.1"
+ParentRecipe: com.github.dataJAR-recipes.download.Godot 4
+MinimumVersion: "3.0"
 
 Input:
   MUNKI_CATEGORY: Programming
   NAME: Godot
+  PRERELEASE: ""
   pkginfo:
-    blocking_applications:
-      - Godot
     category: "%MUNKI_CATEGORY%"
     description: >-
-      Godot is a free and open-source game development engine, supporting both 2D and 3D game types  with a simple scene/node structure that can be extended with the syntaticaly simple GDScript  language.
+      Godot is a free and open-source game development engine for 2D and 3D games,
+      with a scene and node structure that can be extended with GDScript.
     developer: Godot Foundation
     name: "%NAME%"
     unattended_install: true
@@ -20,37 +20,25 @@ Input:
     uninstallable: true
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
-      overwrite: true
-      source_path: "%pkg_path%/%NAME%.app"
-
-  - Processor: MunkiInstallsItemsCreator
-    Arguments:
-      derive_minimum_os_version: true
-      faux_root: "%RECIPE_CACHE_DIR%/payload"
-      installs_item_paths:
-        - /Applications/Godot.app
-
-  - Processor: MunkiPkginfoMerger
-
   - Processor: com.github.woodleighschool.processors/SwiftIconExtractor
     Arguments:
-      input_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app"
+      input_path: "%pkgroot%/Applications/Godot.app"
 
-      NAME: "%NAME%"
-      output_dir: "%RECIPE_CACHE_DIR%"
+  - Processor: DmgCreator
+    Arguments:
+      dmg_path: "%RECIPE_CACHE_DIR%/Godot.dmg"
+      dmg_root: "%pkgroot%/Applications"
+
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - "%RECIPE_CACHE_DIR%/payload"
+        - "%pkgroot%"
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      munkiimport_appname: "%NAME%.app"
-      pkg_path: "%pkg_path%"
+      icon_path: "%icon_path%"
+      munkiimport_appname: Godot.app
+      pkg_path: "%dmg_path%"
       targets:
         exclude: []
         include:

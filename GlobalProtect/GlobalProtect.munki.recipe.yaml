@@ -36,16 +36,6 @@ Process:
       pkg_payload_path: "%RECIPE_CACHE_DIR%/unpacked/gp.pkg/Payload"
       purge_destination: true
 
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: "%RECIPE_CACHE_DIR%/payload/Applications/%NAME%.app/Contents/Info.plist"
-      plist_version_key: CFBundleShortVersionString
-
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      source_pkg: "%pathname%"
-
   - Processor: MunkiInstallsItemsCreator
     Arguments:
       derive_minimum_os_version: true
@@ -55,12 +45,6 @@ Process:
 
   - Processor: MunkiPkginfoMerger
 
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      overwrite: false
-      source_path: "%RECIPE_DIR%/GlobalProtect.png"
-
   - Processor: PathDeleter
     Arguments:
       path_list:
@@ -69,8 +53,8 @@ Process:
 
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      icon_path: "%RECIPE_REPO_DIR%/com.github.woodleighschool.autopkg/GlobalProtect/GlobalProtect.png"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

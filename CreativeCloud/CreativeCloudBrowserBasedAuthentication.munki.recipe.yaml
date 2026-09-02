@@ -62,15 +62,9 @@ Input:
     version: "%VERSION%"
 
 Process:
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      overwrite: false
-      source_path: "%RECIPE_DIR%/%NAME%.png"
-
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%RECIPE_REPO_DIR%/com.github.woodleighschool.autopkg/CreativeCloud/Adobe Creative Cloud Browser-Based Authentication.png"
       targets:
         exclude: []
         include: []

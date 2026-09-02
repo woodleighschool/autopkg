@@ -32,24 +32,13 @@ Input:
     uninstallable: false
 
 Process:
-  - Processor: PkgCopier
-    Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
-      source_pkg: "%pathname%"
-
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      overwrite: false
-      source_path: "%RECIPE_DIR%/Microsoft 365 Suite.png"
-
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
       additional_makepkginfo_options:
         - --pkgvers
         - "%version%"
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      pkg_path: "%pkg_path%"
+      icon_path: "%RECIPE_REPO_DIR%/com.github.woodleighschool.autopkg/Microsoft365BusinessProSuite/Microsoft 365 Suite.png"
+      pkg_path: "%pathname%"
       targets:
         exclude: []
         include:

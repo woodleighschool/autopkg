@@ -1,6 +1,6 @@
 ---
 Identifier: com.github.woodleighschool.munki.CreativeCloud
-ParentRecipe: com.github.woodleighschool.pkg.CreativeCloud
+ParentRecipe: com.github.rtrouton.pkg.AdobeCreativeCloudInstallerAppleSilicon
 MinimumVersion: "2.7"
 
 Input:
@@ -59,15 +59,9 @@ Process:
             version_comparison_key: CFBundleShortVersionString
         version: "%version%"
 
-  - Processor: Copier
-    Arguments:
-      destination_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
-      overwrite: false
-      source_path: "%RECIPE_DIR%/Adobe Creative Cloud.png"
-
   - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiImporter
     Arguments:
-      icon_path: "%RECIPE_CACHE_DIR%/%NAME%.png"
+      icon_path: "%RECIPE_REPO_DIR%/com.github.woodleighschool.autopkg/CreativeCloud/Adobe Creative Cloud.png"
       pkg_path: "%pkg_path%"
       targets:
         exclude: []
