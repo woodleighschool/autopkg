@@ -3,7 +3,7 @@ python = "3.14.7"
 lefthook = "2.1.12"
 actionlint = "1.7.12"
 zizmor = "1.30.0"
-oxfmt = "0.65.0"
+oxfmt = "0.66.0"
 
 [settings]
 experimental = true
