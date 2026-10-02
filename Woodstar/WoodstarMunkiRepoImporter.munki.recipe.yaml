@@ -1,0 +1,6 @@
+---
+Identifier: com.github.woodleighschool.woodstar.munki.repo-import
+MinimumVersion: "2.7"
+Input: {}
+Process:
+  - Processor: com.github.woodleighschool.woodstar.processors/WoodstarMunkiRepoImporter
